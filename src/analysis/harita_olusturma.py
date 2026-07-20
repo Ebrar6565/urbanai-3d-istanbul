@@ -19,10 +19,26 @@ harita_yolu = Path(
 veri = pd.read_csv(veri_yolu)
 
 
-# Yalnızca koordinatı bulunan kayıtları seç
-koordinatli_veri = veri.dropna(
-    subset=["Enlem", "Boylam"]
-).copy()
+# Nominatim tarafından döndürülen adresleri hazırla
+bulunan_adres = veri["Bulunan Adres"].fillna("").astype(str)
+
+
+# Dönen adresin bir kütüphane veya kitaplık kaydı
+# içerip içermediğini kontrol et
+kutuphane_eslesmesi = bulunan_adres.str.contains(
+    r"kütüphane|kitaplık|kitaplığ|library",
+    case=False,
+    regex=True,
+)
+
+
+# Yalnızca koordinatı olan ve güvenilir görünen
+# kayıtları haritada kullan
+koordinatli_veri = veri[
+    veri["Enlem"].notna()
+    & veri["Boylam"].notna()
+    & kutuphane_eslesmesi
+].copy()
 
 
 if koordinatli_veri.empty:

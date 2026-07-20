@@ -53,12 +53,11 @@ eksik_koordinatlar = veri[
     veri["Enlem"].isna() | veri["Boylam"].isna()
 ]
 
+# Koordinatı eksik olan bütün kayıtları işle
+islenilecek_kayitlar = eksik_koordinatlar
 
-# İlk denemede yalnızca 5 kayıt işle
-test_kayitlari = eksik_koordinatlar.head(5)
 
-
-for indeks, satir in test_kayitlari.iterrows():
+for indeks, satir in islenilecek_kayitlar.iterrows():
     kutuphane_adi = satir["Kütüphane Adı"]
     ilce_adi = satir["İlçe Adı"]
 
