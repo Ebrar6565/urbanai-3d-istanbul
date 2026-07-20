@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e7734e0dc78d30088afc909e6ebb933c {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_e7734e0dc78d30088afc909e6ebb933c" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_e7734e0dc78d30088afc909e6ebb933c = L.map(
+                "map_e7734e0dc78d30088afc909e6ebb933c",
+                {
+                    center: [41.05341634, 28.809806639999998],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_a5fa5125dc902d031b8f58e8db663f53 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_a5fa5125dc902d031b8f58e8db663f53.addTo(map_e7734e0dc78d30088afc909e6ebb933c);
+        
+    
+            var marker_f3dc132c2bcebf46f085f910aa464784 = L.marker(
+                [40.8690261, 29.1244133],
+                {
+}
+            ).addTo(map_e7734e0dc78d30088afc909e6ebb933c);
+        
+    
+        var popup_811eb22369349dc6e35f6f27e7fb2adc = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_70174f81c62777b6d9093400560a068d = $(`<div id="html_70174f81c62777b6d9093400560a068d" style="width: 100.0%; height: 100.0%;">     <strong>Taş Mektep Kütüphanesi</strong><br>     İlçe: Adalar<br>     Adres: Kadıyoran Caddesi, Büyükada<br>     Çalışma saatleri: 09:00-18:00<br>     Çalışma günleri: Salı-Pazar     </div>`)[0];
+                popup_811eb22369349dc6e35f6f27e7fb2adc.setContent(html_70174f81c62777b6d9093400560a068d);
+            
+        
+
+        marker_f3dc132c2bcebf46f085f910aa464784.bindPopup(popup_811eb22369349dc6e35f6f27e7fb2adc)
+        ;
+
+        
+    
+    
+            marker_f3dc132c2bcebf46f085f910aa464784.bindTooltip(
+                `<div>
+                     Taş Mektep Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_045da63078b1042095fdd255adb3a05d = L.marker(
+                [41.1862817, 28.7647058],
+                {
+}
+            ).addTo(map_e7734e0dc78d30088afc909e6ebb933c);
+        
+    
+        var popup_13ebe2a0bdf9ef5576f58d60b52ab8b9 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_6519e282597a8bd5f19e7054bfeee4b8 = $(`<div id="html_6519e282597a8bd5f19e7054bfeee4b8" style="width: 100.0%; height: 100.0%;">     <strong>Cemil Meriç Kütüphanesi</strong><br>     İlçe: Arnavutköy<br>     Adres: Yunus Emre Mah., Erdener Sok. F Blok, Arnavutköy/ Boğazköy Kültür ve Yaşam Merkezi<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
+                popup_13ebe2a0bdf9ef5576f58d60b52ab8b9.setContent(html_6519e282597a8bd5f19e7054bfeee4b8);
+            
+        
+
+        marker_045da63078b1042095fdd255adb3a05d.bindPopup(popup_13ebe2a0bdf9ef5576f58d60b52ab8b9)
+        ;
+
+        
+    
+    
+            marker_045da63078b1042095fdd255adb3a05d.bindTooltip(
+                `<div>
+                     Cemil Meriç Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_c3ce23ab827e60cb8ceb4653bda44cc8 = L.marker(
+                [41.1793593, 28.7460023],
+                {
+}
+            ).addTo(map_e7734e0dc78d30088afc909e6ebb933c);
+        
+    
+        var popup_9fdf0e201d04f2cf68348aa3f3bece8f = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_e2cd62727bb6985f9f73a342c3491192 = $(`<div id="html_e2cd62727bb6985f9f73a342c3491192" style="width: 100.0%; height: 100.0%;">     <strong>Rıfat Ilgaz Kütüphanesi</strong><br>     İlçe: Arnavutköy<br>     Adres: Arnavutköy mahallesi Eski Edirne Caddesi No:1187<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
+                popup_9fdf0e201d04f2cf68348aa3f3bece8f.setContent(html_e2cd62727bb6985f9f73a342c3491192);
+            
+        
+
+        marker_c3ce23ab827e60cb8ceb4653bda44cc8.bindPopup(popup_9fdf0e201d04f2cf68348aa3f3bece8f)
+        ;
+
+        
+    
+    
+            marker_c3ce23ab827e60cb8ceb4653bda44cc8.bindTooltip(
+                `<div>
+                     Rıfat Ilgaz Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_3b92714674211ce6a75336e3dba21c4a = L.marker(
+                [41.0312375, 28.702602],
+                {
+}
+            ).addTo(map_e7734e0dc78d30088afc909e6ebb933c);
+        
+    
+        var popup_b289a536dfc5b09a8db851fc2a2c2032 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_03fcf447c68983c0cdcad29bbafac4f0 = $(`<div id="html_03fcf447c68983c0cdcad29bbafac4f0" style="width: 100.0%; height: 100.0%;">     <strong>Fakir Baykurt Kütüphanesi</strong><br>     İlçe: Avcılar<br>     Adres: Yeşilkent Mahallesi Kazım Karabekir Caddesi No:180 Avcılar/İstanbul<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
+                popup_b289a536dfc5b09a8db851fc2a2c2032.setContent(html_03fcf447c68983c0cdcad29bbafac4f0);
+            
+        
+
+        marker_3b92714674211ce6a75336e3dba21c4a.bindPopup(popup_b289a536dfc5b09a8db851fc2a2c2032)
+        ;
+
+        
+    
+    
+            marker_3b92714674211ce6a75336e3dba21c4a.bindTooltip(
+                `<div>
+                     Fakir Baykurt Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_d418599b99fcd8b0ea6e68a431f77bf7 = L.marker(
+                [41.0011771, 28.7113098],
+                {
+}
+            ).addTo(map_e7734e0dc78d30088afc909e6ebb933c);
+        
+    
+        var popup_51a51008da2e381b27dfe6b87b90e36f = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_799471dc4b9fc7859b69b3d67def60d9 = $(`<div id="html_799471dc4b9fc7859b69b3d67def60d9" style="width: 100.0%; height: 100.0%;">     <strong>Sabahattin Eyüboğlu Kütüphanesi</strong><br>     İlçe: Avcılar<br>     Adres: Mustafa Kemal Paşa Mahallesi, Firuzköy Bulvarı No:89 /Avcılar<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
+                popup_51a51008da2e381b27dfe6b87b90e36f.setContent(html_799471dc4b9fc7859b69b3d67def60d9);
+            
+        
+
+        marker_d418599b99fcd8b0ea6e68a431f77bf7.bindPopup(popup_51a51008da2e381b27dfe6b87b90e36f)
+        ;
+
+        
+    
+    
+            marker_d418599b99fcd8b0ea6e68a431f77bf7.bindTooltip(
+                `<div>
+                     Sabahattin Eyüboğlu Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            map_e7734e0dc78d30088afc909e6ebb933c.fitBounds(
+                [[40.8690261, 29.1244133], [41.1862817, 28.7647058], [41.1793593, 28.7460023], [41.0312375, 28.702602], [41.0011771, 28.7113098]],
+                {}
+            );
+        
+</script>
+</html>
