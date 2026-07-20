@@ -1,2 +1,27 @@
+# Python sanal ortamı
+.venv/
+
+# Python geçici dosyaları
+__pycache__/
+*.py[cod]
+
+# Gizli ortam değişkenleri
+.env
+
+# Jupyter geçici dosyaları
+.ipynb_checkpoints/
+
+# Editör ayarları
+.vscode/
+.idea/
+
+# Ham veri dosyaları
+data/raw/*
+!data/raw/.gitkeep
+
+# İşlenmiş veri dosyaları
+data/processed/*
+!data/processed/.gitkeep
+
 # Kişisel staj günlüğü
 docs/staj-gunlugu.md
