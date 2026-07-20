@@ -3,7 +3,7 @@ from pathlib import Path
 
 import folium
 import pandas as pd
-
+from folium.plugins import MarkerCluster
 
 # Dosya yolları
 veri_yolu = Path(
@@ -59,6 +59,12 @@ harita = folium.Map(
 )
 
 
+# İşaretçilerin ekleneceği kümeyi oluştur
+isaretci_kumesi = MarkerCluster(
+    name="Kütüphaneler"
+).add_to(harita)
+
+
 # Her kütüphane için haritaya bir işaretçi ekle
 for _, satir in koordinatli_veri.iterrows():
     kutuphane_adi = escape(str(satir["Kütüphane Adı"]))
@@ -85,7 +91,7 @@ for _, satir in koordinatli_veri.iterrows():
             bilgi_kutusu,
             max_width=350,
         ),
-    ).add_to(harita)
+    ).add_to(isaretci_kumesi)
 
 
 # Haritayı bütün işaretçiler görünecek şekilde ayarla
