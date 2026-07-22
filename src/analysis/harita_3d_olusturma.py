@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
+import sqlite3
 
-import pandas as pd
 import pydeck as pdk
 
 
@@ -9,12 +9,8 @@ import pydeck as pdk
 # DOSYA YOLLARI
 # --------------------------------------------------
 
-ilce_geojson_yolu = Path(
-    "data/processed/istanbul_ilce_oncelik.geojson"
-)
-
-koordinat_veri_yolu = Path(
-    "data/processed/ibb_kutuphaneleri_koordinatli.csv"
+veritabani_yolu = Path(
+    "data/database/urbanai.db"
 )
 
 harita_cikti_yolu = Path(
@@ -23,417 +19,509 @@ harita_cikti_yolu = Path(
 
 
 # --------------------------------------------------
-# İLÇE GEOJSON VERİSİNİ OKU
+# VERİ TABANI BAĞLANTISI
 # --------------------------------------------------
 
-ilce_geojson = json.loads(
-    ilce_geojson_yolu.read_text(
-        encoding="utf-8"
+def baglanti_olustur():
+    """
+    UrbanAI SQLite veri tabanına bağlantı oluşturur.
+    """
+
+    if not veritabani_yolu.exists():
+        raise FileNotFoundError(
+            "Veri tabanı bulunamadı: "
+            f"{veritabani_yolu}\n"
+            "Önce veri tabanı oluşturma ve veri "
+            "aktarma dosyalarını çalıştırın."
+        )
+
+    baglanti = sqlite3.connect(
+        veritabani_yolu
     )
-)
+
+    # SQL sonuçlarındaki sütunlara isimleriyle
+    # erişmemizi sağlar.
+    baglanti.row_factory = sqlite3.Row
+
+    baglanti.execute(
+        "PRAGMA foreign_keys = ON;"
+    )
+
+    return baglanti
 
 
 # --------------------------------------------------
-# İLÇE BİLGİ KUTULARINI HAZIRLA
+# KÜTÜPHANE HİZMET TÜRÜ ID'SİNİ GETİR
 # --------------------------------------------------
 
-for feature in ilce_geojson["features"]:
+def kutuphane_hizmet_turu_id_getir(
+    baglanti
+):
+    """
+    service_types tablosundaki Kütüphane
+    hizmet türünün veri tabanı kimliğini getirir.
+    """
 
-    properties = feature["properties"]
+    sonuc = baglanti.execute(
+        """
+        SELECT id
+        FROM service_types
+        WHERE name = ?;
+        """,
+        (
+            "Kütüphane",
+        ),
+    ).fetchone()
 
-    ilce_adi = properties["district"]
+    if sonuc is None:
+        raise ValueError(
+            "Veri tabanında Kütüphane hizmet "
+            "türü bulunamadı."
+        )
 
-    oncelik_puani = properties[
-        "priority_score"
+    return sonuc["id"]
+
+
+# --------------------------------------------------
+# ÖNCELİK SEVİYESİNE GÖRE RENK BELİRLE
+# --------------------------------------------------
+
+def oncelik_rengi_belirle(
+    oncelik_seviyesi,
+    oncelik_puani,
+):
+    """
+    İlçe alanında kullanılacak RGBA rengini döndürür.
+    """
+
+    # Öncelik puanı hesaplanmamış ilçeler gri.
+    if oncelik_puani is None:
+        return [
+            130,
+            130,
+            130,
+            210,
+        ]
+
+    if oncelik_seviyesi == "Yüksek":
+        return [
+            220,
+            60,
+            60,
+            210,
+        ]
+
+    if oncelik_seviyesi == "Orta":
+        return [
+            245,
+            160,
+            60,
+            210,
+        ]
+
+    # Düşük öncelikli ilçeler mavi.
+    return [
+        65,
+        125,
+        190,
+        210,
     ]
 
-    oncelik_sirasi = properties[
-        "priority_rank"
-    ]
+
+# --------------------------------------------------
+# İLÇE GEOJSON VERİSİNİ VERİ TABANINDAN GETİR
+# --------------------------------------------------
+
+def ilce_geojson_verisini_getir(
+    baglanti,
+    hizmet_turu_id,
+):
+    """
+    districts ve district_metrics tablolarını
+    birleştirerek PyDeck'in kullanabileceği bir
+    GeoJSON FeatureCollection oluşturur.
+    """
+
+    sonuclar = baglanti.execute(
+        """
+        SELECT
+            districts.id,
+            districts.name,
+            districts.population_2025,
+            districts.geometry_geojson,
+
+            district_metrics.facility_count,
+            district_metrics.priority_score,
+            district_metrics.priority_rank,
+            district_metrics.priority_level,
+            district_metrics.data_status
+
+        FROM districts
+
+        LEFT JOIN district_metrics
+            ON district_metrics.district_id =
+               districts.id
+
+           AND district_metrics.service_type_id = ?
+
+           AND district_metrics.analysis_year = ?
+
+        ORDER BY districts.name;
+        """,
+        (
+            hizmet_turu_id,
+            2025,
+        ),
+    ).fetchall()
+
+    features = []
+
+    for satir in sonuclar:
+
+        ilce_adi = satir["name"]
+
+        geometri_metni = satir[
+            "geometry_geojson"
+        ]
+
+        if geometri_metni is None:
+            raise ValueError(
+                f"{ilce_adi} ilçesinin geometrisi "
+                "veri tabanında bulunamadı."
+            )
+
+        try:
+            geometri = json.loads(
+                geometri_metni
+            )
+
+        except json.JSONDecodeError as hata:
+            raise ValueError(
+                f"{ilce_adi} ilçesinin GeoJSON "
+                "geometrisi geçersiz."
+            ) from hata
 
 
-    # Öncelik puanı bulunan ilçelerde
-    # sayıyı okunaklı metne dönüştür.
-    if oncelik_puani is not None:
-        oncelik_puani_gosterim = (
-            f"{oncelik_puani:.1f}"
-        )
+        oncelik_puani = satir[
+            "priority_score"
+        ]
 
-        oncelik_sirasi_gosterim = (
-            str(oncelik_sirasi)
-        )
+        oncelik_sirasi = satir[
+            "priority_rank"
+        ]
 
-    # Puanı hesaplanmamış ilçelerde
-    # yanıltıcı bir sayı göstermek yerine açıklama yaz.
-    else:
-        oncelik_puani_gosterim = (
-            "Hesaplanmadı"
-        )
+        oncelik_seviyesi = satir[
+            "priority_level"
+        ]
 
-        oncelik_sirasi_gosterim = (
-            "Hesaplanmadı"
-        )
+        nufus = satir[
+            "population_2025"
+        ]
+
+        kutuphane_sayisi = satir[
+            "facility_count"
+        ]
 
 
-    properties.update(
-        {
-            "display_name": (
-                f"{ilce_adi} İlçe Önceliği"
-            ),
+        if kutuphane_sayisi is None:
+            kutuphane_sayisi = 0
 
-            "object_type": (
-                "İlçe hizmet önceliği"
-            ),
 
-            "priority_score_display": (
-                oncelik_puani_gosterim
-            ),
+        # Öncelik puanı bulunan ilçelerin
+        # gösterim değerlerini hazırla.
+        if oncelik_puani is not None:
 
-            "priority_rank_display": (
-                oncelik_sirasi_gosterim
-            ),
+            oncelik_puani_gosterim = (
+                f"{oncelik_puani:.1f}"
+            )
 
-            "population_display": (
-                f"{properties['population']:,}"
-                .replace(",", ".")
-            ),
+            oncelik_sirasi_gosterim = (
+                str(oncelik_sirasi)
+            )
 
-            "library_count_display": (
-                str(
-                    properties[
-                        "library_count"
-                    ]
-                )
-            ),
+            yukseklik = (
+                40
+                + oncelik_puani * 6
+            )
 
-            "note": (
+            not_metni = (
                 "Yükseklik, görselleştirme amacıyla "
                 "öncelik puanından üretilmiştir."
-                if oncelik_puani is not None
-                else
+            )
+
+        # Puanı hesaplanmayan ilçeler için
+        # yanıltıcı sayı göstermiyoruz.
+        else:
+
+            oncelik_puani_gosterim = (
+                "Hesaplanmadı"
+            )
+
+            oncelik_sirasi_gosterim = (
+                "Hesaplanmadı"
+            )
+
+            oncelik_seviyesi = (
+                "Veri doğrulaması gerekli"
+            )
+
+            # Gri ilçelerin haritada tamamen düz
+            # görünmemesi için küçük bir yükseklik.
+            yukseklik = 20
+
+            not_metni = (
                 "İBB veri setindeki kayıt durumu "
                 "doğrulanmalıdır."
-            ),
-        }
-    )
+            )
 
 
-# --------------------------------------------------
-# KÜTÜPHANE KOORDİNATLARINI OKU
-# --------------------------------------------------
-
-koordinat_verisi = pd.read_csv(
-    koordinat_veri_yolu
-)
+        renk = oncelik_rengi_belirle(
+            oncelik_seviyesi,
+            oncelik_puani,
+        )
 
 
-# --------------------------------------------------
-# KOORDİNATLARI SAYISAL DEĞERE DÖNÜŞTÜR
-# --------------------------------------------------
+        feature = {
+            "type": "Feature",
 
-koordinat_verisi["Enlem"] = pd.to_numeric(
-    koordinat_verisi["Enlem"],
-    errors="coerce",
-)
-
-koordinat_verisi["Boylam"] = pd.to_numeric(
-    koordinat_verisi["Boylam"],
-    errors="coerce",
-)
-
-
-# --------------------------------------------------
-# GEÇERLİ KOORDİNATLARI BELİRLE
-# --------------------------------------------------
-
-koordinati_bulunan = (
-    koordinat_verisi["Enlem"].notna()
-    & koordinat_verisi["Boylam"].notna()
-)
-
-
-# --------------------------------------------------
-# BULUNAN ADRESİN GÜVENİLİRLİĞİNİ KONTROL ET
-# --------------------------------------------------
-
-kutuphane_ifadesi = (
-    r"kütüphane|kitaplık|kitaplığ|library"
-)
-
-adresi_guvenilir = (
-    koordinat_verisi["Bulunan Adres"]
-    .astype(str)
-    .str.contains(
-        kutuphane_ifadesi,
-        case=False,
-        na=False,
-        regex=True,
-    )
-)
-
-
-guvenilir_kutuphaneler = koordinat_verisi[
-    koordinati_bulunan
-    & adresi_guvenilir
-].copy()
-
-
-# --------------------------------------------------
-# PYDECK İÇİN KÜTÜPHANE NOKTALARINI HAZIRLA
-# --------------------------------------------------
-
-kutuphane_noktalari = []
-
-for _, satir in guvenilir_kutuphaneler.iterrows():
-
-    kutuphane_adi = str(
-        satir["Kütüphane Adı"]
-    )
-
-    ilce_adi = str(
-        satir["İlçe Adı"]
-    )
-
-    adres = str(
-        satir["Adres"]
-    )
-
-    kutuphane_noktalari.append(
-        {
-            # ColumnLayer konumu için:
-            "longitude": float(
-                satir["Boylam"]
-            ),
-
-            "latitude": float(
-                satir["Enlem"]
-            ),
-
-            # Mevcut kütüphaneler çok kısa
-            # mavi sütunlar olarak gösterilecek.
-            #
-            # Bu değer gerçek bina yüksekliği değildir.
-            "elevation": 55,
-
-            "fill_color": [
-                25,
-                85,
-                180,
-                235,
-            ],
-
-            # İlçe alanları ve kütüphane noktalarında
-            # aynı bilgi kutusunu kullanabilmek için
-            # açıklamalar properties içinde tutuluyor.
             "properties": {
-                "display_name": kutuphane_adi,
-
-                "object_type": (
-                    "Mevcut kütüphane"
-                ),
+                "district_id": satir["id"],
 
                 "district": ilce_adi,
 
-                "priority_score_display": (
-                    "İlçe alanına bakınız"
+                "display_name": (
+                    f"{ilce_adi} İlçe Önceliği"
                 ),
 
-                "priority_rank_display": (
-                    "İlçe alanına bakınız"
+                "object_type": (
+                    "İlçe hizmet önceliği"
+                ),
+
+                "population": nufus,
+
+                "library_count": (
+                    kutuphane_sayisi
+                ),
+
+                "priority_score": (
+                    oncelik_puani
+                ),
+
+                "priority_rank": (
+                    oncelik_sirasi
                 ),
 
                 "priority_level": (
-                    "İlçe alanına bakınız"
+                    oncelik_seviyesi
+                ),
+
+                "data_status": satir[
+                    "data_status"
+                ],
+
+                "fill_color": renk,
+
+                # Bu değer gerçek arazi veya bina
+                # yüksekliği değildir.
+                "elevation": yukseklik,
+
+                "priority_score_display": (
+                    oncelik_puani_gosterim
+                ),
+
+                "priority_rank_display": (
+                    oncelik_sirasi_gosterim
                 ),
 
                 "population_display": (
-                    "İlçe alanına bakınız"
+                    f"{nufus:,}"
+                    .replace(",", ".")
+                    if nufus is not None
+                    else "Bilinmiyor"
                 ),
 
                 "library_count_display": (
-                    "İlçe alanına bakınız"
+                    str(kutuphane_sayisi)
                 ),
 
-                "note": (
-                    f"Adres: {adres}"
-                ),
+                "note": not_metni,
             },
+
+            "geometry": geometri,
         }
-    )
+
+        features.append(
+            feature
+        )
+
+
+    if len(features) != 39:
+        raise ValueError(
+            "Harita için 39 ilçe bekleniyordu. "
+            f"Bulunan ilçe: {len(features)}"
+        )
+
+
+    return {
+        "type": "FeatureCollection",
+        "features": features,
+    }
 
 
 # --------------------------------------------------
-# İLÇE GEOJSON KATMANI
+# KÜTÜPHANE NOKTALARINI VERİ TABANINDAN GETİR
 # --------------------------------------------------
 
-ilce_katmani = pdk.Layer(
-    "GeoJsonLayer",
+def kutuphane_noktalarini_getir(
+    baglanti,
+    hizmet_turu_id,
+):
+    """
+    facilities tablosundaki güvenilir koordinatlı
+    kütüphaneleri PyDeck ColumnLayer biçimine
+    dönüştürür.
+    """
 
-    data=ilce_geojson,
+    sonuclar = baglanti.execute(
+        """
+        SELECT
+            facilities.id,
+            facilities.name,
+            facilities.address,
+            facilities.latitude,
+            facilities.longitude,
+            facilities.coordinate_status,
 
-    # GeoJSON içindeki polygon ve multipolygon
-    # geometrilerinin içini doldur.
-    filled=True,
+            districts.name AS district_name
 
-    # İlçe sınır çizgilerini göster.
-    stroked=True,
+        FROM facilities
 
-    # İlçe alanlarını yükseklikli hâle getir.
-    extruded=True,
+        INNER JOIN districts
+            ON districts.id =
+               facilities.district_id
 
-    # Renk her ilçenin properties alanından gelir.
-    get_fill_color=(
-        "properties.fill_color"
-    ),
+        WHERE facilities.service_type_id = ?
 
-    # Yükseklik her ilçenin properties alanından gelir.
-    get_elevation=(
-        "properties.elevation"
-    ),
+          AND facilities.coordinate_status =
+              'verified'
 
-    # İlçe sınır çizgisinin rengi.
-    get_line_color=[
-        255,
-        255,
-        255,
-        210,
-    ],
+          AND facilities.latitude IS NOT NULL
 
-    line_width_min_pixels=1,
+          AND facilities.longitude IS NOT NULL
 
-    # Polygon üzerine gelindiğinde bilgi alınabilsin.
-    pickable=True,
+        ORDER BY facilities.name;
+        """,
+        (
+            hizmet_turu_id,
+        ),
+    ).fetchall()
 
-    # Fareyle üzerine gelinen alanı vurgula.
-    auto_highlight=True,
 
-    highlight_color=[
-        255,
-        255,
-        255,
-        80,
-    ],
+    kutuphane_noktalari = []
 
-    # Polygon kenarlarında tel kafes çizgisi gösterme.
-    wireframe=False,
+    for satir in sonuclar:
 
-    opacity=0.82,
-)
+        kutuphane_adi = satir[
+            "name"
+        ]
+
+        ilce_adi = satir[
+            "district_name"
+        ]
+
+        adres = (
+            satir["address"]
+            or "Adres bilgisi bulunamadı."
+        )
+
+
+        kutuphane_noktalari.append(
+            {
+                "id": satir["id"],
+
+                # ColumnLayer için önce boylam,
+                # sonra enlem kullanılır.
+                "longitude": float(
+                    satir["longitude"]
+                ),
+
+                "latitude": float(
+                    satir["latitude"]
+                ),
+
+                # Bu değer gerçek bina yüksekliği
+                # değildir. Noktaların görünür olması
+                # için kullanılan kısa sütun değeridir.
+                "elevation": 55,
+
+                "fill_color": [
+                    25,
+                    85,
+                    180,
+                    235,
+                ],
+
+                # İlçe alanlarıyla aynı tooltip
+                # yapısını kullanabilmek için bilgiler
+                # properties içinde tutulur.
+                "properties": {
+                    "display_name": (
+                        kutuphane_adi
+                    ),
+
+                    "object_type": (
+                        "Mevcut kütüphane"
+                    ),
+
+                    "district": ilce_adi,
+
+                    "priority_score_display": (
+                        "İlçe alanına bakınız"
+                    ),
+
+                    "priority_rank_display": (
+                        "İlçe alanına bakınız"
+                    ),
+
+                    "priority_level": (
+                        "İlçe alanına bakınız"
+                    ),
+
+                    "population_display": (
+                        "İlçe alanına bakınız"
+                    ),
+
+                    "library_count_display": (
+                        "İlçe alanına bakınız"
+                    ),
+
+                    "note": (
+                        f"Adres: {adres}"
+                    ),
+                },
+            }
+        )
+
+
+    if len(kutuphane_noktalari) != 51:
+        raise ValueError(
+            "Harita için 51 güvenilir kütüphane "
+            "noktası bekleniyordu. "
+            f"Bulunan kayıt: "
+            f"{len(kutuphane_noktalari)}"
+        )
+
+
+    return kutuphane_noktalari
 
 
 # --------------------------------------------------
-# MEVCUT KÜTÜPHANE KATMANI
+# HARİTA AÇIKLAMA PANELİ
 # --------------------------------------------------
 
-kutuphane_katmani = pdk.Layer(
-    "ColumnLayer",
+def aciklama_panelini_getir():
 
-    data=kutuphane_noktalari,
-
-    get_position=[
-        "longitude",
-        "latitude",
-    ],
-
-    get_elevation="elevation",
-
-    get_fill_color="fill_color",
-
-    # Mevcut kütüphanelerin tabanı,
-    # ilçe alanlarına göre küçük tutulur.
-    radius=110,
-
-    disk_resolution=12,
-
-    elevation_scale=1,
-
-    extruded=True,
-
-    pickable=True,
-
-    auto_highlight=True,
-)
-
-
-# --------------------------------------------------
-# BAŞLANGIÇ KAMERA GÖRÜNÜMÜ
-# --------------------------------------------------
-
-baslangic_gorunumu = pdk.ViewState(
-    # İstanbul'un yaklaşık merkezi.
-    latitude=41.02,
-    longitude=28.97,
-
-    zoom=9.15,
-
-    # Haritaya eğimli bakış:
-    pitch=40,
-
-    # Haritayı fazla döndürmeden doğal yönünde göster.
-    bearing=0,
-)
-
-
-# --------------------------------------------------
-# ORTAK BİLGİ KUTUSU
-# --------------------------------------------------
-
-
-bilgi_kutusu = {
-    "html": """
-        <b>{properties.display_name}</b><br/>
-        Öncelik: {properties.priority_score_display}
-        — {properties.priority_level}<br/>
-        Sıra: {properties.priority_rank_display}<br/>
-        Nüfus: {properties.population_display}<br/>
-        İBB kütüphane kaydı:
-        {properties.library_count_display}<br/>
-        <span style="color: #bbbbbb;">
-            {properties.note}
-        </span>
-    """,
-
-    "style": {
-        "backgroundColor": "rgba(25, 25, 25, 0.92)",
-        "color": "white",
-        "fontSize": "11px",
-        "padding": "8px",
-        "maxWidth": "230px",
-        "borderRadius": "6px",
-    },
-}
-
-
-# --------------------------------------------------
-# HARİTA NESNESİNİ OLUŞTUR
-# --------------------------------------------------
-
-harita_3d = pdk.Deck(
-    layers=[
-        # İlçe alanları altta bulunur.
-        ilce_katmani,
-
-        # Mevcut kütüphaneler üstte gösterilir.
-        kutuphane_katmani,
-    ],
-
-    initial_view_state=baslangic_gorunumu,
-
-    map_provider="carto",
-
-    map_style="light",
-
-    tooltip=bilgi_kutusu,
-
-    show_error=True,
-)
-
-
-## --------------------------------------------------
-# HARİTA BAŞLIĞI VE RENK AÇIKLAMASI
-# --------------------------------------------------
-
-aciklama_paneli = """
+    return """
 <div id="urbanai-bilgi-paneli">
     <div class="urbanai-baslik">
         UrbanAI 3D İstanbul
@@ -480,17 +568,18 @@ aciklama_paneli = """
     </div>
 
     <div class="urbanai-kaynak">
+        Veri kaynağı: UrbanAI SQLite veri tabanı<br>
         Analiz yılı: 2025
     </div>
 </div>
 
- <a
+<a
     id="urbanai-ana-sayfa-butonu"
     href="index.html"
 >
     <span>←</span>
     Ana sayfaya dön
-</a>  
+</a>
 
 <style>
     #urbanai-bilgi-paneli {
@@ -518,31 +607,23 @@ aciklama_paneli = """
         box-shadow:
             0 4px 16px rgba(0, 0, 0, 0.28);
 
-        /*
-        Panel yalnızca bilgi vermek için kullanılıyor.
-        Fare hareketlerini engellememesi için harita
-        etkileşimleri panelin arkasında devam eder.
-        */
         pointer-events: none;
     }
 
     .urbanai-baslik {
         margin-bottom: 3px;
-
         font-size: 18px;
         font-weight: 700;
     }
 
     .urbanai-alt-baslik {
         color: rgba(255, 255, 255, 0.82);
-
         font-size: 13px;
         line-height: 1.35;
     }
 
     .urbanai-ayrac {
         height: 1px;
-
         margin: 11px 0;
 
         background:
@@ -565,8 +646,8 @@ aciklama_paneli = """
         width: 16px;
         height: 16px;
 
-        border: 1px solid
-            rgba(255, 255, 255, 0.65);
+        border:
+            1px solid rgba(255, 255, 255, 0.65);
 
         border-radius: 4px;
     }
@@ -622,13 +703,10 @@ aciklama_paneli = """
         color: rgba(255, 255, 255, 0.60);
 
         font-size: 10px;
+        line-height: 1.4;
     }
 
-    /*
-    Ekran dar olduğunda panelin fazla yer
-    kaplamaması için boyutunu küçült.
-    */
-        #urbanai-ana-sayfa-butonu {
+    #urbanai-ana-sayfa-butonu {
         position: fixed;
         top: 18px;
         right: 18px;
@@ -640,11 +718,15 @@ aciklama_paneli = """
 
         padding: 11px 15px;
 
-        border: 1px solid rgba(255, 255, 255, 0.22);
+        border:
+            1px solid rgba(255, 255, 255, 0.22);
+
         border-radius: 10px;
 
         color: white;
-        background: rgba(22, 27, 34, 0.92);
+
+        background:
+            rgba(22, 27, 34, 0.92);
 
         font-family:
             Arial,
@@ -653,6 +735,7 @@ aciklama_paneli = """
 
         font-size: 13px;
         font-weight: 700;
+
         text-decoration: none;
 
         box-shadow:
@@ -666,16 +749,19 @@ aciklama_paneli = """
     }
 
     #urbanai-ana-sayfa-butonu:hover {
-        background: rgba(35, 95, 159, 0.96);
-        transform: translateY(-2px);
+        background:
+            rgba(35, 95, 159, 0.96);
+
+        transform:
+            translateY(-2px);
     }
-    
+
     @media (max-width: 600px) {
         #urbanai-bilgi-paneli {
             top: 10px;
             left: 10px;
 
-            width: 235px;
+            width: 225px;
 
             padding: 11px 12px;
         }
@@ -692,93 +778,311 @@ aciklama_paneli = """
         .urbanai-not {
             font-size: 10px;
         }
+
+        #urbanai-ana-sayfa-butonu {
+            top: 10px;
+            right: 10px;
+
+            padding: 9px 11px;
+
+            font-size: 11px;
+        }
     }
 </style>
 """
 
 
 # --------------------------------------------------
-# HARİTA HTML KODUNU METİN OLARAK ÜRET
+# ANA ÇALIŞMA AKIŞI
 # --------------------------------------------------
 
-harita_html = harita_3d.to_html(
-    as_string=True,
-    open_browser=False,
-)
+def main():
+
+    baglanti = baglanti_olustur()
+
+    try:
+        hizmet_turu_id = (
+            kutuphane_hizmet_turu_id_getir(
+                baglanti
+            )
+        )
+
+        ilce_geojson = (
+            ilce_geojson_verisini_getir(
+                baglanti,
+                hizmet_turu_id,
+            )
+        )
+
+        kutuphane_noktalari = (
+            kutuphane_noktalarini_getir(
+                baglanti,
+                hizmet_turu_id,
+            )
+        )
+
+    finally:
+        baglanti.close()
 
 
-# --------------------------------------------------
-# AÇIKLAMA PANELİNİ HTML DOSYASINA EKLE
-# --------------------------------------------------
+    # --------------------------------------------------
+    # İLÇE GEOJSON KATMANI
+    # --------------------------------------------------
 
-if "</body>" not in harita_html:
-    raise ValueError(
-        "Pydeck tarafından üretilen HTML içinde "
-        "</body> etiketi bulunamadı."
+    ilce_katmani = pdk.Layer(
+        "GeoJsonLayer",
+
+        data=ilce_geojson,
+
+        filled=True,
+        stroked=True,
+        extruded=True,
+
+        get_fill_color=(
+            "properties.fill_color"
+        ),
+
+        get_elevation=(
+            "properties.elevation"
+        ),
+
+        get_line_color=[
+            255,
+            255,
+            255,
+            210,
+        ],
+
+        line_width_min_pixels=1,
+
+        pickable=True,
+
+        auto_highlight=True,
+
+        highlight_color=[
+            255,
+            255,
+            255,
+            80,
+        ],
+
+        wireframe=False,
+
+        opacity=0.82,
     )
 
 
-harita_html = harita_html.replace(
-    "</body>",
-    aciklama_paneli + "\n</body>",
-)
+    # --------------------------------------------------
+    # MEVCUT KÜTÜPHANE KATMANI
+    # --------------------------------------------------
+
+    kutuphane_katmani = pdk.Layer(
+        "ColumnLayer",
+
+        data=kutuphane_noktalari,
+
+        get_position=[
+            "longitude",
+            "latitude",
+        ],
+
+        get_elevation="elevation",
+
+        get_fill_color="fill_color",
+
+        radius=110,
+
+        disk_resolution=12,
+
+        elevation_scale=1,
+
+        extruded=True,
+
+        pickable=True,
+
+        auto_highlight=True,
+    )
 
 
-# --------------------------------------------------
-# HTML DOSYASINI KAYDET
-# --------------------------------------------------
+    # --------------------------------------------------
+    # BAŞLANGIÇ KAMERA GÖRÜNÜMÜ
+    # --------------------------------------------------
 
-harita_cikti_yolu.parent.mkdir(
-    parents=True,
-    exist_ok=True,
-)
+    baslangic_gorunumu = pdk.ViewState(
+        latitude=41.02,
+        longitude=28.97,
 
-harita_cikti_yolu.write_text(
-    harita_html,
-    encoding="utf-8",
-)
-# --------------------------------------------------
-# SONUÇLARI KONTROL ET
-# --------------------------------------------------
+        zoom=9.15,
 
-toplam_ilce_sayisi = len(
-    ilce_geojson["features"]
-)
+        pitch=40,
 
-puanli_ilce_sayisi = sum(
-    feature["properties"][
-        "priority_score"
-    ] is not None
-    for feature in ilce_geojson["features"]
-)
-
-dogrulama_gereken_sayi = (
-    toplam_ilce_sayisi
-    - puanli_ilce_sayisi
-)
+        bearing=0,
+    )
 
 
-print(
-    f"3D ilçe alanı sayısı: "
-    f"{toplam_ilce_sayisi}"
-)
+    # --------------------------------------------------
+    # ORTAK BİLGİ KUTUSU
+    # --------------------------------------------------
 
-print(
-    f"Öncelik puanı bulunan ilçe: "
-    f"{puanli_ilce_sayisi}"
-)
+    bilgi_kutusu = {
+        "html": """
+            <b>{properties.display_name}</b><br/>
+            Öncelik: {properties.priority_score_display}
+            — {properties.priority_level}<br/>
+            Sıra: {properties.priority_rank_display}<br/>
+            Nüfus: {properties.population_display}<br/>
+            İBB kütüphane kaydı:
+            {properties.library_count_display}<br/>
+            <span style="color: #bbbbbb;">
+                {properties.note}
+            </span>
+        """,
 
-print(
-    f"Veri doğrulaması gereken ilçe: "
-    f"{dogrulama_gereken_sayi}"
-)
+        "style": {
+            "backgroundColor": (
+                "rgba(25, 25, 25, 0.92)"
+            ),
 
-print(
-    f"Gösterilen mevcut kütüphane: "
-    f"{len(kutuphane_noktalari)}"
-)
+            "color": "white",
 
-print(
-    f"\n3D ilçe öncelik haritası kaydedildi: "
-    f"{harita_cikti_yolu}"
-)
+            "fontSize": "11px",
+
+            "padding": "8px",
+
+            "maxWidth": "230px",
+
+            "borderRadius": "6px",
+        },
+    }
+
+
+    # --------------------------------------------------
+    # HARİTA NESNESİNİ OLUŞTUR
+    # --------------------------------------------------
+
+    harita_3d = pdk.Deck(
+        layers=[
+            ilce_katmani,
+            kutuphane_katmani,
+        ],
+
+        initial_view_state=(
+            baslangic_gorunumu
+        ),
+
+        map_provider="carto",
+
+        map_style="light",
+
+        tooltip=bilgi_kutusu,
+
+        show_error=True,
+    )
+
+
+    # --------------------------------------------------
+    # HARİTA HTML KODUNU ÜRET
+    # --------------------------------------------------
+
+    harita_html = harita_3d.to_html(
+        as_string=True,
+        open_browser=False,
+    )
+
+
+    # --------------------------------------------------
+    # AÇIKLAMA PANELİNİ HTML'E EKLE
+    # --------------------------------------------------
+
+    if "</body>" not in harita_html:
+        raise ValueError(
+            "PyDeck tarafından üretilen HTML "
+            "içinde </body> etiketi bulunamadı."
+        )
+
+
+    aciklama_paneli = (
+        aciklama_panelini_getir()
+    )
+
+
+    harita_html = harita_html.replace(
+        "</body>",
+        aciklama_paneli + "\n</body>",
+    )
+
+
+    # --------------------------------------------------
+    # HTML DOSYASINI KAYDET
+    # --------------------------------------------------
+
+    harita_cikti_yolu.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+
+    harita_cikti_yolu.write_text(
+        harita_html,
+        encoding="utf-8",
+    )
+
+
+    # --------------------------------------------------
+    # SONUÇLARI KONTROL ET
+    # --------------------------------------------------
+
+    toplam_ilce_sayisi = len(
+        ilce_geojson["features"]
+    )
+
+
+    puanli_ilce_sayisi = sum(
+        feature["properties"][
+            "priority_score"
+        ] is not None
+
+        for feature
+        in ilce_geojson["features"]
+    )
+
+
+    dogrulama_gereken_sayi = (
+        toplam_ilce_sayisi
+        - puanli_ilce_sayisi
+    )
+
+
+    print(
+        "Veri kaynağı: "
+        "data/database/urbanai.db"
+    )
+
+    print(
+        f"3D ilçe alanı sayısı: "
+        f"{toplam_ilce_sayisi}"
+    )
+
+    print(
+        f"Öncelik puanı bulunan ilçe: "
+        f"{puanli_ilce_sayisi}"
+    )
+
+    print(
+        f"Veri doğrulaması gereken ilçe: "
+        f"{dogrulama_gereken_sayi}"
+    )
+
+    print(
+        f"Gösterilen mevcut kütüphane: "
+        f"{len(kutuphane_noktalari)}"
+    )
+
+    print(
+        "\n3D ilçe öncelik haritası "
+        f"kaydedildi: {harita_cikti_yolu}"
+    )
+
+
+if __name__ == "__main__":
+    main()
