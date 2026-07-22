@@ -1,8 +1,8 @@
 from html import escape
 from pathlib import Path
+import sqlite3
 
 import folium
-import pandas as pd
 
 from branca.element import Element
 from folium.plugins import MarkerCluster, Search
@@ -12,8 +12,8 @@ from folium.plugins import MarkerCluster, Search
 # 1. DOSYA YOLLARI
 # --------------------------------------------------
 
-veri_yolu = Path(
-    "data/processed/ibb_kutuphaneleri_koordinatli.csv"
+veritabani_yolu = Path(
+    "data/database/urbanai.db"
 )
 
 harita_yolu = Path(
@@ -22,272 +22,536 @@ harita_yolu = Path(
 
 
 # --------------------------------------------------
-# 2. KOORDİNATLI VERİYİ OKU
+# 2. VERİ TABANI BAĞLANTISI
 # --------------------------------------------------
 
-veri = pd.read_csv(veri_yolu)
+def baglanti_olustur():
+    """
+    UrbanAI SQLite veri tabanına bağlantı oluşturur.
+    """
+
+    if not veritabani_yolu.exists():
+        raise FileNotFoundError(
+            "Veri tabanı bulunamadı: "
+            f"{veritabani_yolu}\n"
+            "Önce veri tabanı oluşturma ve veri "
+            "aktarma dosyalarını çalıştırın."
+        )
+
+    baglanti = sqlite3.connect(
+        veritabani_yolu
+    )
+
+    # Sorgu sonuçlarındaki sütunlara
+    # isimleriyle erişmemizi sağlar.
+    baglanti.row_factory = sqlite3.Row
+
+    baglanti.execute(
+        "PRAGMA foreign_keys = ON;"
+    )
+
+    return baglanti
 
 
 # --------------------------------------------------
-# 3. GÜVENİLİR KOORDİNATLARI SEÇ
+# 3. GÜVENİLİR KÜTÜPHANELERİ GETİR
 # --------------------------------------------------
 
-# Nominatim tarafından döndürülen adresleri
-# boş değerlerden arındırarak metne dönüştür.
-bulunan_adres = (
-    veri["Bulunan Adres"]
-    .fillna("")
-    .astype(str)
-)
+def guvenilir_kutuphaneleri_getir(
+    baglanti
+):
+    """
+    Veri tabanından yalnızca güvenilir ve
+    koordinatı bulunan kütüphaneleri getirir.
+    """
+
+    sonuclar = baglanti.execute(
+        """
+        SELECT
+            facilities.id,
+
+            facilities.name
+                AS kutuphane_adi,
+
+            districts.name
+                AS ilce_adi,
+
+            facilities.address,
+
+            facilities.working_hours,
+
+            facilities.working_days,
+
+            facilities.latitude,
+
+            facilities.longitude,
+
+            facilities.coordinate_status
+
+        FROM facilities
+
+        INNER JOIN districts
+            ON districts.id =
+               facilities.district_id
+
+        INNER JOIN service_types
+            ON service_types.id =
+               facilities.service_type_id
+
+        WHERE service_types.name = ?
+
+          AND facilities.coordinate_status =
+              'verified'
+
+          AND facilities.latitude IS NOT NULL
+
+          AND facilities.longitude IS NOT NULL
+
+        ORDER BY facilities.name;
+        """,
+        (
+            "Kütüphane",
+        ),
+    ).fetchall()
+
+    if not sonuclar:
+        raise ValueError(
+            "Haritada gösterilecek güvenilir "
+            "koordinatlı kütüphane bulunamadı."
+        )
+
+    return sonuclar
 
 
-# Bulunan adresin gerçekten kütüphane veya
-# kitaplık kaydına benzeyip benzemediğini kontrol et.
-kutuphane_eslesmesi = bulunan_adres.str.contains(
-    r"kütüphane|kitaplık|kitaplığ|library",
-    case=False,
-    regex=True,
-)
+# --------------------------------------------------
+# 4. BOŞ METİNLERİ DÜZENLE
+# --------------------------------------------------
+
+def metni_hazirla(
+    deger,
+    varsayilan="Bilgi bulunamadı",
+):
+    """
+    None ve boş metinleri okunabilir bir
+    açıklamaya dönüştürür.
+    """
+
+    if deger is None:
+        return varsayilan
+
+    temiz_deger = str(deger).strip()
+
+    if temiz_deger == "":
+        return varsayilan
+
+    return temiz_deger
 
 
-# Haritada yalnızca:
-# - enlemi bulunan,
-# - boylamı bulunan,
-# - güvenilir görünen
-# kayıtları kullan.
-koordinatli_veri = veri[
-    veri["Enlem"].notna()
-    & veri["Boylam"].notna()
-    & kutuphane_eslesmesi
-].copy()
+# --------------------------------------------------
+# 5. ANA ÇALIŞMA AKIŞI
+# --------------------------------------------------
+
+def main():
+
+    # ----------------------------------------------
+    # VERİ TABANINDAN VERİYİ AL
+    # ----------------------------------------------
+
+    with baglanti_olustur() as baglanti:
+
+        kutuphaneler = (
+            guvenilir_kutuphaneleri_getir(
+                baglanti
+            )
+        )
 
 
-# Hiç uygun kayıt kalmamışsa programı anlaşılır
-# bir hata mesajıyla durdur.
-if koordinatli_veri.empty:
-    raise ValueError(
-        "Haritada gösterilecek güvenilir koordinatlı "
-        "kayıt bulunamadı."
+    # ----------------------------------------------
+    # HARİTANIN MERKEZİNİ HESAPLA
+    # ----------------------------------------------
+
+    merkez_enlem = sum(
+        float(
+            kutuphane["latitude"]
+        )
+        for kutuphane in kutuphaneler
+    ) / len(kutuphaneler)
+
+
+    merkez_boylam = sum(
+        float(
+            kutuphane["longitude"]
+        )
+        for kutuphane in kutuphaneler
+    ) / len(kutuphaneler)
+
+
+    # ----------------------------------------------
+    # TEMEL HARİTAYI OLUŞTUR
+    # ----------------------------------------------
+
+    harita = folium.Map(
+        location=[
+            merkez_enlem,
+            merkez_boylam,
+        ],
+
+        zoom_start=10,
+
+        tiles="OpenStreetMap",
     )
 
 
-# --------------------------------------------------
-# 4. HARİTANIN MERKEZİNİ HESAPLA
-# --------------------------------------------------
+    # ----------------------------------------------
+    # MARKER CLUSTER OLUŞTUR
+    # ----------------------------------------------
 
-merkez_enlem = koordinatli_veri["Enlem"].mean()
-merkez_boylam = koordinatli_veri["Boylam"].mean()
-
-
-# --------------------------------------------------
-# 5. TEMEL HARİTAYI OLUŞTUR
-# --------------------------------------------------
-
-harita = folium.Map(
-    location=[
-        merkez_enlem,
-        merkez_boylam,
-    ],
-    zoom_start=10,
-    tiles="OpenStreetMap",
-)
+    isaretci_kumesi = MarkerCluster(
+        name="Kütüphaneler"
+    ).add_to(harita)
 
 
-# --------------------------------------------------
-# 6. MARKER CLUSTER OLUŞTUR
-# --------------------------------------------------
+    # ----------------------------------------------
+    # ARAMA İÇİN GEOJSON LİSTESİ
+    # ----------------------------------------------
 
-# Görünen mavi işaretçiler bu kümenin
-# içerisinde tutulacak.
-isaretci_kumesi = MarkerCluster(
-    name="Kütüphaneler"
-).add_to(harita)
+    arama_ozellikleri = []
 
 
-# --------------------------------------------------
-# 7. ARAMA İÇİN BOŞ GEOJSON LİSTESİ
-# --------------------------------------------------
+    # ----------------------------------------------
+    # KÜTÜPHANELERİ HARİTAYA EKLE
+    # ----------------------------------------------
 
-# Arama kutusunun kullanacağı bütün kütüphane
-# kayıtlarını bu listede toplayacağız.
-arama_ozellikleri = []
+    for kutuphane in kutuphaneler:
+
+        # Arama sisteminde kullanılacak ham isim.
+        kutuphane_adi_ham = metni_hazirla(
+            kutuphane["kutuphane_adi"],
+            "İsimsiz kütüphane",
+        )
 
 
-# --------------------------------------------------
-# 8. KÜTÜPHANELERİ HARİTAYA EKLE
-# --------------------------------------------------
+        # Bilgi kutusunda gösterilecek metinleri
+        # HTML açısından güvenli hâle getir.
+        kutuphane_adi = escape(
+            kutuphane_adi_ham
+        )
 
-for _, satir in koordinatli_veri.iterrows():
+        ilce_adi = escape(
+            metni_hazirla(
+                kutuphane["ilce_adi"]
+            )
+        )
 
-    # Aramada kullanılacak ham isim.
-    # HTML escape uygulanmıyor çünkü bu değer
-    # HTML olarak gösterilmeyecek.
-    kutuphane_adi_ham = str(
-        satir["Kütüphane Adı"]
-    ).strip()
+        adres = escape(
+            metni_hazirla(
+                kutuphane["address"]
+            )
+        )
 
-    # Bilgi kutusunda gösterilecek metinleri
-    # güvenli HTML biçimine dönüştür.
-    kutuphane_adi = escape(
-        kutuphane_adi_ham
+        calisma_saatleri = escape(
+            metni_hazirla(
+                kutuphane["working_hours"]
+            )
+        )
+
+        calisma_gunleri = escape(
+            metni_hazirla(
+                kutuphane["working_days"]
+            )
+        )
+
+
+        enlem = float(
+            kutuphane["latitude"]
+        )
+
+        boylam = float(
+            kutuphane["longitude"]
+        )
+
+
+        # ------------------------------------------
+        # TIKLANDIĞINDA AÇILACAK BİLGİ KUTUSU
+        # ------------------------------------------
+
+        bilgi_kutusu = f"""
+        <div style="
+            font-family: Arial, Helvetica, sans-serif;
+            min-width: 230px;
+        ">
+            <strong>{kutuphane_adi}</strong>
+            <br><br>
+
+            <b>İlçe:</b>
+            {ilce_adi}
+            <br>
+
+            <b>Adres:</b>
+            {adres}
+            <br>
+
+            <b>Çalışma saatleri:</b>
+            {calisma_saatleri}
+            <br>
+
+            <b>Çalışma günleri:</b>
+            {calisma_gunleri}
+        </div>
+        """
+
+
+        # ------------------------------------------
+        # GÖRÜNEN KÜTÜPHANE İŞARETÇİSİ
+        # ------------------------------------------
+
+        folium.Marker(
+            location=[
+                enlem,
+                boylam,
+            ],
+
+            tooltip=kutuphane_adi,
+
+            popup=folium.Popup(
+                bilgi_kutusu,
+                max_width=350,
+            ),
+        ).add_to(
+            isaretci_kumesi
+        )
+
+
+        # ------------------------------------------
+        # ARAMA İÇİN GEOJSON KAYDI
+        # ------------------------------------------
+
+        arama_ozellikleri.append(
+            {
+                "type": "Feature",
+
+                "geometry": {
+                    "type": "Point",
+
+                    # GeoJSON koordinat sırası:
+                    # önce boylam, sonra enlem.
+                    "coordinates": [
+                        boylam,
+                        enlem,
+                    ],
+                },
+
+                "properties": {
+                    "kutuphane_adi": (
+                        kutuphane_adi_ham
+                    ),
+                },
+            }
+        )
+
+
+    # ----------------------------------------------
+    # ARAMA GEOJSON VERİSİ
+    # ----------------------------------------------
+
+    arama_verisi = {
+        "type": "FeatureCollection",
+        "features": arama_ozellikleri,
+    }
+
+
+    # Arama noktalarını görünmez yapıyoruz.
+    # Gerçek görünen işaretçiler MarkerCluster
+    # katmanında bulunuyor.
+    arama_geojson = folium.GeoJson(
+        data=arama_verisi,
+
+        name="Kütüphane Arama Verisi",
+
+        marker=folium.CircleMarker(
+            radius=1,
+            opacity=0,
+            fill=True,
+            fill_opacity=0,
+        ),
+    ).add_to(harita)
+
+
+    # ----------------------------------------------
+    # ARAMA KUTUSUNU EKLE
+    # ----------------------------------------------
+
+    Search(
+        layer=arama_geojson,
+
+        search_label="kutuphane_adi",
+
+        geom_type="Point",
+
+        search_zoom=16,
+
+        placeholder="Kütüphane ara...",
+
+        collapsed=False,
+    ).add_to(harita)
+
+
+    # ----------------------------------------------
+    # HARİTAYI BÜTÜN NOKTALARA SIĞDIR
+    # ----------------------------------------------
+
+    sinirlar = [
+        [
+            float(
+                kutuphane["latitude"]
+            ),
+
+            float(
+                kutuphane["longitude"]
+            ),
+        ]
+
+        for kutuphane
+        in kutuphaneler
+    ]
+
+
+    harita.fit_bounds(
+        sinirlar
     )
 
-    ilce_adi = escape(
-        str(satir["İlçe Adı"])
-    )
 
-    adres = escape(
-        str(satir["Adres"])
-    )
+    # ----------------------------------------------
+    # ANA SAYFAYA DÖN BUTONU
+    # ----------------------------------------------
 
-    calisma_saatleri = escape(
-        str(satir["Çalışma Saatleri"])
-    )
+    ana_sayfa_butonu = """
+    <a
+        id="urbanai-ana-sayfa-butonu"
+        href="index.html"
+    >
+        <span>←</span>
+        Ana sayfaya dön
+    </a>
 
-    calisma_gunleri = escape(
-        str(satir["Çalışma Günleri"])
-    )
+    <style>
+        #urbanai-ana-sayfa-butonu {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 10000;
 
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
 
-    # Marker tıklandığında açılacak bilgi kutusu.
-    bilgi_kutusu = f"""
-    <strong>{kutuphane_adi}</strong><br>
-    İlçe: {ilce_adi}<br>
-    Adres: {adres}<br>
-    Çalışma saatleri: {calisma_saatleri}<br>
-    Çalışma günleri: {calisma_gunleri}
+            padding: 11px 15px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.22);
+
+            border-radius: 10px;
+
+            color: white;
+
+            background:
+                rgba(22, 27, 34, 0.92);
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            text-decoration: none;
+
+            box-shadow:
+                0 4px 16px
+                rgba(0, 0, 0, 0.25);
+
+            backdrop-filter: blur(8px);
+
+            transition:
+                background 0.18s ease,
+                transform 0.18s ease;
+        }
+
+        #urbanai-ana-sayfa-butonu:hover {
+            background:
+                rgba(35, 95, 159, 0.96);
+
+            transform:
+                translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            #urbanai-ana-sayfa-butonu {
+                top: 10px;
+                right: 10px;
+
+                padding: 9px 12px;
+
+                font-size: 11px;
+            }
+        }
+    </style>
     """
 
 
-    # ----------------------------------------------
-    # GÖRÜNEN KÜTÜPHANE İŞARETÇİSİ
-    # ----------------------------------------------
-
-    folium.Marker(
-        location=[
-            float(satir["Enlem"]),
-            float(satir["Boylam"]),
-        ],
-        tooltip=kutuphane_adi,
-        popup=folium.Popup(
-            bilgi_kutusu,
-            max_width=350,
-        ),
-    ).add_to(isaretci_kumesi)
-
-
-    # ----------------------------------------------
-    # ARAMA İÇİN GEOJSON KAYDI
-    # ----------------------------------------------
-
-    arama_ozellikleri.append(
-        {
-            "type": "Feature",
-
-            "geometry": {
-                "type": "Point",
-
-                # GeoJSON'da koordinat sıralaması:
-                # önce boylam, sonra enlem.
-                "coordinates": [
-                    float(satir["Boylam"]),
-                    float(satir["Enlem"]),
-                ],
-            },
-
-            "properties": {
-                "kutuphane_adi": kutuphane_adi_ham,
-            },
-        }
+    harita.get_root().html.add_child(
+        Element(
+            ana_sayfa_butonu
+        )
     )
 
 
-# --------------------------------------------------
-# 9. ARAMA GEOJSON KATMANINI OLUŞTUR
-# --------------------------------------------------
+    # ----------------------------------------------
+    # HARİTAYI HTML OLARAK KAYDET
+    # ----------------------------------------------
 
-arama_verisi = {
-    "type": "FeatureCollection",
-    "features": arama_ozellikleri,
-}
-
-
-# Arama noktaları haritada görünmesin diye
-# tamamen saydam CircleMarker kullanıyoruz.
-arama_geojson = folium.GeoJson(
-    data=arama_verisi,
-    name="Kütüphane Arama Verisi",
-    marker=folium.CircleMarker(
-        radius=1,
-        opacity=0,
-        fill=True,
-        fill_opacity=0,
-    ),
-).add_to(harita)
+    harita_yolu.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
 
 
-# --------------------------------------------------
-# 10. ARAMA KUTUSUNU EKLE
-# --------------------------------------------------
-
-Search(
-    layer=arama_geojson,
-
-    # GeoJSON properties içindeki alan adı.
-    search_label="kutuphane_adi",
-
-    # Aranan nesneler nokta geometrisidir.
-    geom_type="Point",
-
-    # Sonuç seçildiğinde yakınlaşma seviyesi.
-    search_zoom=16,
-
-    placeholder="Kütüphane ara...",
-
-    # Arama kutusu başlangıçta açık görünsün.
-    collapsed=False,
-).add_to(harita)
+    harita.save(
+        harita_yolu
+    )
 
 
-# --------------------------------------------------
-# 11. HARİTAYI BÜTÜN NOKTALARA SIĞDIR
-# --------------------------------------------------
+    # ----------------------------------------------
+    # TERMINAL BİLGİLERİ
+    # ----------------------------------------------
 
-sinirlar = koordinatli_veri[
-    ["Enlem", "Boylam"]
-].values.tolist()
+    print(
+        "2D kütüphane haritası "
+        "başarıyla oluşturuldu."
+    )
 
-harita.fit_bounds(sinirlar)
+    print(
+        "Veri kaynağı: "
+        "data/database/urbanai.db"
+    )
+
+    print(
+        f"Haritadaki güvenilir kütüphane: "
+        f"{len(kutuphaneler)}"
+    )
+
+    print(
+        f"Arama sistemindeki kayıt sayısı: "
+        f"{len(arama_ozellikleri)}"
+    )
+
+    print(
+        f"Harita dosyası: "
+        f"{harita_yolu}"
+    )
 
 
-# --------------------------------------------------
-# 12. HARİTAYI HTML OLARAK KAYDET
-# --------------------------------------------------
-
-harita_yolu.parent.mkdir(
-    parents=True,
-    exist_ok=True,
-)
-
-harita.save(harita_yolu)
-
-
-# --------------------------------------------------
-# 13. TERMINAL BİLGİLERİ
-# --------------------------------------------------
-
-print("Harita başarıyla oluşturuldu.")
-
-print(
-    f"Haritadaki kütüphane sayısı: "
-    f"{len(koordinatli_veri)}"
-)
-
-print(
-    f"Arama sistemindeki kayıt sayısı: "
-    f"{len(arama_ozellikleri)}"
-)
-
-print(
-    f"Harita dosyası: {harita_yolu}"
-)
+if __name__ == "__main__":
+    main()

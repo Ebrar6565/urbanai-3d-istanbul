@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_4664b0c7d779a5cdbac648b82b84fcf0 {
+                #map_4e9843202bf9f35183e290a2550bb63b {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -59,16 +59,90 @@
 <body>
     
     
-            <div class="folium-map" id="map_4664b0c7d779a5cdbac648b82b84fcf0" ></div>
+    <a
+        id="urbanai-ana-sayfa-butonu"
+        href="index.html"
+    >
+        <span>←</span>
+        Ana sayfaya dön
+    </a>
+
+    <style>
+        #urbanai-ana-sayfa-butonu {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 10000;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 11px 15px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.22);
+
+            border-radius: 10px;
+
+            color: white;
+
+            background:
+                rgba(22, 27, 34, 0.92);
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            text-decoration: none;
+
+            box-shadow:
+                0 4px 16px
+                rgba(0, 0, 0, 0.25);
+
+            backdrop-filter: blur(8px);
+
+            transition:
+                background 0.18s ease,
+                transform 0.18s ease;
+        }
+
+        #urbanai-ana-sayfa-butonu:hover {
+            background:
+                rgba(35, 95, 159, 0.96);
+
+            transform:
+                translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            #urbanai-ana-sayfa-butonu {
+                top: 10px;
+                right: 10px;
+
+                padding: 9px 12px;
+
+                font-size: 11px;
+            }
+        }
+    </style>
+    
+    
+            <div class="folium-map" id="map_4e9843202bf9f35183e290a2550bb63b" ></div>
         
 </body>
 <script>
     
     
-            var map_4664b0c7d779a5cdbac648b82b84fcf0 = L.map(
-                "map_4664b0c7d779a5cdbac648b82b84fcf0",
+            var map_4e9843202bf9f35183e290a2550bb63b = L.map(
+                "map_4e9843202bf9f35183e290a2550bb63b",
                 {
-                    center: [41.01827972745099, 28.96257179215686],
+                    center: [41.01827972745098, 28.96257179215686],
                     crs: L.CRS.EPSG3857,
                     ...{
   "zoom": 10,
@@ -83,7 +157,7 @@
 
         
     
-            var tile_layer_ccd5ac28c09f60ffa0ddadd0ebb4dd84 = L.tileLayer(
+            var tile_layer_e2881b33c70293eed20557569b4998e8 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -100,1094 +174,40 @@
             );
         
     
-            tile_layer_ccd5ac28c09f60ffa0ddadd0ebb4dd84.addTo(map_4664b0c7d779a5cdbac648b82b84fcf0);
+            tile_layer_e2881b33c70293eed20557569b4998e8.addTo(map_4e9843202bf9f35183e290a2550bb63b);
         
     
-            var marker_cluster_c327d09f82804136c66f92ed73119426 = L.markerClusterGroup(
+            var marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc = L.markerClusterGroup(
                 {
 }
             );
         
     
-            var marker_4fdc03ce4a954ebfef67dc6b17ba67ad = L.marker(
-                [40.8690261, 29.1244133],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_c6c1d278904f818834d541bc662a6116 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_30b57c2fe430eaefb916d4c5609c816d = $(`<div id="html_30b57c2fe430eaefb916d4c5609c816d" style="width: 100.0%; height: 100.0%;">     <strong>Taş Mektep Kütüphanesi</strong><br>     İlçe: Adalar<br>     Adres: Kadıyoran Caddesi, Büyükada<br>     Çalışma saatleri: 09:00-18:00<br>     Çalışma günleri: Salı-Pazar     </div>`)[0];
-                popup_c6c1d278904f818834d541bc662a6116.setContent(html_30b57c2fe430eaefb916d4c5609c816d);
-            
-        
-
-        marker_4fdc03ce4a954ebfef67dc6b17ba67ad.bindPopup(popup_c6c1d278904f818834d541bc662a6116)
-        ;
-
-        
-    
-    
-            marker_4fdc03ce4a954ebfef67dc6b17ba67ad.bindTooltip(
-                `<div>
-                     Taş Mektep Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_68be79ded0fc3f2ce3ba14baaafe4c1b = L.marker(
-                [41.1862817, 28.7647058],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_40537753169cc76cbea72919c34e927c = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_e4a6fedb68d9bb5c21f9653ffe5bde6b = $(`<div id="html_e4a6fedb68d9bb5c21f9653ffe5bde6b" style="width: 100.0%; height: 100.0%;">     <strong>Cemil Meriç Kütüphanesi</strong><br>     İlçe: Arnavutköy<br>     Adres: Yunus Emre Mah., Erdener Sok. F Blok, Arnavutköy/ Boğazköy Kültür ve Yaşam Merkezi<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_40537753169cc76cbea72919c34e927c.setContent(html_e4a6fedb68d9bb5c21f9653ffe5bde6b);
-            
-        
-
-        marker_68be79ded0fc3f2ce3ba14baaafe4c1b.bindPopup(popup_40537753169cc76cbea72919c34e927c)
-        ;
-
-        
-    
-    
-            marker_68be79ded0fc3f2ce3ba14baaafe4c1b.bindTooltip(
-                `<div>
-                     Cemil Meriç Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_c1771dcf0f4dfc28b84ea223c4c49e75 = L.marker(
-                [41.1793593, 28.7460023],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_7d2dc2fdff55f2b236b8737d232d384f = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_1b73463e321c020be983fa6488101885 = $(`<div id="html_1b73463e321c020be983fa6488101885" style="width: 100.0%; height: 100.0%;">     <strong>Rıfat Ilgaz Kütüphanesi</strong><br>     İlçe: Arnavutköy<br>     Adres: Arnavutköy mahallesi Eski Edirne Caddesi No:1187<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_7d2dc2fdff55f2b236b8737d232d384f.setContent(html_1b73463e321c020be983fa6488101885);
-            
-        
-
-        marker_c1771dcf0f4dfc28b84ea223c4c49e75.bindPopup(popup_7d2dc2fdff55f2b236b8737d232d384f)
-        ;
-
-        
-    
-    
-            marker_c1771dcf0f4dfc28b84ea223c4c49e75.bindTooltip(
-                `<div>
-                     Rıfat Ilgaz Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_8bab9c46848332a2a4e62a4d4b4c0a6f = L.marker(
-                [41.0312375, 28.702602],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_71aefd20ad1b43fe1c30fb1e7142e74f = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_8f9c8f01392063d489cde8de699497e6 = $(`<div id="html_8f9c8f01392063d489cde8de699497e6" style="width: 100.0%; height: 100.0%;">     <strong>Fakir Baykurt Kütüphanesi</strong><br>     İlçe: Avcılar<br>     Adres: Yeşilkent Mahallesi Kazım Karabekir Caddesi No:180 Avcılar/İstanbul<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_71aefd20ad1b43fe1c30fb1e7142e74f.setContent(html_8f9c8f01392063d489cde8de699497e6);
-            
-        
-
-        marker_8bab9c46848332a2a4e62a4d4b4c0a6f.bindPopup(popup_71aefd20ad1b43fe1c30fb1e7142e74f)
-        ;
-
-        
-    
-    
-            marker_8bab9c46848332a2a4e62a4d4b4c0a6f.bindTooltip(
-                `<div>
-                     Fakir Baykurt Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_37689b2ccab6b7c3f989ac7af289681a = L.marker(
-                [41.0011771, 28.7113098],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_947581ee9ab6f8147005bfca14206ab0 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_0eb13d22d6d313e80fa45cdc5caf4bca = $(`<div id="html_0eb13d22d6d313e80fa45cdc5caf4bca" style="width: 100.0%; height: 100.0%;">     <strong>Sabahattin Eyüboğlu Kütüphanesi</strong><br>     İlçe: Avcılar<br>     Adres: Mustafa Kemal Paşa Mahallesi, Firuzköy Bulvarı No:89 /Avcılar<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_947581ee9ab6f8147005bfca14206ab0.setContent(html_0eb13d22d6d313e80fa45cdc5caf4bca);
-            
-        
-
-        marker_37689b2ccab6b7c3f989ac7af289681a.bindPopup(popup_947581ee9ab6f8147005bfca14206ab0)
-        ;
-
-        
-    
-    
-            marker_37689b2ccab6b7c3f989ac7af289681a.bindTooltip(
-                `<div>
-                     Sabahattin Eyüboğlu Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_ccb2399c0af14a2ef294b10288b47462 = L.marker(
-                [40.9809416, 28.8743693],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_657724e1e135d91138385c804dadde40 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_c23d35ed848833a0d350a8aac2f0c9dc = $(`<div id="html_c23d35ed848833a0d350a8aac2f0c9dc" style="width: 100.0%; height: 100.0%;">     <strong>Bakırköy Ödünç Kütüphane</strong><br>     İlçe: Bakırköy<br>     Adres: Zuhuratbaba, 34147 Bakırköy/İstanbul<br>     Çalışma saatleri: 10:00-18:00<br>     Çalışma günleri: Pazartesi-Cuma     </div>`)[0];
-                popup_657724e1e135d91138385c804dadde40.setContent(html_c23d35ed848833a0d350a8aac2f0c9dc);
-            
-        
-
-        marker_ccb2399c0af14a2ef294b10288b47462.bindPopup(popup_657724e1e135d91138385c804dadde40)
-        ;
-
-        
-    
-    
-            marker_ccb2399c0af14a2ef294b10288b47462.bindTooltip(
-                `<div>
-                     Bakırköy Ödünç Kütüphane
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_5665b59f6c829cfb3050f03588cde679 = L.marker(
-                [40.9755004, 28.860091],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_352cee9530950f427db4caf3e8b08aa9 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_365889a957cd898740e2eb33c62dfc21 = $(`<div id="html_365889a957cd898740e2eb33c62dfc21" style="width: 100.0%; height: 100.0%;">     <strong>Baruthane Kütüphane</strong><br>     İlçe: Bakırköy<br>     Adres: Ataköy 2-5-6. Kısım Mahallesi, Rauf Orbay Caddesi Bakırköy/İstanbul<br>     Çalışma saatleri: 10:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_352cee9530950f427db4caf3e8b08aa9.setContent(html_365889a957cd898740e2eb33c62dfc21);
-            
-        
-
-        marker_5665b59f6c829cfb3050f03588cde679.bindPopup(popup_352cee9530950f427db4caf3e8b08aa9)
-        ;
-
-        
-    
-    
-            marker_5665b59f6c829cfb3050f03588cde679.bindTooltip(
-                `<div>
-                     Baruthane Kütüphane
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_581c9f431b16b2b2fa09d0c350bc7efc = L.marker(
-                [40.9747892, 28.7871655],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_4951c636e5140f000e6967abb65afcfa = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_f573bfc814c7abf9004158061b8d1f21 = $(`<div id="html_f573bfc814c7abf9004158061b8d1f21" style="width: 100.0%; height: 100.0%;">     <strong>İPA İstanbul Kitaplığı</strong><br>     İlçe: Bakırköy<br>     Adres: Basınköy, Valilik Yolu Cd. No:2, 34153 Bakırköy/İstanbul<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Pazartesi-Cumartesi     </div>`)[0];
-                popup_4951c636e5140f000e6967abb65afcfa.setContent(html_f573bfc814c7abf9004158061b8d1f21);
-            
-        
-
-        marker_581c9f431b16b2b2fa09d0c350bc7efc.bindPopup(popup_4951c636e5140f000e6967abb65afcfa)
-        ;
-
-        
-    
-    
-            marker_581c9f431b16b2b2fa09d0c350bc7efc.bindTooltip(
-                `<div>
-                     İPA İstanbul Kitaplığı
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_204a569b82625112a2e49382a2f988c9 = L.marker(
-                [41.038943, 28.8956236],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_1d97c73c34f891690c864c7029c14785 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_2cd981d7a5d8f7be2d71e84782813b04 = $(`<div id="html_2cd981d7a5d8f7be2d71e84782813b04" style="width: 100.0%; height: 100.0%;">     <strong>Evliya Çelebi Kütüphanesi</strong><br>     İlçe: Bayrampaşa<br>     Adres: Büyük İstanbul Otogarı A1 Kız Kulesi Esenler/İstanbul<br>     Çalışma saatleri: 09:00-17:00<br>     Çalışma günleri: Pazartesi-Cuma     </div>`)[0];
-                popup_1d97c73c34f891690c864c7029c14785.setContent(html_2cd981d7a5d8f7be2d71e84782813b04);
-            
-        
-
-        marker_204a569b82625112a2e49382a2f988c9.bindPopup(popup_1d97c73c34f891690c864c7029c14785)
-        ;
-
-        
-    
-    
-            marker_204a569b82625112a2e49382a2f988c9.bindTooltip(
-                `<div>
-                     Evliya Çelebi Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_07a268f53688a52452016e2193e1c570 = L.marker(
-                [41.0457831, 28.902505],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_acee5ee0b5c7adfa98bcedd13b94bc6d = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_3cbf847ab3e2a256343a4708023df9bb = $(`<div id="html_3cbf847ab3e2a256343a4708023df9bb" style="width: 100.0%; height: 100.0%;">     <strong>Suat Derviş Kütüphanesi</strong><br>     İlçe: Bayrampaşa<br>     Adres: Tuna Cd. 104-106, Muratpaşa, 34040 Bayrampaşa/İstanbul<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_acee5ee0b5c7adfa98bcedd13b94bc6d.setContent(html_3cbf847ab3e2a256343a4708023df9bb);
-            
-        
-
-        marker_07a268f53688a52452016e2193e1c570.bindPopup(popup_acee5ee0b5c7adfa98bcedd13b94bc6d)
-        ;
-
-        
-    
-    
-            marker_07a268f53688a52452016e2193e1c570.bindTooltip(
-                `<div>
-                     Suat Derviş Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_e0f5f52cdc010f2994b3c944a8ec8213 = L.marker(
-                [41.0728385, 28.88711],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_6b2086721561135557cadd42df3f0913 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_c11001efd9b988622923edc014edaf61 = $(`<div id="html_c11001efd9b988622923edc014edaf61" style="width: 100.0%; height: 100.0%;">     <strong>Sâmiha Ayverdi Kütüphanesi</strong><br>     İlçe: Bayrampaşa<br>     Adres: Cevatpaşa, Eski Edirne Asf. No:385, 34045 Bayrampaşa/İstanbul<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_6b2086721561135557cadd42df3f0913.setContent(html_c11001efd9b988622923edc014edaf61);
-            
-        
-
-        marker_e0f5f52cdc010f2994b3c944a8ec8213.bindPopup(popup_6b2086721561135557cadd42df3f0913)
-        ;
-
-        
-    
-    
-            marker_e0f5f52cdc010f2994b3c944a8ec8213.bindTooltip(
-                `<div>
-                     Sâmiha Ayverdi Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_1f8c871d7d724ed69df25163e0ee7c82 = L.marker(
-                [41.1045658, 28.7854389],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_01caafbcbc5d1888f5ad99cb71989c8f = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_b9cb50148586922832c0afcc2ad8f9af = $(`<div id="html_b9cb50148586922832c0afcc2ad8f9af" style="width: 100.0%; height: 100.0%;">     <strong>Rasim Özdenören Kütüphanesi</strong><br>     İlçe: Başakşehir<br>     Adres: Başakşehir Mah. Mimar Sinan Cad. Ilgaz Sok. 2.Etap Başakşehir Kültür Merkezi, Başakşehir - İstanbul<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_01caafbcbc5d1888f5ad99cb71989c8f.setContent(html_b9cb50148586922832c0afcc2ad8f9af);
-            
-        
-
-        marker_1f8c871d7d724ed69df25163e0ee7c82.bindPopup(popup_01caafbcbc5d1888f5ad99cb71989c8f)
-        ;
-
-        
-    
-    
-            marker_1f8c871d7d724ed69df25163e0ee7c82.bindTooltip(
-                `<div>
-                     Rasim Özdenören Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_2648e073100fcc500915fc3808abcbbf = L.marker(
-                [41.0681151, 28.7529337],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_36149998de49f8d8b40ea65be4e912c4 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_bd39f7c3cc3b6e1871ac59d9579d0796 = $(`<div id="html_bd39f7c3cc3b6e1871ac59d9579d0796" style="width: 100.0%; height: 100.0%;">     <strong>Sabahattin Ali Kütüphanesi</strong><br>     İlçe: Başakşehir<br>     Adres: Altınşehir Mah. Osmanlı Cd. No: 49 / Başakşehir<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_36149998de49f8d8b40ea65be4e912c4.setContent(html_bd39f7c3cc3b6e1871ac59d9579d0796);
-            
-        
-
-        marker_2648e073100fcc500915fc3808abcbbf.bindPopup(popup_36149998de49f8d8b40ea65be4e912c4)
-        ;
-
-        
-    
-    
-            marker_2648e073100fcc500915fc3808abcbbf.bindTooltip(
-                `<div>
-                     Sabahattin Ali Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_2b3c9175d7e00346d644a9ff69278084 = L.marker(
-                [41.0790958, 29.0740307],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_647f2bc5bee56c231e048559d78d5a2b = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_0f368dd57c9f4fd2e932c589e4d30b69 = $(`<div id="html_0f368dd57c9f4fd2e932c589e4d30b69" style="width: 100.0%; height: 100.0%;">     <strong>Feza Gürsey Kütüphanesi</strong><br>     İlçe: Beykoz<br>     Adres: Göksu Cd. 50-54, Göksu, 34815 Beykoz/İstanbul<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_647f2bc5bee56c231e048559d78d5a2b.setContent(html_0f368dd57c9f4fd2e932c589e4d30b69);
-            
-        
-
-        marker_2b3c9175d7e00346d644a9ff69278084.bindPopup(popup_647f2bc5bee56c231e048559d78d5a2b)
-        ;
-
-        
-    
-    
-            marker_2b3c9175d7e00346d644a9ff69278084.bindTooltip(
-                `<div>
-                     Feza Gürsey Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_f4e840d696d0fb6e3e37481223f7af8f = L.marker(
-                [41.1082453, 29.0835867],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_f455eddd8f9e3c222a564577ae69077c = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_7fcdbdbcbfd823b1ab2aa90043fd9c26 = $(`<div id="html_7fcdbdbcbfd823b1ab2aa90043fd9c26" style="width: 100.0%; height: 100.0%;">     <strong>Çubuklu Silolar Kütüphanesi</strong><br>     İlçe: Beykoz<br>     Adres: Çubuklu Mah, Şehit Ersin Güner Cad, Beykoz/İstanbul<br>     Çalışma saatleri: 10:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_f455eddd8f9e3c222a564577ae69077c.setContent(html_7fcdbdbcbfd823b1ab2aa90043fd9c26);
-            
-        
-
-        marker_f4e840d696d0fb6e3e37481223f7af8f.bindPopup(popup_f455eddd8f9e3c222a564577ae69077c)
-        ;
-
-        
-    
-    
-            marker_f4e840d696d0fb6e3e37481223f7af8f.bindTooltip(
-                `<div>
-                     Çubuklu Silolar Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_b330099698d3a6bfe9a6d0a0f44018b4 = L.marker(
-                [41.0409795, 28.9603068],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_829c0b5a43133c4b34081465b8f965d7 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_c6464c3604dc31d8a1194d9559109473 = $(`<div id="html_c6464c3604dc31d8a1194d9559109473" style="width: 100.0%; height: 100.0%;">     <strong>Okçular Tekkesi Kütüphanesi</strong><br>     İlçe: Beyoğlu<br>     Adres: Keçecipiri Mahallesi Fatih Sultan Minberi Cad. No: 1 Beyoğlu/İstanbul<br>     Çalışma saatleri: 09:00-17:00<br>     Çalışma günleri: Pazartesi-Cuma     </div>`)[0];
-                popup_829c0b5a43133c4b34081465b8f965d7.setContent(html_c6464c3604dc31d8a1194d9559109473);
-            
-        
-
-        marker_b330099698d3a6bfe9a6d0a0f44018b4.bindPopup(popup_829c0b5a43133c4b34081465b8f965d7)
-        ;
-
-        
-    
-    
-            marker_b330099698d3a6bfe9a6d0a0f44018b4.bindTooltip(
-                `<div>
-                     Okçular Tekkesi Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_5ba6534a3abd3aa6bd40e26c20617c97 = L.marker(
-                [41.0334055, 28.9694044],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_2f4052cf2f3af8fd9329a5c2f48d7fbf = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_57aa3390d4a00537124d2647bbe04ef2 = $(`<div id="html_57aa3390d4a00537124d2647bbe04ef2" style="width: 100.0%; height: 100.0%;">     <strong>Peyami Safa Kütüphanesi</strong><br>     İlçe: Beyoğlu<br>     Adres: Yahya Kemal Mahallesi Bahriye caddesi No:24 Kasımpaşa-Beyoğlu/İstanbul<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_2f4052cf2f3af8fd9329a5c2f48d7fbf.setContent(html_57aa3390d4a00537124d2647bbe04ef2);
-            
-        
-
-        marker_5ba6534a3abd3aa6bd40e26c20617c97.bindPopup(popup_2f4052cf2f3af8fd9329a5c2f48d7fbf)
-        ;
-
-        
-    
-    
-            marker_5ba6534a3abd3aa6bd40e26c20617c97.bindTooltip(
-                `<div>
-                     Peyami Safa Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_4ce507ba17d7847cacd3bd00cd167c1e = L.marker(
-                [41.0394435, 28.9855591],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_ec69a8e674ef99a69b29b39c15cdbbb8 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_6cdcc8a068c096c6f0e515834c8bd6e6 = $(`<div id="html_6cdcc8a068c096c6f0e515834c8bd6e6" style="width: 100.0%; height: 100.0%;">     <strong>Sevgi Soysal Kütüphanesi</strong><br>     İlçe: Beyoğlu<br>     Adres: Kocatepe, Aydede Cd. No:2, 34437 Beyoğlu/İstanbul<br>     Çalışma saatleri: 7/24<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_ec69a8e674ef99a69b29b39c15cdbbb8.setContent(html_6cdcc8a068c096c6f0e515834c8bd6e6);
-            
-        
-
-        marker_4ce507ba17d7847cacd3bd00cd167c1e.bindPopup(popup_ec69a8e674ef99a69b29b39c15cdbbb8)
-        ;
-
-        
-    
-    
-            marker_4ce507ba17d7847cacd3bd00cd167c1e.bindTooltip(
-                `<div>
-                     Sevgi Soysal Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_ec742deb09d8a4e7fdafd396d002bb88 = L.marker(
-                [41.041202, 29.0072169],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_42a4f6f52f390181bf69f0756895cb36 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_6bd74894de13d7e29af6d0897b2dd88f = $(`<div id="html_6bd74894de13d7e29af6d0897b2dd88f" style="width: 100.0%; height: 100.0%;">     <strong>Beşiktaş İskele Kütüphanesi</strong><br>     İlçe: Beşiktaş<br>     Adres: Sinanpaşa, İskele Cd. No:16, 34353 Beşiktaş/İstanbul<br>     Çalışma saatleri: 09:00-22:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_42a4f6f52f390181bf69f0756895cb36.setContent(html_6bd74894de13d7e29af6d0897b2dd88f);
-            
-        
-
-        marker_ec742deb09d8a4e7fdafd396d002bb88.bindPopup(popup_42a4f6f52f390181bf69f0756895cb36)
-        ;
-
-        
-    
-    
-            marker_ec742deb09d8a4e7fdafd396d002bb88.bindTooltip(
-                `<div>
-                     Beşiktaş İskele Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_1de87d897f444d040e13b16c80119ae3 = L.marker(
-                [41.0336452, 28.6511839],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_ca611cfd9ad1be8df05ab90b03a24989 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_5df8848adc40a3d849720117bab1c981 = $(`<div id="html_5df8848adc40a3d849720117bab1c981" style="width: 100.0%; height: 100.0%;">     <strong>Gülten Akın Kütüphanesi</strong><br>     İlçe: Esenyurt<br>     Adres: Kıraç Mahallesi Gazi caddesi No:81/A Esenyurt/İstanbul<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_ca611cfd9ad1be8df05ab90b03a24989.setContent(html_5df8848adc40a3d849720117bab1c981);
-            
-        
-
-        marker_1de87d897f444d040e13b16c80119ae3.bindPopup(popup_ca611cfd9ad1be8df05ab90b03a24989)
-        ;
-
-        
-    
-    
-            marker_1de87d897f444d040e13b16c80119ae3.bindTooltip(
-                `<div>
-                     Gülten Akın Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_d070cb64a8139092f2a717f7c325e5d5 = L.marker(
-                [41.0334811, 28.6827686],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_664739d2b71fdbd1fb9f1b0a90837892 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_b670965f8887fa57c601a6a5fc996bb0 = $(`<div id="html_b670965f8887fa57c601a6a5fc996bb0" style="width: 100.0%; height: 100.0%;">     <strong>İsmail Hakkı Tonguç Kütüphanesi</strong><br>     İlçe: Esenyurt<br>     Adres: Sultaniye Mah. 618. Sk. No:1 Esenyurt/İstanbul<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_664739d2b71fdbd1fb9f1b0a90837892.setContent(html_b670965f8887fa57c601a6a5fc996bb0);
-            
-        
-
-        marker_d070cb64a8139092f2a717f7c325e5d5.bindPopup(popup_664739d2b71fdbd1fb9f1b0a90837892)
-        ;
-
-        
-    
-    
-            marker_d070cb64a8139092f2a717f7c325e5d5.bindTooltip(
-                `<div>
-                     İsmail Hakkı Tonguç Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_b437e059fe6e360befdf2e655c90d98b = L.marker(
-                [41.0829701, 28.9281987],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_257674ed02b6a490e0377b4f2604c65f = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_67a577a7f646a05bb85ae53e56ae46a1 = $(`<div id="html_67a577a7f646a05bb85ae53e56ae46a1" style="width: 100.0%; height: 100.0%;">     <strong>Hasan Hüseyin Korkmazgil Kütüphanesi</strong><br>     İlçe: Eyüpsultan<br>     Adres: Akşemsettin, Cengiz Topel Cd. No:26, 34070 Eyüpsultan/İstanbul<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_257674ed02b6a490e0377b4f2604c65f.setContent(html_67a577a7f646a05bb85ae53e56ae46a1);
-            
-        
-
-        marker_b437e059fe6e360befdf2e655c90d98b.bindPopup(popup_257674ed02b6a490e0377b4f2604c65f)
-        ;
-
-        
-    
-    
-            marker_b437e059fe6e360befdf2e655c90d98b.bindTooltip(
-                `<div>
-                     Hasan Hüseyin Korkmazgil Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_687f950165f90efe622d4672710ae3a7 = L.marker(
-                [41.0438314, 28.9373954],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_fda2f5a67abf319ba40fc1aa77f923ff = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_e356163284cc7a15b6fcec5fcc502321 = $(`<div id="html_e356163284cc7a15b6fcec5fcc502321" style="width: 100.0%; height: 100.0%;">     <strong>Naile Akıncı Kütüphanesi</strong><br>     İlçe: Eyüpsultan<br>     Adres: Eyüp Merkez, Eski Feshane Cad., 34050 Eyüpsultan<br>     Çalışma saatleri: 10:00-20:00<br>     Çalışma günleri: Pazartesi-Cumartesi     </div>`)[0];
-                popup_fda2f5a67abf319ba40fc1aa77f923ff.setContent(html_e356163284cc7a15b6fcec5fcc502321);
-            
-        
-
-        marker_687f950165f90efe622d4672710ae3a7.bindPopup(popup_fda2f5a67abf319ba40fc1aa77f923ff)
-        ;
-
-        
-    
-    
-            marker_687f950165f90efe622d4672710ae3a7.bindTooltip(
-                `<div>
-                     Naile Akıncı Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_58d4f1fd5a2ed4969fe28e9f5cd7f225 = L.marker(
-                [41.0482431, 28.9354595],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_47df616299adaec68e9c4ae88dff8a72 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_3ba3c33229558fead18b2ab0ce7d9c8a = $(`<div id="html_3ba3c33229558fead18b2ab0ce7d9c8a" style="width: 100.0%; height: 100.0%;">     <strong>Sesli Kütüphane</strong><br>     İlçe: Eyüpsultan<br>     Adres: Merkez Mah. Sultan Reşat Cad. Boyacı Sok. No: 6 Eyüp - İstanbul<br>     Çalışma saatleri: 09:00-17:00<br>     Çalışma günleri: Pazartesi-Cuma     </div>`)[0];
-                popup_47df616299adaec68e9c4ae88dff8a72.setContent(html_3ba3c33229558fead18b2ab0ce7d9c8a);
-            
-        
-
-        marker_58d4f1fd5a2ed4969fe28e9f5cd7f225.bindPopup(popup_47df616299adaec68e9c4ae88dff8a72)
-        ;
-
-        
-    
-    
-            marker_58d4f1fd5a2ed4969fe28e9f5cd7f225.bindTooltip(
-                `<div>
-                     Sesli Kütüphane
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_f4ebde290786fb8a451960c855378449 = L.marker(
-                [41.0196101, 28.9398749],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_b294fb61eccb3304140379fa7df25ce6 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_6bbf9827e1f76517be0be95953efdb71 = $(`<div id="html_6bbf9827e1f76517be0be95953efdb71" style="width: 100.0%; height: 100.0%;">     <strong>Ahmet Kabaklı Kütüphanesi</strong><br>     İlçe: Fatih<br>     Adres: Hırka-i Şerif Mah. Akşemseddin Cad. No: 66/3 İBB Ali Emiri Efendi Kültür Merkezi, Fatih - İstanbul<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_b294fb61eccb3304140379fa7df25ce6.setContent(html_6bbf9827e1f76517be0be95953efdb71);
-            
-        
-
-        marker_f4ebde290786fb8a451960c855378449.bindPopup(popup_b294fb61eccb3304140379fa7df25ce6)
-        ;
-
-        
-    
-    
-            marker_f4ebde290786fb8a451960c855378449.bindTooltip(
-                `<div>
-                     Ahmet Kabaklı Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_390167217404abfd9dff4e129a0c4846 = L.marker(
-                [41.0069951, 28.9440457],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_7222a03dfe63f2d89be9a2fd5ff651e7 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_d807dcb6baffe413505e1f740fddde9e = $(`<div id="html_d807dcb6baffe413505e1f740fddde9e" style="width: 100.0%; height: 100.0%;">     <strong>Bulgur Palas Kütüphanesi</strong><br>     İlçe: Fatih<br>     Adres: Aksaray, Kargı Çk. No:5, 34096 Fatih/İstanbul<br>     Çalışma saatleri: 10:00-19:00<br>     Çalışma günleri: Salı-Pazar     </div>`)[0];
-                popup_7222a03dfe63f2d89be9a2fd5ff651e7.setContent(html_d807dcb6baffe413505e1f740fddde9e);
-            
-        
-
-        marker_390167217404abfd9dff4e129a0c4846.bindPopup(popup_7222a03dfe63f2d89be9a2fd5ff651e7)
-        ;
-
-        
-    
-    
-            marker_390167217404abfd9dff4e129a0c4846.bindTooltip(
-                `<div>
-                     Bulgur Palas Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_d84f1c73dfea8b3a47f90e55e1c401d6 = L.marker(
-                [41.0307407, 28.9504883],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_d2fce4f9b0f9b9c578e184f522895c2c = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_6ff91bd31eb48b755282d8a0f7216db6 = $(`<div id="html_6ff91bd31eb48b755282d8a0f7216db6" style="width: 100.0%; height: 100.0%;">     <strong>Kadın Eserleri Kütüphanesi</strong><br>     İlçe: Fatih<br>     Adres: Fener Mah. Mürselpaşa Cad. No: 8 Haliç - Fatih - İstanbul<br>     Çalışma saatleri: 09:00-17:00<br>     Çalışma günleri: Pazartesi-Cuma     </div>`)[0];
-                popup_d2fce4f9b0f9b9c578e184f522895c2c.setContent(html_6ff91bd31eb48b755282d8a0f7216db6);
-            
-        
-
-        marker_d84f1c73dfea8b3a47f90e55e1c401d6.bindPopup(popup_d2fce4f9b0f9b9c578e184f522895c2c)
-        ;
-
-        
-    
-    
-            marker_d84f1c73dfea8b3a47f90e55e1c401d6.bindTooltip(
-                `<div>
-                     Kadın Eserleri Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_920194fa4a782a4c19354c608c6266e3 = L.marker(
-                [41.0146728, 28.9220713],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_497b91362ecbe343dd29eb8253a0a847 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_790d312262dd8a36475aeb7308269e96 = $(`<div id="html_790d312262dd8a36475aeb7308269e96" style="width: 100.0%; height: 100.0%;">     <strong>Kara Surları Mevlanakapı Kütüphanesi</strong><br>     İlçe: Fatih<br>     Adres: Fatih İlçesi, Mevlanakapı Caddesi, Melek Hatun Mahallesi, No:1<br>     Çalışma saatleri: 10:00-18:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_497b91362ecbe343dd29eb8253a0a847.setContent(html_790d312262dd8a36475aeb7308269e96);
-            
-        
-
-        marker_920194fa4a782a4c19354c608c6266e3.bindPopup(popup_497b91362ecbe343dd29eb8253a0a847)
-        ;
-
-        
-    
-    
-            marker_920194fa4a782a4c19354c608c6266e3.bindTooltip(
-                `<div>
-                     Kara Surları Mevlanakapı Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_a47c0f078d4ff4a6ab873f2c3b91925b = L.marker(
-                [41.0120472, 28.9622045],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_9649c6c9cfa3cf8321696b0bdbc595ac = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_595515338980a72a1b436e8546b74e91 = $(`<div id="html_595515338980a72a1b436e8546b74e91" style="width: 100.0%; height: 100.0%;">     <strong>Kütüphane Troleybüs</strong><br>     İlçe: Fatih<br>     Adres: Süleymaniye, Prof. Dr. Cavit Orhan Tütengil Sokak No:4, Fatih/İstanbul<br>     Çalışma saatleri: 09.00- 19.00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_9649c6c9cfa3cf8321696b0bdbc595ac.setContent(html_595515338980a72a1b436e8546b74e91);
-            
-        
-
-        marker_a47c0f078d4ff4a6ab873f2c3b91925b.bindPopup(popup_9649c6c9cfa3cf8321696b0bdbc595ac)
-        ;
-
-        
-    
-    
-            marker_a47c0f078d4ff4a6ab873f2c3b91925b.bindTooltip(
-                `<div>
-                     Kütüphane Troleybüs
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_ba85d8c9d6963146cfab53197da9c88f = L.marker(
-                [41.0285491, 28.8770823],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_461950fa731483ea3bb4774badad88a0 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_be7fc0b653e4c055a2368780d6dc796a = $(`<div id="html_be7fc0b653e4c055a2368780d6dc796a" style="width: 100.0%; height: 100.0%;">     <strong>Osman Nuri Ergin Kütüphanesi</strong><br>     İlçe: Güngören<br>     Adres: Genç Osman Mah. Çinçin Deresi Cad. No: 78 Güngören - İstanbul<br>     Çalışma saatleri: 09:00-17:00<br>     Çalışma günleri: Pazartesi-Cuma     </div>`)[0];
-                popup_461950fa731483ea3bb4774badad88a0.setContent(html_be7fc0b653e4c055a2368780d6dc796a);
-            
-        
-
-        marker_ba85d8c9d6963146cfab53197da9c88f.bindPopup(popup_461950fa731483ea3bb4774badad88a0)
-        ;
-
-        
-    
-    
-            marker_ba85d8c9d6963146cfab53197da9c88f.bindTooltip(
-                `<div>
-                     Osman Nuri Ergin Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_58ac9dd15479eb645805887e30d29e66 = L.marker(
-                [41.035921, 28.8724483],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_f16c4753361eeb9754849cfb1d18a2bc = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_1d1ff85c2e0d22b12056c209b4890543 = $(`<div id="html_1d1ff85c2e0d22b12056c209b4890543" style="width: 100.0%; height: 100.0%;">     <strong>Sezai Karakoç Kütüphanesi</strong><br>     İlçe: Güngören<br>     Adres: Güngören Kültür ve Yaşam Merkezi, Gençosman Mah. Doğanay Sokak No:1<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_f16c4753361eeb9754849cfb1d18a2bc.setContent(html_1d1ff85c2e0d22b12056c209b4890543);
-            
-        
-
-        marker_58ac9dd15479eb645805887e30d29e66.bindPopup(popup_f16c4753361eeb9754849cfb1d18a2bc)
-        ;
-
-        
-    
-    
-            marker_58ac9dd15479eb645805887e30d29e66.bindTooltip(
-                `<div>
-                     Sezai Karakoç Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_7fbf351f81690476f9de9f2285ff5117 = L.marker(
+            var marker_073a5099c351147ec4408d444ab52171 = L.marker(
                 [40.9970443, 29.0437256],
                 {
 }
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
         
     
-        var popup_05414ba6aefb996b80e94e64db6dd883 = L.popup({
+        var popup_ff413545fee997deff7435f5aa3752f8 = L.popup({
   "maxWidth": 350,
 });
 
         
             
-                var html_5231782a3a26f13f2d0323bb74500479 = $(`<div id="html_5231782a3a26f13f2d0323bb74500479" style="width: 100.0%; height: 100.0%;">     <strong>Afife Batur Kütüphanesi</strong><br>     İlçe: Kadıköy<br>     Adres: Hasanpaşa, İkbaliye Sk. No:39, 34722 Kadıköy/İstanbul<br>     Çalışma saatleri: 7/24<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_05414ba6aefb996b80e94e64db6dd883.setContent(html_5231782a3a26f13f2d0323bb74500479);
+                var html_dbc429a0cf6bd987520d64b07d96be63 = $(`<div id="html_dbc429a0cf6bd987520d64b07d96be63" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Afife Batur Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Kadıköy             <br>              <b>Adres:</b>             Hasanpaşa, İkbaliye Sk. No:39, 34722 Kadıköy/İstanbul             <br>              <b>Çalışma saatleri:</b>             7/24             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_ff413545fee997deff7435f5aa3752f8.setContent(html_dbc429a0cf6bd987520d64b07d96be63);
             
         
 
-        marker_7fbf351f81690476f9de9f2285ff5117.bindPopup(popup_05414ba6aefb996b80e94e64db6dd883)
+        marker_073a5099c351147ec4408d444ab52171.bindPopup(popup_ff413545fee997deff7435f5aa3752f8)
         ;
 
         
     
     
-            marker_7fbf351f81690476f9de9f2285ff5117.bindTooltip(
+            marker_073a5099c351147ec4408d444ab52171.bindTooltip(
                 `<div>
                      Afife Batur Kütüphanesi
                  </div>`,
@@ -1197,371 +217,31 @@
             );
         
     
-            var marker_4cb485da79f3516bb47cb507710c7044 = L.marker(
-                [40.9789898, 29.0251042],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_3a36b3c65a53f5b47cc693447d2a2673 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_8fb28033677acec28ec5fd415c5f8ad3 = $(`<div id="html_8fb28033677acec28ec5fd415c5f8ad3" style="width: 100.0%; height: 100.0%;">     <strong>Moda İskelesi Kütüphanesi</strong><br>     İlçe: Kadıköy<br>     Adres: Caferağa, Moda Cd. No:175, 34710 Kadıköy/İstanbul<br>     Çalışma saatleri: 09:00-22:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_3a36b3c65a53f5b47cc693447d2a2673.setContent(html_8fb28033677acec28ec5fd415c5f8ad3);
-            
-        
-
-        marker_4cb485da79f3516bb47cb507710c7044.bindPopup(popup_3a36b3c65a53f5b47cc693447d2a2673)
-        ;
-
-        
-    
-    
-            marker_4cb485da79f3516bb47cb507710c7044.bindTooltip(
-                `<div>
-                     Moda İskelesi Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_9376b4d1d24cdb888e456543c5c0680e = L.marker(
-                [40.9840957, 29.0308119],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_ffc7b8d1882a2813640db49d92d6f088 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_859d0b39c67405b21833e395072658f0 = $(`<div id="html_859d0b39c67405b21833e395072658f0" style="width: 100.0%; height: 100.0%;">     <strong>Özgen Berkol Doğan Kütüphanesi</strong><br>     İlçe: Kadıköy<br>     Adres: Caferağa Mahallesi Safa Sokak No:20 Kadıköy, Istanbul<br>     Çalışma saatleri: 10:00-19:00<br>     Çalışma günleri: Salı-Pazar     </div>`)[0];
-                popup_ffc7b8d1882a2813640db49d92d6f088.setContent(html_859d0b39c67405b21833e395072658f0);
-            
-        
-
-        marker_9376b4d1d24cdb888e456543c5c0680e.bindPopup(popup_ffc7b8d1882a2813640db49d92d6f088)
-        ;
-
-        
-    
-    
-            marker_9376b4d1d24cdb888e456543c5c0680e.bindTooltip(
-                `<div>
-                     Özgen Berkol Doğan Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_3bf21c2a418a7cfa6e086bef6f80ab39 = L.marker(
-                [40.905902, 29.1613794],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_f34f6d89ebed1a539ae943d14d663a28 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_7737d2f83f9811900b3fedbb2abebcb1 = $(`<div id="html_7737d2f83f9811900b3fedbb2abebcb1" style="width: 100.0%; height: 100.0%;">     <strong>Halil İnalcık Kütüphanesi</strong><br>     İlçe: Kartal<br>     Adres: Orhantepe Mah. Bağdat Cad. No: 130 Kartal - İstanbul<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_f34f6d89ebed1a539ae943d14d663a28.setContent(html_7737d2f83f9811900b3fedbb2abebcb1);
-            
-        
-
-        marker_3bf21c2a418a7cfa6e086bef6f80ab39.bindPopup(popup_f34f6d89ebed1a539ae943d14d663a28)
-        ;
-
-        
-    
-    
-            marker_3bf21c2a418a7cfa6e086bef6f80ab39.bindTooltip(
-                `<div>
-                     Halil İnalcık Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_8bb12beecdd986da3740bb5e77123855 = L.marker(
-                [40.886181, 29.1966004],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_ce18b6f4a2077e90f1158ea26a3f8d70 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_98dc5158424daa53c49f31b45aa490e7 = $(`<div id="html_98dc5158424daa53c49f31b45aa490e7" style="width: 100.0%; height: 100.0%;">     <strong>Muallim Cevdet Kütüphanesi</strong><br>     İlçe: Kartal<br>     Adres: Kordonboyu Mah. Ankara Cad. No: 142 Kartal - İstanbul<br>     Çalışma saatleri: 7/24<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_ce18b6f4a2077e90f1158ea26a3f8d70.setContent(html_98dc5158424daa53c49f31b45aa490e7);
-            
-        
-
-        marker_8bb12beecdd986da3740bb5e77123855.bindPopup(popup_ce18b6f4a2077e90f1158ea26a3f8d70)
-        ;
-
-        
-    
-    
-            marker_8bb12beecdd986da3740bb5e77123855.bindTooltip(
-                `<div>
-                     Muallim Cevdet Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_4fe4bff983b3496a87d9171f71de216a = L.marker(
-                [40.990127, 28.7832456],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_14331afc8522e038c02e3e35e9716a55 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_1ee59fce24188f69f895f4ab5d851bb3 = $(`<div id="html_1ee59fce24188f69f895f4ab5d851bb3" style="width: 100.0%; height: 100.0%;">     <strong>Atilla İlhan Kütüphanesi</strong><br>     İlçe: Küçükçekmece<br>     Adres: Cennet, Yavuz Selim Cd. 34 C, 34290 Küçükçekmece/İstanbul<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_14331afc8522e038c02e3e35e9716a55.setContent(html_1ee59fce24188f69f895f4ab5d851bb3);
-            
-        
-
-        marker_4fe4bff983b3496a87d9171f71de216a.bindPopup(popup_14331afc8522e038c02e3e35e9716a55)
-        ;
-
-        
-    
-    
-            marker_4fe4bff983b3496a87d9171f71de216a.bindTooltip(
-                `<div>
-                     Atilla İlhan Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_ed48ad8f0858bf2a00d60b8e28fc47c3 = L.marker(
-                [41.0525518, 28.7962117],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_3d81196e932bcd8ede8f07d60de8e91d = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_c51723fc343490378e4170b08e893298 = $(`<div id="html_c51723fc343490378e4170b08e893298" style="width: 100.0%; height: 100.0%;">     <strong>Metin Altıok Kütüphanesi</strong><br>     İlçe: Küçükçekmece<br>     Adres: Atatürk Mah. İkitelli Cad. No:140 Küçükçekmece<br>     Çalışma saatleri: 09.00- 21.00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_3d81196e932bcd8ede8f07d60de8e91d.setContent(html_c51723fc343490378e4170b08e893298);
-            
-        
-
-        marker_ed48ad8f0858bf2a00d60b8e28fc47c3.bindPopup(popup_3d81196e932bcd8ede8f07d60de8e91d)
-        ;
-
-        
-    
-    
-            marker_ed48ad8f0858bf2a00d60b8e28fc47c3.bindTooltip(
-                `<div>
-                     Metin Altıok Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_a96510cee03b36e24d75c10eb88b212d = L.marker(
-                [40.9979824, 28.7927495],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_827c543e7e06f0eef59b7baeb7f3d841 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_2fa54efbf7be125fa8465e46d312c898 = $(`<div id="html_2fa54efbf7be125fa8465e46d312c898" style="width: 100.0%; height: 100.0%;">     <strong>Metin And Kütüphanesi</strong><br>     İlçe: Küçükçekmece<br>     Adres: Gültepe Mah. Bağlar Cad. No: 57 Sefaköy - İstanbul<br>     Çalışma saatleri: 09:00-17:00<br>     Çalışma günleri: Pazartesi-Cuma     </div>`)[0];
-                popup_827c543e7e06f0eef59b7baeb7f3d841.setContent(html_2fa54efbf7be125fa8465e46d312c898);
-            
-        
-
-        marker_a96510cee03b36e24d75c10eb88b212d.bindPopup(popup_827c543e7e06f0eef59b7baeb7f3d841)
-        ;
-
-        
-    
-    
-            marker_a96510cee03b36e24d75c10eb88b212d.bindTooltip(
-                `<div>
-                     Metin And Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_e21ebddcc0411c43ba9a280852822600 = L.marker(
-                [40.9275656, 29.156483],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_9dfafa9322f5afdd067ee6ece3d8c2ce = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_1ff317c17f9e505fbd0111dee1acad22 = $(`<div id="html_1ff317c17f9e505fbd0111dee1acad22" style="width: 100.0%; height: 100.0%;">     <strong>Muzaffer İzgü Kütüphanesi</strong><br>     İlçe: Maltepe<br>     Adres: Fevzi Çakmak Cd. 31-35, Gülsuyu, 34848/Maltepe<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_9dfafa9322f5afdd067ee6ece3d8c2ce.setContent(html_1ff317c17f9e505fbd0111dee1acad22);
-            
-        
-
-        marker_e21ebddcc0411c43ba9a280852822600.bindPopup(popup_9dfafa9322f5afdd067ee6ece3d8c2ce)
-        ;
-
-        
-    
-    
-            marker_e21ebddcc0411c43ba9a280852822600.bindTooltip(
-                `<div>
-                     Muzaffer İzgü Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_4cef7ce13f46d02ba42f0867514f75ce = L.marker(
-                [40.875952, 29.2319759],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_140be88e04a1006bcb9b0b34788fe250 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_c4cb0601da1301f1dba2bc886f6edbc2 = $(`<div id="html_c4cb0601da1301f1dba2bc886f6edbc2" style="width: 100.0%; height: 100.0%;">     <strong>Hasan İzzettin Dinamo Kütüphanesi</strong><br>     İlçe: Pendik<br>     Adres: Batı Mah. Erol Kaya cad. No:95/ Pendik<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_140be88e04a1006bcb9b0b34788fe250.setContent(html_c4cb0601da1301f1dba2bc886f6edbc2);
-            
-        
-
-        marker_4cef7ce13f46d02ba42f0867514f75ce.bindPopup(popup_140be88e04a1006bcb9b0b34788fe250)
-        ;
-
-        
-    
-    
-            marker_4cef7ce13f46d02ba42f0867514f75ce.bindTooltip(
-                `<div>
-                     Hasan İzzettin Dinamo Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_2d5f757e08234cb890aa5b0085b90417 = L.marker(
-                [41.0132894, 29.2064075],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_e134dd23800ea1f0ba5d2b68ae8fce86 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_d583b382440a718589887f0b21ec9ed2 = $(`<div id="html_d583b382440a718589887f0b21ec9ed2" style="width: 100.0%; height: 100.0%;">     <strong>Yaşar Kemal Kütüphanesi</strong><br>     İlçe: Sancaktepe<br>     Adres: Meclis Mahalesi Semih Sancar Caddesi İlknur Sokak no:1 Sancaktepe/İstanbul<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_e134dd23800ea1f0ba5d2b68ae8fce86.setContent(html_d583b382440a718589887f0b21ec9ed2);
-            
-        
-
-        marker_2d5f757e08234cb890aa5b0085b90417.bindPopup(popup_e134dd23800ea1f0ba5d2b68ae8fce86)
-        ;
-
-        
-    
-    
-            marker_2d5f757e08234cb890aa5b0085b90417.bindTooltip(
-                `<div>
-                     Yaşar Kemal Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_e6fa1430e20866da0c46144b7667a33b = L.marker(
+            var marker_e86647a4b85ed3b3abeebcf029c8f761 = L.marker(
                 [41.1541638, 29.0304981],
                 {
 }
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
         
     
-        var popup_3d247ebcca08492312a8bdf7fbfa6646 = L.popup({
+        var popup_ae1c78ccfe47988bc6e3a8f4369fefa0 = L.popup({
   "maxWidth": 350,
 });
 
         
             
-                var html_0ddb57337e6584d6bb3d6f69b0f606f9 = $(`<div id="html_0ddb57337e6584d6bb3d6f69b0f606f9" style="width: 100.0%; height: 100.0%;">     <strong>Ahmet Bedevi Kütüphanesi</strong><br>     İlçe: Sarıyer<br>     Adres: Ptt Evleri, Hacı Osman Bayırı Cd., 34453 Sarıyer/İstanbul<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_3d247ebcca08492312a8bdf7fbfa6646.setContent(html_0ddb57337e6584d6bb3d6f69b0f606f9);
+                var html_bbc665ddce27b18cd5c202a2725c68f8 = $(`<div id="html_bbc665ddce27b18cd5c202a2725c68f8" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Ahmet Bedevi Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Sarıyer             <br>              <b>Adres:</b>             Ptt Evleri, Hacı Osman Bayırı Cd., 34453 Sarıyer/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_ae1c78ccfe47988bc6e3a8f4369fefa0.setContent(html_bbc665ddce27b18cd5c202a2725c68f8);
             
         
 
-        marker_e6fa1430e20866da0c46144b7667a33b.bindPopup(popup_3d247ebcca08492312a8bdf7fbfa6646)
+        marker_e86647a4b85ed3b3abeebcf029c8f761.bindPopup(popup_ae1c78ccfe47988bc6e3a8f4369fefa0)
         ;
 
         
     
     
-            marker_e6fa1430e20866da0c46144b7667a33b.bindTooltip(
+            marker_e86647a4b85ed3b3abeebcf029c8f761.bindTooltip(
                 `<div>
                      Ahmet Bedevi Kütüphanesi
                  </div>`,
@@ -1571,33 +251,33 @@
             );
         
     
-            var marker_df5f0d826289b8b5a032099c88dd20a3 = L.marker(
-                [40.9691507, 29.2669677],
+            var marker_5def2eda42fcefd3fabbce93254df6a5 = L.marker(
+                [41.0196101, 28.9398749],
                 {
 }
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
         
     
-        var popup_e6fc5ceb4eb12b2db2f47346f495479a = L.popup({
+        var popup_6a8f501b38cf12fed93a5d4cead06e57 = L.popup({
   "maxWidth": 350,
 });
 
         
             
-                var html_daefebbaf8577f8aac8cf1612f645eed = $(`<div id="html_daefebbaf8577f8aac8cf1612f645eed" style="width: 100.0%; height: 100.0%;">     <strong>İlhan Varank Kütüphanesi</strong><br>     İlçe: Sultanbeyli<br>     Adres: Mehmet Akif Ersoy Mah. Kadıköy Sok. No: 17/1 Sultanbeyli - İstanbul<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_e6fc5ceb4eb12b2db2f47346f495479a.setContent(html_daefebbaf8577f8aac8cf1612f645eed);
+                var html_6e5fcc312b2f22e97b4d964f3f63a94d = $(`<div id="html_6e5fcc312b2f22e97b4d964f3f63a94d" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Ahmet Kabaklı Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Fatih             <br>              <b>Adres:</b>             Hırka-i Şerif Mah. Akşemseddin Cad. No: 66/3 İBB Ali Emiri Efendi Kültür Merkezi, Fatih - İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_6a8f501b38cf12fed93a5d4cead06e57.setContent(html_6e5fcc312b2f22e97b4d964f3f63a94d);
             
         
 
-        marker_df5f0d826289b8b5a032099c88dd20a3.bindPopup(popup_e6fc5ceb4eb12b2db2f47346f495479a)
+        marker_5def2eda42fcefd3fabbce93254df6a5.bindPopup(popup_6a8f501b38cf12fed93a5d4cead06e57)
         ;
 
         
     
     
-            marker_df5f0d826289b8b5a032099c88dd20a3.bindTooltip(
+            marker_5def2eda42fcefd3fabbce93254df6a5.bindTooltip(
                 `<div>
-                     İlhan Varank Kütüphanesi
+                     Ahmet Kabaklı Kütüphanesi
                  </div>`,
                 {
   "sticky": true,
@@ -1605,167 +285,31 @@
             );
         
     
-            var marker_47537c1ff4681bccc6d5b93f28ecc162 = L.marker(
-                [40.8175569, 29.3001429],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_112441eea4dceb28299dbbbdaead91e3 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_3574d7dce14c11ca2ab9ff77f0277c29 = $(`<div id="html_3574d7dce14c11ca2ab9ff77f0277c29" style="width: 100.0%; height: 100.0%;">     <strong>Necati Cumalı Kütüphanesi</strong><br>     İlçe: Tuzla<br>     Adres: Anadolu Yakası, Postane, 34940 Tuzla/İstanbul<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_112441eea4dceb28299dbbbdaead91e3.setContent(html_3574d7dce14c11ca2ab9ff77f0277c29);
-            
-        
-
-        marker_47537c1ff4681bccc6d5b93f28ecc162.bindPopup(popup_112441eea4dceb28299dbbbdaead91e3)
-        ;
-
-        
-    
-    
-            marker_47537c1ff4681bccc6d5b93f28ecc162.bindTooltip(
-                `<div>
-                     Necati Cumalı Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_533dd97fadda2fbec362bf9a0b1a8ec6 = L.marker(
-                [40.8500468, 29.3031159],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_d1bee296af40c5adcf9dd6f6b40f75d2 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_46e4686616240aeeb4ec456b07cc1c50 = $(`<div id="html_46e4686616240aeeb4ec456b07cc1c50" style="width: 100.0%; height: 100.0%;">     <strong>İdris Güllüce Kütüphanesi</strong><br>     İlçe: Tuzla<br>     Adres: Aydınlı Yolu Üzeri Oto Sanayi Sitesi Karşısı No: 20 İçmeler - Tuzla - İstanbul<br>     Çalışma saatleri: 09:00-21:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_d1bee296af40c5adcf9dd6f6b40f75d2.setContent(html_46e4686616240aeeb4ec456b07cc1c50);
-            
-        
-
-        marker_533dd97fadda2fbec362bf9a0b1a8ec6.bindPopup(popup_d1bee296af40c5adcf9dd6f6b40f75d2)
-        ;
-
-        
-    
-    
-            marker_533dd97fadda2fbec362bf9a0b1a8ec6.bindTooltip(
-                `<div>
-                     İdris Güllüce Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_0f361b33897b74064a1914f2687714f1 = L.marker(
-                [41.0531537, 29.2380278],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_b0bb047d17e6fd902f4a9cc1d1e41728 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_06adc3eb57387534f8b9194f02fbdb9b = $(`<div id="html_06adc3eb57387534f8b9194f02fbdb9b" style="width: 100.0%; height: 100.0%;">     <strong>Fatma Aliye Kütüphanesi</strong><br>     İlçe: Çekmeköy<br>     Adres: Alemdağ Mah. Reşadiye Cad. 145. Sok. No: 2 Alemdağ Kültür Merkezi, Çekmeköy - İstanbul<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_b0bb047d17e6fd902f4a9cc1d1e41728.setContent(html_06adc3eb57387534f8b9194f02fbdb9b);
-            
-        
-
-        marker_0f361b33897b74064a1914f2687714f1.bindPopup(popup_b0bb047d17e6fd902f4a9cc1d1e41728)
-        ;
-
-        
-    
-    
-            marker_0f361b33897b74064a1914f2687714f1.bindTooltip(
-                `<div>
-                     Fatma Aliye Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_a4e01309a5805bcd7ddae61c18486033 = L.marker(
-                [41.0291621, 29.0799949],
-                {
-}
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
-        
-    
-        var popup_168a092835586268e0f8b483260f9fd3 = L.popup({
-  "maxWidth": 350,
-});
-
-        
-            
-                var html_c7805bc4bb3979bb12f7a43f879e812f = $(`<div id="html_c7805bc4bb3979bb12f7a43f879e812f" style="width: 100.0%; height: 100.0%;">     <strong>Salah Birsel Kütüphanesi</strong><br>     İlçe: Üsküdar<br>     Adres: Kısıklı, Bosna Blv 39-31, 34692 Üsküdar/İstanbul<br>     Çalışma saatleri: 09:00-19:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_168a092835586268e0f8b483260f9fd3.setContent(html_c7805bc4bb3979bb12f7a43f879e812f);
-            
-        
-
-        marker_a4e01309a5805bcd7ddae61c18486033.bindPopup(popup_168a092835586268e0f8b483260f9fd3)
-        ;
-
-        
-    
-    
-            marker_a4e01309a5805bcd7ddae61c18486033.bindTooltip(
-                `<div>
-                     Salah Birsel Kütüphanesi
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var marker_0f981352b7df3a748e5958ecb0c39333 = L.marker(
+            var marker_dc7d375292e65cf9c1ab09e0af7313c9 = L.marker(
                 [41.0564045, 28.9872128],
                 {
 }
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
         
     
-        var popup_2081e4beaffca29a85b56359c639c451 = L.popup({
+        var popup_f6d590a3d5b8188dfd6cf3e3ae1c21b7 = L.popup({
   "maxWidth": 350,
 });
 
         
             
-                var html_98a48c746968705449b484da4f5753a6 = $(`<div id="html_98a48c746968705449b484da4f5753a6" style="width: 100.0%; height: 100.0%;">     <strong>Atatürk Müzesi Kütüphanesi</strong><br>     İlçe: Şişli<br>     Adres: Meşrutiyet, Halaskargazi Cd. No:140, 34363 Şişli/İstanbul<br>     Çalışma saatleri: 09:00 - 17:00<br>     Çalışma günleri: Salı-Pazar     </div>`)[0];
-                popup_2081e4beaffca29a85b56359c639c451.setContent(html_98a48c746968705449b484da4f5753a6);
+                var html_2e9b42ec8eebcca909659501c917a9b9 = $(`<div id="html_2e9b42ec8eebcca909659501c917a9b9" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Atatürk Müzesi Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Şişli             <br>              <b>Adres:</b>             Meşrutiyet, Halaskargazi Cd. No:140, 34363 Şişli/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00 - 17:00             <br>              <b>Çalışma günleri:</b>             Salı-Pazar         </div>         </div>`)[0];
+                popup_f6d590a3d5b8188dfd6cf3e3ae1c21b7.setContent(html_2e9b42ec8eebcca909659501c917a9b9);
             
         
 
-        marker_0f981352b7df3a748e5958ecb0c39333.bindPopup(popup_2081e4beaffca29a85b56359c639c451)
+        marker_dc7d375292e65cf9c1ab09e0af7313c9.bindPopup(popup_f6d590a3d5b8188dfd6cf3e3ae1c21b7)
         ;
 
         
     
     
-            marker_0f981352b7df3a748e5958ecb0c39333.bindTooltip(
+            marker_dc7d375292e65cf9c1ab09e0af7313c9.bindTooltip(
                 `<div>
                      Atatürk Müzesi Kütüphanesi
                  </div>`,
@@ -1775,31 +319,405 @@
             );
         
     
-            var marker_af592d96c7d88ea03103c4433c42942d = L.marker(
-                [41.0647782, 28.9872634],
+            var marker_04668d5dffd8d270d4510419ab4663ea = L.marker(
+                [40.990127, 28.7832456],
                 {
 }
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
         
     
-        var popup_021a5825d110397bdf0d3635a153be46 = L.popup({
+        var popup_7dbb420a6df54a998a11e3afe5bde5cd = L.popup({
   "maxWidth": 350,
 });
 
         
             
-                var html_d53e118ce6f15eecae10bade1cda09dc = $(`<div id="html_d53e118ce6f15eecae10bade1cda09dc" style="width: 100.0%; height: 100.0%;">     <strong>Habitat Kütüphane</strong><br>     İlçe: Şişli<br>     Adres: Merkez mah. Abide-i Hürriyet Cad. No:211<br>     Çalışma saatleri: 10:00-22:00<br>     Çalışma günleri: Hergün     </div>`)[0];
-                popup_021a5825d110397bdf0d3635a153be46.setContent(html_d53e118ce6f15eecae10bade1cda09dc);
+                var html_89fd66a4f8ce19b1a3dbe1cfc6947473 = $(`<div id="html_89fd66a4f8ce19b1a3dbe1cfc6947473" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Atilla İlhan Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Küçükçekmece             <br>              <b>Adres:</b>             Cennet, Yavuz Selim Cd. 34 C, 34290 Küçükçekmece/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_7dbb420a6df54a998a11e3afe5bde5cd.setContent(html_89fd66a4f8ce19b1a3dbe1cfc6947473);
             
         
 
-        marker_af592d96c7d88ea03103c4433c42942d.bindPopup(popup_021a5825d110397bdf0d3635a153be46)
+        marker_04668d5dffd8d270d4510419ab4663ea.bindPopup(popup_7dbb420a6df54a998a11e3afe5bde5cd)
         ;
 
         
     
     
-            marker_af592d96c7d88ea03103c4433c42942d.bindTooltip(
+            marker_04668d5dffd8d270d4510419ab4663ea.bindTooltip(
+                `<div>
+                     Atilla İlhan Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_2c653ebcff6a3ce4064f9c630031e61e = L.marker(
+                [40.9809416, 28.8743693],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_1f8cccfb5eba859621d4bb5bebaff9d1 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_d2252b8baef0fc8a0c8e1ddac3499ee7 = $(`<div id="html_d2252b8baef0fc8a0c8e1ddac3499ee7" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Bakırköy Ödünç Kütüphane</strong>             <br><br>              <b>İlçe:</b>             Bakırköy             <br>              <b>Adres:</b>             Zuhuratbaba, 34147 Bakırköy/İstanbul             <br>              <b>Çalışma saatleri:</b>             10:00-18:00             <br>              <b>Çalışma günleri:</b>             Pazartesi-Cuma         </div>         </div>`)[0];
+                popup_1f8cccfb5eba859621d4bb5bebaff9d1.setContent(html_d2252b8baef0fc8a0c8e1ddac3499ee7);
+            
+        
+
+        marker_2c653ebcff6a3ce4064f9c630031e61e.bindPopup(popup_1f8cccfb5eba859621d4bb5bebaff9d1)
+        ;
+
+        
+    
+    
+            marker_2c653ebcff6a3ce4064f9c630031e61e.bindTooltip(
+                `<div>
+                     Bakırköy Ödünç Kütüphane
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_31da0a9a13c76381daf15cb61f5f4626 = L.marker(
+                [40.9755004, 28.860091],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_3fb98558dc95319fcd0eb2d8f400e287 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_09f87ec7bd177db98919b6bacea69fed = $(`<div id="html_09f87ec7bd177db98919b6bacea69fed" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Baruthane Kütüphane</strong>             <br><br>              <b>İlçe:</b>             Bakırköy             <br>              <b>Adres:</b>             Ataköy 2-5-6. Kısım Mahallesi, Rauf Orbay Caddesi Bakırköy/İstanbul             <br>              <b>Çalışma saatleri:</b>             10:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_3fb98558dc95319fcd0eb2d8f400e287.setContent(html_09f87ec7bd177db98919b6bacea69fed);
+            
+        
+
+        marker_31da0a9a13c76381daf15cb61f5f4626.bindPopup(popup_3fb98558dc95319fcd0eb2d8f400e287)
+        ;
+
+        
+    
+    
+            marker_31da0a9a13c76381daf15cb61f5f4626.bindTooltip(
+                `<div>
+                     Baruthane Kütüphane
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_186ca951014015cbbcd637ddb194331c = L.marker(
+                [41.041202, 29.0072169],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_b11d751d2737ab1c38904eed9b7f3dda = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_69bb8f971ddcb56f81e255a3031190e4 = $(`<div id="html_69bb8f971ddcb56f81e255a3031190e4" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Beşiktaş İskele Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Beşiktaş             <br>              <b>Adres:</b>             Sinanpaşa, İskele Cd. No:16, 34353 Beşiktaş/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-22:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_b11d751d2737ab1c38904eed9b7f3dda.setContent(html_69bb8f971ddcb56f81e255a3031190e4);
+            
+        
+
+        marker_186ca951014015cbbcd637ddb194331c.bindPopup(popup_b11d751d2737ab1c38904eed9b7f3dda)
+        ;
+
+        
+    
+    
+            marker_186ca951014015cbbcd637ddb194331c.bindTooltip(
+                `<div>
+                     Beşiktaş İskele Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9f205171d68aada148b969ce1ac2c8f1 = L.marker(
+                [41.0069951, 28.9440457],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_1ea0d9728d038599c33e4fff88de6ebb = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_56c1f0f33339015adc9fa14e39779f35 = $(`<div id="html_56c1f0f33339015adc9fa14e39779f35" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Bulgur Palas Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Fatih             <br>              <b>Adres:</b>             Aksaray, Kargı Çk. No:5, 34096 Fatih/İstanbul             <br>              <b>Çalışma saatleri:</b>             10:00-19:00             <br>              <b>Çalışma günleri:</b>             Salı-Pazar         </div>         </div>`)[0];
+                popup_1ea0d9728d038599c33e4fff88de6ebb.setContent(html_56c1f0f33339015adc9fa14e39779f35);
+            
+        
+
+        marker_9f205171d68aada148b969ce1ac2c8f1.bindPopup(popup_1ea0d9728d038599c33e4fff88de6ebb)
+        ;
+
+        
+    
+    
+            marker_9f205171d68aada148b969ce1ac2c8f1.bindTooltip(
+                `<div>
+                     Bulgur Palas Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_bf46ed8b28d82c2a038802015a0030c8 = L.marker(
+                [41.1862817, 28.7647058],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_6943af01259a4a785a506e1b534e5aac = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_7f9f6aa96208ffac14c22461cfb30618 = $(`<div id="html_7f9f6aa96208ffac14c22461cfb30618" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Cemil Meriç Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Arnavutköy             <br>              <b>Adres:</b>             Yunus Emre Mah., Erdener Sok. F Blok, Arnavutköy/ Boğazköy Kültür ve Yaşam Merkezi             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_6943af01259a4a785a506e1b534e5aac.setContent(html_7f9f6aa96208ffac14c22461cfb30618);
+            
+        
+
+        marker_bf46ed8b28d82c2a038802015a0030c8.bindPopup(popup_6943af01259a4a785a506e1b534e5aac)
+        ;
+
+        
+    
+    
+            marker_bf46ed8b28d82c2a038802015a0030c8.bindTooltip(
+                `<div>
+                     Cemil Meriç Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_b0709c81ff6aef5557cb6bc6a5a75f73 = L.marker(
+                [41.038943, 28.8956236],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_26b57a15183c703aeffde1a40f87fa9c = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_ed883d6814983960a8b6159455fc684f = $(`<div id="html_ed883d6814983960a8b6159455fc684f" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Evliya Çelebi Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Bayrampaşa             <br>              <b>Adres:</b>             Büyük İstanbul Otogarı A1 Kız Kulesi Esenler/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-17:00             <br>              <b>Çalışma günleri:</b>             Pazartesi-Cuma         </div>         </div>`)[0];
+                popup_26b57a15183c703aeffde1a40f87fa9c.setContent(html_ed883d6814983960a8b6159455fc684f);
+            
+        
+
+        marker_b0709c81ff6aef5557cb6bc6a5a75f73.bindPopup(popup_26b57a15183c703aeffde1a40f87fa9c)
+        ;
+
+        
+    
+    
+            marker_b0709c81ff6aef5557cb6bc6a5a75f73.bindTooltip(
+                `<div>
+                     Evliya Çelebi Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_c6d206c77474e2aea851e84b77059681 = L.marker(
+                [41.0312375, 28.702602],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_8b30addcd93c4596249ffd7b2f539fbf = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_c47b59998b91218e5d8c0b1f065fa897 = $(`<div id="html_c47b59998b91218e5d8c0b1f065fa897" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Fakir Baykurt Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Avcılar             <br>              <b>Adres:</b>             Yeşilkent Mahallesi Kazım Karabekir Caddesi No:180 Avcılar/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_8b30addcd93c4596249ffd7b2f539fbf.setContent(html_c47b59998b91218e5d8c0b1f065fa897);
+            
+        
+
+        marker_c6d206c77474e2aea851e84b77059681.bindPopup(popup_8b30addcd93c4596249ffd7b2f539fbf)
+        ;
+
+        
+    
+    
+            marker_c6d206c77474e2aea851e84b77059681.bindTooltip(
+                `<div>
+                     Fakir Baykurt Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_1a17d3d7cce8cc59aeca154445cbf1bc = L.marker(
+                [41.0531537, 29.2380278],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_a0e435983b6932762e9ecd930e1bf85b = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_1f7804a891000dfe6fe803d1bdae7b09 = $(`<div id="html_1f7804a891000dfe6fe803d1bdae7b09" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Fatma Aliye Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Çekmeköy             <br>              <b>Adres:</b>             Alemdağ Mah. Reşadiye Cad. 145. Sok. No: 2 Alemdağ Kültür Merkezi, Çekmeköy - İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_a0e435983b6932762e9ecd930e1bf85b.setContent(html_1f7804a891000dfe6fe803d1bdae7b09);
+            
+        
+
+        marker_1a17d3d7cce8cc59aeca154445cbf1bc.bindPopup(popup_a0e435983b6932762e9ecd930e1bf85b)
+        ;
+
+        
+    
+    
+            marker_1a17d3d7cce8cc59aeca154445cbf1bc.bindTooltip(
+                `<div>
+                     Fatma Aliye Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_973576408973db69477e830c9f1e78b9 = L.marker(
+                [41.0790958, 29.0740307],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_3d0b37a7fb8e5ed82f39142e104039c2 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_eee836210dba242eab50f095d4b317cb = $(`<div id="html_eee836210dba242eab50f095d4b317cb" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Feza Gürsey Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Beykoz             <br>              <b>Adres:</b>             Göksu Cd. 50-54, Göksu, 34815 Beykoz/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_3d0b37a7fb8e5ed82f39142e104039c2.setContent(html_eee836210dba242eab50f095d4b317cb);
+            
+        
+
+        marker_973576408973db69477e830c9f1e78b9.bindPopup(popup_3d0b37a7fb8e5ed82f39142e104039c2)
+        ;
+
+        
+    
+    
+            marker_973576408973db69477e830c9f1e78b9.bindTooltip(
+                `<div>
+                     Feza Gürsey Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_5146f4434158e6521318866fe6fd6fd4 = L.marker(
+                [41.0336452, 28.6511839],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_4b99ab824617aba676541c3d153fc8fa = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_f015344a297fe09c28befb2badde5be7 = $(`<div id="html_f015344a297fe09c28befb2badde5be7" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Gülten Akın Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Esenyurt             <br>              <b>Adres:</b>             Kıraç Mahallesi Gazi caddesi No:81/A Esenyurt/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_4b99ab824617aba676541c3d153fc8fa.setContent(html_f015344a297fe09c28befb2badde5be7);
+            
+        
+
+        marker_5146f4434158e6521318866fe6fd6fd4.bindPopup(popup_4b99ab824617aba676541c3d153fc8fa)
+        ;
+
+        
+    
+    
+            marker_5146f4434158e6521318866fe6fd6fd4.bindTooltip(
+                `<div>
+                     Gülten Akın Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_b19a14603573684cb419cdb7e0833047 = L.marker(
+                [41.0647782, 28.9872634],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_38fd52ee0418ba5eaa899b32f9c34fdf = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_9935a93005fcc9bb5f6d30b766072dce = $(`<div id="html_9935a93005fcc9bb5f6d30b766072dce" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Habitat Kütüphane</strong>             <br><br>              <b>İlçe:</b>             Şişli             <br>              <b>Adres:</b>             Merkez mah. Abide-i Hürriyet Cad. No:211             <br>              <b>Çalışma saatleri:</b>             10:00-22:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_38fd52ee0418ba5eaa899b32f9c34fdf.setContent(html_9935a93005fcc9bb5f6d30b766072dce);
+            
+        
+
+        marker_b19a14603573684cb419cdb7e0833047.bindPopup(popup_38fd52ee0418ba5eaa899b32f9c34fdf)
+        ;
+
+        
+    
+    
+            marker_b19a14603573684cb419cdb7e0833047.bindTooltip(
                 `<div>
                      Habitat Kütüphane
                  </div>`,
@@ -1809,31 +727,235 @@
             );
         
     
-            var marker_7461a24149c6f0324485013d23b4eacb = L.marker(
-                [41.0665315, 28.995647],
+            var marker_ffd1f46dfcdddaceb6b4d802ce454554 = L.marker(
+                [40.905902, 29.1613794],
                 {
 }
-            ).addTo(marker_cluster_c327d09f82804136c66f92ed73119426);
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
         
     
-        var popup_85a3dd951b54df4d771889ca8c273571 = L.popup({
+        var popup_692f2c9863acb96421b330224d677da0 = L.popup({
   "maxWidth": 350,
 });
 
         
             
-                var html_2c2904d0efdb4eec62ead9931bfafd29 = $(`<div id="html_2c2904d0efdb4eec62ead9931bfafd29" style="width: 100.0%; height: 100.0%;">     <strong>Mecidiyeköy Ödünç Kütüphane</strong><br>     İlçe: Şişli<br>     Adres: Mecidiyeköy Meydanı, Şişli<br>     Çalışma saatleri: 10:00-18:00<br>     Çalışma günleri: Pazartesi-Cuma     </div>`)[0];
-                popup_85a3dd951b54df4d771889ca8c273571.setContent(html_2c2904d0efdb4eec62ead9931bfafd29);
+                var html_efa46b984447a516a12c3faef9d4f10c = $(`<div id="html_efa46b984447a516a12c3faef9d4f10c" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Halil İnalcık Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Kartal             <br>              <b>Adres:</b>             Orhantepe Mah. Bağdat Cad. No: 130 Kartal - İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_692f2c9863acb96421b330224d677da0.setContent(html_efa46b984447a516a12c3faef9d4f10c);
             
         
 
-        marker_7461a24149c6f0324485013d23b4eacb.bindPopup(popup_85a3dd951b54df4d771889ca8c273571)
+        marker_ffd1f46dfcdddaceb6b4d802ce454554.bindPopup(popup_692f2c9863acb96421b330224d677da0)
         ;
 
         
     
     
-            marker_7461a24149c6f0324485013d23b4eacb.bindTooltip(
+            marker_ffd1f46dfcdddaceb6b4d802ce454554.bindTooltip(
+                `<div>
+                     Halil İnalcık Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_ed33b8f9a11373cd0d02811a5db3b97c = L.marker(
+                [41.0829701, 28.9281987],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_1974907bcba1b6288d9d096482d35d5a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_b7993c4910aea3ba528f4ffde1132b21 = $(`<div id="html_b7993c4910aea3ba528f4ffde1132b21" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Hasan Hüseyin Korkmazgil Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Eyüpsultan             <br>              <b>Adres:</b>             Akşemsettin, Cengiz Topel Cd. No:26, 34070 Eyüpsultan/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_1974907bcba1b6288d9d096482d35d5a.setContent(html_b7993c4910aea3ba528f4ffde1132b21);
+            
+        
+
+        marker_ed33b8f9a11373cd0d02811a5db3b97c.bindPopup(popup_1974907bcba1b6288d9d096482d35d5a)
+        ;
+
+        
+    
+    
+            marker_ed33b8f9a11373cd0d02811a5db3b97c.bindTooltip(
+                `<div>
+                     Hasan Hüseyin Korkmazgil Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_5aeaf19d5ac8e249f59eb8079480484f = L.marker(
+                [40.875952, 29.2319759],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_40144de0cdaacdd6202cf3aaae39704a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_590388f7b23923f0127151c6dd63234f = $(`<div id="html_590388f7b23923f0127151c6dd63234f" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Hasan İzzettin Dinamo Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Pendik             <br>              <b>Adres:</b>             Batı Mah. Erol Kaya cad. No:95/ Pendik             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_40144de0cdaacdd6202cf3aaae39704a.setContent(html_590388f7b23923f0127151c6dd63234f);
+            
+        
+
+        marker_5aeaf19d5ac8e249f59eb8079480484f.bindPopup(popup_40144de0cdaacdd6202cf3aaae39704a)
+        ;
+
+        
+    
+    
+            marker_5aeaf19d5ac8e249f59eb8079480484f.bindTooltip(
+                `<div>
+                     Hasan İzzettin Dinamo Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_3a0915178dbf8caecad1112105c49f0b = L.marker(
+                [41.0307407, 28.9504883],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_c18edcdeb7920f7024008d3b6806af2f = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_b71530f6a8bd4caac16ec3c93129db5e = $(`<div id="html_b71530f6a8bd4caac16ec3c93129db5e" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Kadın Eserleri Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Fatih             <br>              <b>Adres:</b>             Fener Mah. Mürselpaşa Cad. No: 8 Haliç - Fatih - İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-17:00             <br>              <b>Çalışma günleri:</b>             Pazartesi-Cuma         </div>         </div>`)[0];
+                popup_c18edcdeb7920f7024008d3b6806af2f.setContent(html_b71530f6a8bd4caac16ec3c93129db5e);
+            
+        
+
+        marker_3a0915178dbf8caecad1112105c49f0b.bindPopup(popup_c18edcdeb7920f7024008d3b6806af2f)
+        ;
+
+        
+    
+    
+            marker_3a0915178dbf8caecad1112105c49f0b.bindTooltip(
+                `<div>
+                     Kadın Eserleri Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_bd04f519d5c7ad6608efefe2be50b519 = L.marker(
+                [41.0146728, 28.9220713],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_578e22c3340ac0699f1e4ece7e735d33 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_8e152a579aa31b03fed49e030b7ab45f = $(`<div id="html_8e152a579aa31b03fed49e030b7ab45f" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Kara Surları Mevlanakapı Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Fatih             <br>              <b>Adres:</b>             Fatih İlçesi, Mevlanakapı Caddesi, Melek Hatun Mahallesi, No:1             <br>              <b>Çalışma saatleri:</b>             10:00-18:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_578e22c3340ac0699f1e4ece7e735d33.setContent(html_8e152a579aa31b03fed49e030b7ab45f);
+            
+        
+
+        marker_bd04f519d5c7ad6608efefe2be50b519.bindPopup(popup_578e22c3340ac0699f1e4ece7e735d33)
+        ;
+
+        
+    
+    
+            marker_bd04f519d5c7ad6608efefe2be50b519.bindTooltip(
+                `<div>
+                     Kara Surları Mevlanakapı Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_59dcca86ef68a1ad8eb4333dcb2df98e = L.marker(
+                [41.0120472, 28.9622045],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_984297a1c69a3cb906af7f323ef3ec95 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_0a6105498e57795654011bd7a9a75782 = $(`<div id="html_0a6105498e57795654011bd7a9a75782" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Kütüphane Troleybüs</strong>             <br><br>              <b>İlçe:</b>             Fatih             <br>              <b>Adres:</b>             Süleymaniye, Prof. Dr. Cavit Orhan Tütengil Sokak No:4, Fatih/İstanbul             <br>              <b>Çalışma saatleri:</b>             09.00- 19.00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_984297a1c69a3cb906af7f323ef3ec95.setContent(html_0a6105498e57795654011bd7a9a75782);
+            
+        
+
+        marker_59dcca86ef68a1ad8eb4333dcb2df98e.bindPopup(popup_984297a1c69a3cb906af7f323ef3ec95)
+        ;
+
+        
+    
+    
+            marker_59dcca86ef68a1ad8eb4333dcb2df98e.bindTooltip(
+                `<div>
+                     Kütüphane Troleybüs
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_eefbbdaef82a1731ca774c551017fd02 = L.marker(
+                [41.0665315, 28.995647],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_bdde8a1fa278e32d25aac6b5d576c82a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_9490444581cb0e93b9b1c315218f52d1 = $(`<div id="html_9490444581cb0e93b9b1c315218f52d1" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Mecidiyeköy Ödünç Kütüphane</strong>             <br><br>              <b>İlçe:</b>             Şişli             <br>              <b>Adres:</b>             Mecidiyeköy Meydanı, Şişli             <br>              <b>Çalışma saatleri:</b>             10:00-18:00             <br>              <b>Çalışma günleri:</b>             Pazartesi-Cuma         </div>         </div>`)[0];
+                popup_bdde8a1fa278e32d25aac6b5d576c82a.setContent(html_9490444581cb0e93b9b1c315218f52d1);
+            
+        
+
+        marker_eefbbdaef82a1731ca774c551017fd02.bindPopup(popup_bdde8a1fa278e32d25aac6b5d576c82a)
+        ;
+
+        
+    
+    
+            marker_eefbbdaef82a1731ca774c551017fd02.bindTooltip(
                 `<div>
                      Mecidiyeköy Ödünç Kütüphane
                  </div>`,
@@ -1843,10 +965,962 @@
             );
         
     
-            marker_cluster_c327d09f82804136c66f92ed73119426.addTo(map_4664b0c7d779a5cdbac648b82b84fcf0);
+            var marker_30c9f2ad1d4e5fd714a168247618a92d = L.marker(
+                [41.0525518, 28.7962117],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
         
     
-        function geo_json_278c23d9338051e1f8404b3dacb11a37_pointToLayer(feature, latlng) {
+        var popup_8fcd5ae898fcdc00fba1a910e7d26c41 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_71dd58be73bb4284e616fe188bf28dd1 = $(`<div id="html_71dd58be73bb4284e616fe188bf28dd1" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Metin Altıok Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Küçükçekmece             <br>              <b>Adres:</b>             Atatürk Mah. İkitelli Cad. No:140 Küçükçekmece             <br>              <b>Çalışma saatleri:</b>             09.00- 21.00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_8fcd5ae898fcdc00fba1a910e7d26c41.setContent(html_71dd58be73bb4284e616fe188bf28dd1);
+            
+        
+
+        marker_30c9f2ad1d4e5fd714a168247618a92d.bindPopup(popup_8fcd5ae898fcdc00fba1a910e7d26c41)
+        ;
+
+        
+    
+    
+            marker_30c9f2ad1d4e5fd714a168247618a92d.bindTooltip(
+                `<div>
+                     Metin Altıok Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9c793a96df15891fd38c6958ebe42398 = L.marker(
+                [40.9979824, 28.7927495],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_bf2c8565bf955dfd04511d21889ef50a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_815f368909ae779c5aebf4cde6c55f12 = $(`<div id="html_815f368909ae779c5aebf4cde6c55f12" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Metin And Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Küçükçekmece             <br>              <b>Adres:</b>             Gültepe Mah. Bağlar Cad. No: 57 Sefaköy - İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-17:00             <br>              <b>Çalışma günleri:</b>             Pazartesi-Cuma         </div>         </div>`)[0];
+                popup_bf2c8565bf955dfd04511d21889ef50a.setContent(html_815f368909ae779c5aebf4cde6c55f12);
+            
+        
+
+        marker_9c793a96df15891fd38c6958ebe42398.bindPopup(popup_bf2c8565bf955dfd04511d21889ef50a)
+        ;
+
+        
+    
+    
+            marker_9c793a96df15891fd38c6958ebe42398.bindTooltip(
+                `<div>
+                     Metin And Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_5bb92f6f77816cf7c8883bb8d7ca3dc2 = L.marker(
+                [40.9789898, 29.0251042],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_604d46e55db49b58fc1e0b8723729799 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_c130955f2992df42dca06be1aecab16a = $(`<div id="html_c130955f2992df42dca06be1aecab16a" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Moda İskelesi Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Kadıköy             <br>              <b>Adres:</b>             Caferağa, Moda Cd. No:175, 34710 Kadıköy/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-22:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_604d46e55db49b58fc1e0b8723729799.setContent(html_c130955f2992df42dca06be1aecab16a);
+            
+        
+
+        marker_5bb92f6f77816cf7c8883bb8d7ca3dc2.bindPopup(popup_604d46e55db49b58fc1e0b8723729799)
+        ;
+
+        
+    
+    
+            marker_5bb92f6f77816cf7c8883bb8d7ca3dc2.bindTooltip(
+                `<div>
+                     Moda İskelesi Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_c84bbdaa0e5c05b3285e23c788e9dffd = L.marker(
+                [40.886181, 29.1966004],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_b3bfef2a7d47f69005d59e17e9c56cd9 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_beb974bf67f22b64048072628bf81883 = $(`<div id="html_beb974bf67f22b64048072628bf81883" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Muallim Cevdet Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Kartal             <br>              <b>Adres:</b>             Kordonboyu Mah. Ankara Cad. No: 142 Kartal - İstanbul             <br>              <b>Çalışma saatleri:</b>             7/24             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_b3bfef2a7d47f69005d59e17e9c56cd9.setContent(html_beb974bf67f22b64048072628bf81883);
+            
+        
+
+        marker_c84bbdaa0e5c05b3285e23c788e9dffd.bindPopup(popup_b3bfef2a7d47f69005d59e17e9c56cd9)
+        ;
+
+        
+    
+    
+            marker_c84bbdaa0e5c05b3285e23c788e9dffd.bindTooltip(
+                `<div>
+                     Muallim Cevdet Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_77db4b403534cd1b1d766a08728080a8 = L.marker(
+                [40.9275656, 29.156483],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_5c30b102b51a96125b246989c3874aa5 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_e2329b2bd698b7a11497e6a78acfccc3 = $(`<div id="html_e2329b2bd698b7a11497e6a78acfccc3" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Muzaffer İzgü Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Maltepe             <br>              <b>Adres:</b>             Fevzi Çakmak Cd. 31-35, Gülsuyu, 34848/Maltepe             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_5c30b102b51a96125b246989c3874aa5.setContent(html_e2329b2bd698b7a11497e6a78acfccc3);
+            
+        
+
+        marker_77db4b403534cd1b1d766a08728080a8.bindPopup(popup_5c30b102b51a96125b246989c3874aa5)
+        ;
+
+        
+    
+    
+            marker_77db4b403534cd1b1d766a08728080a8.bindTooltip(
+                `<div>
+                     Muzaffer İzgü Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_c791408390a1a5c0a0daf544891a0f16 = L.marker(
+                [41.0438314, 28.9373954],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_28bc0685760ca4bba55577ebe2e901b6 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_c824bf722a175d365d9d5e652eeb386c = $(`<div id="html_c824bf722a175d365d9d5e652eeb386c" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Naile Akıncı Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Eyüpsultan             <br>              <b>Adres:</b>             Eyüp Merkez, Eski Feshane Cad., 34050 Eyüpsultan             <br>              <b>Çalışma saatleri:</b>             10:00-20:00             <br>              <b>Çalışma günleri:</b>             Pazartesi-Cumartesi         </div>         </div>`)[0];
+                popup_28bc0685760ca4bba55577ebe2e901b6.setContent(html_c824bf722a175d365d9d5e652eeb386c);
+            
+        
+
+        marker_c791408390a1a5c0a0daf544891a0f16.bindPopup(popup_28bc0685760ca4bba55577ebe2e901b6)
+        ;
+
+        
+    
+    
+            marker_c791408390a1a5c0a0daf544891a0f16.bindTooltip(
+                `<div>
+                     Naile Akıncı Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a016afb77ea1553b3016a9d6f63dbb64 = L.marker(
+                [40.8175569, 29.3001429],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_82362692061479a169931b59a10e7345 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_25aea4a8d75c738a9a11557167dd7da5 = $(`<div id="html_25aea4a8d75c738a9a11557167dd7da5" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Necati Cumalı Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Tuzla             <br>              <b>Adres:</b>             Anadolu Yakası, Postane, 34940 Tuzla/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_82362692061479a169931b59a10e7345.setContent(html_25aea4a8d75c738a9a11557167dd7da5);
+            
+        
+
+        marker_a016afb77ea1553b3016a9d6f63dbb64.bindPopup(popup_82362692061479a169931b59a10e7345)
+        ;
+
+        
+    
+    
+            marker_a016afb77ea1553b3016a9d6f63dbb64.bindTooltip(
+                `<div>
+                     Necati Cumalı Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_f4ba18020b5c94b93a3e8a5c89b3c94b = L.marker(
+                [41.0409795, 28.9603068],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_4f74f3a2d143ffc55724bcaa2c17c5be = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_2b3f1473fab1fe72dfeea324f8f9f02b = $(`<div id="html_2b3f1473fab1fe72dfeea324f8f9f02b" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Okçular Tekkesi Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Beyoğlu             <br>              <b>Adres:</b>             Keçecipiri Mahallesi Fatih Sultan Minberi Cad. No: 1 Beyoğlu/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-17:00             <br>              <b>Çalışma günleri:</b>             Pazartesi-Cuma         </div>         </div>`)[0];
+                popup_4f74f3a2d143ffc55724bcaa2c17c5be.setContent(html_2b3f1473fab1fe72dfeea324f8f9f02b);
+            
+        
+
+        marker_f4ba18020b5c94b93a3e8a5c89b3c94b.bindPopup(popup_4f74f3a2d143ffc55724bcaa2c17c5be)
+        ;
+
+        
+    
+    
+            marker_f4ba18020b5c94b93a3e8a5c89b3c94b.bindTooltip(
+                `<div>
+                     Okçular Tekkesi Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_1cec407360f22a01adb8a22d573a17dc = L.marker(
+                [41.0285491, 28.8770823],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_6416b0bd9f08c66196dd111d3fe7abc0 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_0c6d8164ca94180b5e60d3929b256075 = $(`<div id="html_0c6d8164ca94180b5e60d3929b256075" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Osman Nuri Ergin Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Güngören             <br>              <b>Adres:</b>             Genç Osman Mah. Çinçin Deresi Cad. No: 78 Güngören - İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-17:00             <br>              <b>Çalışma günleri:</b>             Pazartesi-Cuma         </div>         </div>`)[0];
+                popup_6416b0bd9f08c66196dd111d3fe7abc0.setContent(html_0c6d8164ca94180b5e60d3929b256075);
+            
+        
+
+        marker_1cec407360f22a01adb8a22d573a17dc.bindPopup(popup_6416b0bd9f08c66196dd111d3fe7abc0)
+        ;
+
+        
+    
+    
+            marker_1cec407360f22a01adb8a22d573a17dc.bindTooltip(
+                `<div>
+                     Osman Nuri Ergin Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_0315c7193ae7d7a598764b3b00b804bf = L.marker(
+                [41.0334055, 28.9694044],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_6e58e4fd10bca4ad565cb3f03073e723 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_75a6b591a0489b88cc2d3c72cf08992d = $(`<div id="html_75a6b591a0489b88cc2d3c72cf08992d" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Peyami Safa Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Beyoğlu             <br>              <b>Adres:</b>             Yahya Kemal Mahallesi Bahriye caddesi No:24 Kasımpaşa-Beyoğlu/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_6e58e4fd10bca4ad565cb3f03073e723.setContent(html_75a6b591a0489b88cc2d3c72cf08992d);
+            
+        
+
+        marker_0315c7193ae7d7a598764b3b00b804bf.bindPopup(popup_6e58e4fd10bca4ad565cb3f03073e723)
+        ;
+
+        
+    
+    
+            marker_0315c7193ae7d7a598764b3b00b804bf.bindTooltip(
+                `<div>
+                     Peyami Safa Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_2dacc629b625338c89e9dfb009c56bfe = L.marker(
+                [41.1045658, 28.7854389],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_2fcce3a013ebbf485ebbe900e7af9220 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_34ecfca05c477640e129b07511147483 = $(`<div id="html_34ecfca05c477640e129b07511147483" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Rasim Özdenören Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Başakşehir             <br>              <b>Adres:</b>             Başakşehir Mah. Mimar Sinan Cad. Ilgaz Sok. 2.Etap Başakşehir Kültür Merkezi, Başakşehir - İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_2fcce3a013ebbf485ebbe900e7af9220.setContent(html_34ecfca05c477640e129b07511147483);
+            
+        
+
+        marker_2dacc629b625338c89e9dfb009c56bfe.bindPopup(popup_2fcce3a013ebbf485ebbe900e7af9220)
+        ;
+
+        
+    
+    
+            marker_2dacc629b625338c89e9dfb009c56bfe.bindTooltip(
+                `<div>
+                     Rasim Özdenören Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a1a149d82af7a3602cac0bc38764b3c2 = L.marker(
+                [41.1793593, 28.7460023],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_e0954739006aed3c1f832a3f2db6eda3 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_be4c272828314ab13003935a71f010cf = $(`<div id="html_be4c272828314ab13003935a71f010cf" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Rıfat Ilgaz Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Arnavutköy             <br>              <b>Adres:</b>             Arnavutköy mahallesi Eski Edirne Caddesi No:1187             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_e0954739006aed3c1f832a3f2db6eda3.setContent(html_be4c272828314ab13003935a71f010cf);
+            
+        
+
+        marker_a1a149d82af7a3602cac0bc38764b3c2.bindPopup(popup_e0954739006aed3c1f832a3f2db6eda3)
+        ;
+
+        
+    
+    
+            marker_a1a149d82af7a3602cac0bc38764b3c2.bindTooltip(
+                `<div>
+                     Rıfat Ilgaz Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_20cf8df68083a125a3a6bb2ad4d0c105 = L.marker(
+                [41.0681151, 28.7529337],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_22d9c1ba2de6c79e61078a29406eb14c = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_87a2036172725e5c797e7bcc34b41694 = $(`<div id="html_87a2036172725e5c797e7bcc34b41694" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Sabahattin Ali Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Başakşehir             <br>              <b>Adres:</b>             Altınşehir Mah. Osmanlı Cd. No: 49 / Başakşehir             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_22d9c1ba2de6c79e61078a29406eb14c.setContent(html_87a2036172725e5c797e7bcc34b41694);
+            
+        
+
+        marker_20cf8df68083a125a3a6bb2ad4d0c105.bindPopup(popup_22d9c1ba2de6c79e61078a29406eb14c)
+        ;
+
+        
+    
+    
+            marker_20cf8df68083a125a3a6bb2ad4d0c105.bindTooltip(
+                `<div>
+                     Sabahattin Ali Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_197ea64a18c4d50fec4d43d97186934e = L.marker(
+                [41.0011771, 28.7113098],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_48a54d5d643e4930eb455b3515dcdcf9 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_2c3973a3d1f6d645fc865bb00a722729 = $(`<div id="html_2c3973a3d1f6d645fc865bb00a722729" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Sabahattin Eyüboğlu Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Avcılar             <br>              <b>Adres:</b>             Mustafa Kemal Paşa Mahallesi, Firuzköy Bulvarı No:89 /Avcılar             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_48a54d5d643e4930eb455b3515dcdcf9.setContent(html_2c3973a3d1f6d645fc865bb00a722729);
+            
+        
+
+        marker_197ea64a18c4d50fec4d43d97186934e.bindPopup(popup_48a54d5d643e4930eb455b3515dcdcf9)
+        ;
+
+        
+    
+    
+            marker_197ea64a18c4d50fec4d43d97186934e.bindTooltip(
+                `<div>
+                     Sabahattin Eyüboğlu Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_6d947d2269ee3bb6080119d85f177504 = L.marker(
+                [41.0291621, 29.0799949],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_e9967722eec992a52a579f85663414cc = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_71bd68768f72a472fe096893607adb99 = $(`<div id="html_71bd68768f72a472fe096893607adb99" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Salah Birsel Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Üsküdar             <br>              <b>Adres:</b>             Kısıklı, Bosna Blv 39-31, 34692 Üsküdar/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_e9967722eec992a52a579f85663414cc.setContent(html_71bd68768f72a472fe096893607adb99);
+            
+        
+
+        marker_6d947d2269ee3bb6080119d85f177504.bindPopup(popup_e9967722eec992a52a579f85663414cc)
+        ;
+
+        
+    
+    
+            marker_6d947d2269ee3bb6080119d85f177504.bindTooltip(
+                `<div>
+                     Salah Birsel Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_00eea4445787191c6f2a8af9d9545cba = L.marker(
+                [41.0482431, 28.9354595],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_1bd70ec5bfa432c1e2d7b0510d898b8d = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_ab73452296dde3cb7f1e1288263c4e0b = $(`<div id="html_ab73452296dde3cb7f1e1288263c4e0b" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Sesli Kütüphane</strong>             <br><br>              <b>İlçe:</b>             Eyüpsultan             <br>              <b>Adres:</b>             Merkez Mah. Sultan Reşat Cad. Boyacı Sok. No: 6 Eyüp - İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-17:00             <br>              <b>Çalışma günleri:</b>             Pazartesi-Cuma         </div>         </div>`)[0];
+                popup_1bd70ec5bfa432c1e2d7b0510d898b8d.setContent(html_ab73452296dde3cb7f1e1288263c4e0b);
+            
+        
+
+        marker_00eea4445787191c6f2a8af9d9545cba.bindPopup(popup_1bd70ec5bfa432c1e2d7b0510d898b8d)
+        ;
+
+        
+    
+    
+            marker_00eea4445787191c6f2a8af9d9545cba.bindTooltip(
+                `<div>
+                     Sesli Kütüphane
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_f356d83b907e66873f5abfe691471e47 = L.marker(
+                [41.0394435, 28.9855591],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_a8f5de666d8ac16449814460a4ce0300 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_93e7789ffc834070e82dbbab56ee8e3c = $(`<div id="html_93e7789ffc834070e82dbbab56ee8e3c" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Sevgi Soysal Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Beyoğlu             <br>              <b>Adres:</b>             Kocatepe, Aydede Cd. No:2, 34437 Beyoğlu/İstanbul             <br>              <b>Çalışma saatleri:</b>             7/24             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_a8f5de666d8ac16449814460a4ce0300.setContent(html_93e7789ffc834070e82dbbab56ee8e3c);
+            
+        
+
+        marker_f356d83b907e66873f5abfe691471e47.bindPopup(popup_a8f5de666d8ac16449814460a4ce0300)
+        ;
+
+        
+    
+    
+            marker_f356d83b907e66873f5abfe691471e47.bindTooltip(
+                `<div>
+                     Sevgi Soysal Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9c89f4ef8ec100f7f4a0265ec3dadc53 = L.marker(
+                [41.035921, 28.8724483],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_5fead3bca8f4f0652288bf7c2b170bee = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_f04cca34f9891ecaaa9eabeb845148fe = $(`<div id="html_f04cca34f9891ecaaa9eabeb845148fe" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Sezai Karakoç Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Güngören             <br>              <b>Adres:</b>             Güngören Kültür ve Yaşam Merkezi, Gençosman Mah. Doğanay Sokak No:1             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_5fead3bca8f4f0652288bf7c2b170bee.setContent(html_f04cca34f9891ecaaa9eabeb845148fe);
+            
+        
+
+        marker_9c89f4ef8ec100f7f4a0265ec3dadc53.bindPopup(popup_5fead3bca8f4f0652288bf7c2b170bee)
+        ;
+
+        
+    
+    
+            marker_9c89f4ef8ec100f7f4a0265ec3dadc53.bindTooltip(
+                `<div>
+                     Sezai Karakoç Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_c2ff4a000fe6f80bc1eb82325805a97f = L.marker(
+                [41.0457831, 28.902505],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_e2db7d8dbe3557f53f6609d0de13a4b2 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_99e2c8c3d9c52f4ebe66ee49f02663f5 = $(`<div id="html_99e2c8c3d9c52f4ebe66ee49f02663f5" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Suat Derviş Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Bayrampaşa             <br>              <b>Adres:</b>             Tuna Cd. 104-106, Muratpaşa, 34040 Bayrampaşa/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-19:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_e2db7d8dbe3557f53f6609d0de13a4b2.setContent(html_99e2c8c3d9c52f4ebe66ee49f02663f5);
+            
+        
+
+        marker_c2ff4a000fe6f80bc1eb82325805a97f.bindPopup(popup_e2db7d8dbe3557f53f6609d0de13a4b2)
+        ;
+
+        
+    
+    
+            marker_c2ff4a000fe6f80bc1eb82325805a97f.bindTooltip(
+                `<div>
+                     Suat Derviş Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_fa5dda3474c6fe68cf6db3a8d21d04c3 = L.marker(
+                [41.0728385, 28.88711],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_97af8795b724628a73724307f92e4b3e = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_eee144f732fe9508b504caafd27e8dcf = $(`<div id="html_eee144f732fe9508b504caafd27e8dcf" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Sâmiha Ayverdi Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Bayrampaşa             <br>              <b>Adres:</b>             Cevatpaşa, Eski Edirne Asf. No:385, 34045 Bayrampaşa/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_97af8795b724628a73724307f92e4b3e.setContent(html_eee144f732fe9508b504caafd27e8dcf);
+            
+        
+
+        marker_fa5dda3474c6fe68cf6db3a8d21d04c3.bindPopup(popup_97af8795b724628a73724307f92e4b3e)
+        ;
+
+        
+    
+    
+            marker_fa5dda3474c6fe68cf6db3a8d21d04c3.bindTooltip(
+                `<div>
+                     Sâmiha Ayverdi Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_dc3b81698ab5e27dfeabba44d9e4f5fa = L.marker(
+                [40.8690261, 29.1244133],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_71ad07e1155a23adb4e75df1ce072c95 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_9640dd4f35968abc94fdfe732bb5dc13 = $(`<div id="html_9640dd4f35968abc94fdfe732bb5dc13" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Taş Mektep Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Adalar             <br>              <b>Adres:</b>             Kadıyoran Caddesi, Büyükada             <br>              <b>Çalışma saatleri:</b>             09:00-18:00             <br>              <b>Çalışma günleri:</b>             Salı-Pazar         </div>         </div>`)[0];
+                popup_71ad07e1155a23adb4e75df1ce072c95.setContent(html_9640dd4f35968abc94fdfe732bb5dc13);
+            
+        
+
+        marker_dc3b81698ab5e27dfeabba44d9e4f5fa.bindPopup(popup_71ad07e1155a23adb4e75df1ce072c95)
+        ;
+
+        
+    
+    
+            marker_dc3b81698ab5e27dfeabba44d9e4f5fa.bindTooltip(
+                `<div>
+                     Taş Mektep Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_2d769841fe5bae15f8c3a0110405a476 = L.marker(
+                [41.0132894, 29.2064075],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_9aefd8021a3c0817d26b6ffbc887b13b = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_6995e1264267446528c8f7ac63f9e7ae = $(`<div id="html_6995e1264267446528c8f7ac63f9e7ae" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Yaşar Kemal Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Sancaktepe             <br>              <b>Adres:</b>             Meclis Mahalesi Semih Sancar Caddesi İlknur Sokak no:1 Sancaktepe/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_9aefd8021a3c0817d26b6ffbc887b13b.setContent(html_6995e1264267446528c8f7ac63f9e7ae);
+            
+        
+
+        marker_2d769841fe5bae15f8c3a0110405a476.bindPopup(popup_9aefd8021a3c0817d26b6ffbc887b13b)
+        ;
+
+        
+    
+    
+            marker_2d769841fe5bae15f8c3a0110405a476.bindTooltip(
+                `<div>
+                     Yaşar Kemal Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_f9da3c486fbd98e473a32d0e9bef6cb9 = L.marker(
+                [41.1082453, 29.0835867],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_800f8e2bd66244c1c642293f3f5abf0c = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_97be0b88c90f925bb927071d5394fef8 = $(`<div id="html_97be0b88c90f925bb927071d5394fef8" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Çubuklu Silolar Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Beykoz             <br>              <b>Adres:</b>             Çubuklu Mah, Şehit Ersin Güner Cad, Beykoz/İstanbul             <br>              <b>Çalışma saatleri:</b>             10:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_800f8e2bd66244c1c642293f3f5abf0c.setContent(html_97be0b88c90f925bb927071d5394fef8);
+            
+        
+
+        marker_f9da3c486fbd98e473a32d0e9bef6cb9.bindPopup(popup_800f8e2bd66244c1c642293f3f5abf0c)
+        ;
+
+        
+    
+    
+            marker_f9da3c486fbd98e473a32d0e9bef6cb9.bindTooltip(
+                `<div>
+                     Çubuklu Silolar Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_64e170d01a559871b4cf0c4ad77e39fa = L.marker(
+                [40.9840957, 29.0308119],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_b1fd760c2464f2c3a80c8f34735d52c8 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_f64addbb7bad93989c831a6698df5eb3 = $(`<div id="html_f64addbb7bad93989c831a6698df5eb3" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>Özgen Berkol Doğan Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Kadıköy             <br>              <b>Adres:</b>             Caferağa Mahallesi Safa Sokak No:20 Kadıköy, Istanbul             <br>              <b>Çalışma saatleri:</b>             10:00-19:00             <br>              <b>Çalışma günleri:</b>             Salı-Pazar         </div>         </div>`)[0];
+                popup_b1fd760c2464f2c3a80c8f34735d52c8.setContent(html_f64addbb7bad93989c831a6698df5eb3);
+            
+        
+
+        marker_64e170d01a559871b4cf0c4ad77e39fa.bindPopup(popup_b1fd760c2464f2c3a80c8f34735d52c8)
+        ;
+
+        
+    
+    
+            marker_64e170d01a559871b4cf0c4ad77e39fa.bindTooltip(
+                `<div>
+                     Özgen Berkol Doğan Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_d187764b2ae179b97b600b78bd8a40f4 = L.marker(
+                [40.9747892, 28.7871655],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_7184c680874661835eba45a66577f2c1 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_507ec24bf10e48a9c79d36e33747d9bb = $(`<div id="html_507ec24bf10e48a9c79d36e33747d9bb" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>İPA İstanbul Kitaplığı</strong>             <br><br>              <b>İlçe:</b>             Bakırköy             <br>              <b>Adres:</b>             Basınköy, Valilik Yolu Cd. No:2, 34153 Bakırköy/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Pazartesi-Cumartesi         </div>         </div>`)[0];
+                popup_7184c680874661835eba45a66577f2c1.setContent(html_507ec24bf10e48a9c79d36e33747d9bb);
+            
+        
+
+        marker_d187764b2ae179b97b600b78bd8a40f4.bindPopup(popup_7184c680874661835eba45a66577f2c1)
+        ;
+
+        
+    
+    
+            marker_d187764b2ae179b97b600b78bd8a40f4.bindTooltip(
+                `<div>
+                     İPA İstanbul Kitaplığı
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_de272a91ff1395bcdc25e7ec7720d4e2 = L.marker(
+                [40.8500468, 29.3031159],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_4604a199c92dbc33323dc7a9b065192a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_ebafeb41de2894bb7a66394f5a4fa6ab = $(`<div id="html_ebafeb41de2894bb7a66394f5a4fa6ab" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>İdris Güllüce Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Tuzla             <br>              <b>Adres:</b>             Aydınlı Yolu Üzeri Oto Sanayi Sitesi Karşısı No: 20 İçmeler - Tuzla - İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_4604a199c92dbc33323dc7a9b065192a.setContent(html_ebafeb41de2894bb7a66394f5a4fa6ab);
+            
+        
+
+        marker_de272a91ff1395bcdc25e7ec7720d4e2.bindPopup(popup_4604a199c92dbc33323dc7a9b065192a)
+        ;
+
+        
+    
+    
+            marker_de272a91ff1395bcdc25e7ec7720d4e2.bindTooltip(
+                `<div>
+                     İdris Güllüce Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_15a15e209081e9d3c8a38d06ee03b811 = L.marker(
+                [40.9691507, 29.2669677],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_49472f7468a3d5266b201c05e91956ef = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_92ba5d8b33da260ac468a6034ee15517 = $(`<div id="html_92ba5d8b33da260ac468a6034ee15517" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>İlhan Varank Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Sultanbeyli             <br>              <b>Adres:</b>             Mehmet Akif Ersoy Mah. Kadıköy Sok. No: 17/1 Sultanbeyli - İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_49472f7468a3d5266b201c05e91956ef.setContent(html_92ba5d8b33da260ac468a6034ee15517);
+            
+        
+
+        marker_15a15e209081e9d3c8a38d06ee03b811.bindPopup(popup_49472f7468a3d5266b201c05e91956ef)
+        ;
+
+        
+    
+    
+            marker_15a15e209081e9d3c8a38d06ee03b811.bindTooltip(
+                `<div>
+                     İlhan Varank Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_20fffb0e944e7640acfcdb112cd58315 = L.marker(
+                [41.0334811, 28.6827686],
+                {
+}
+            ).addTo(marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc);
+        
+    
+        var popup_18b2c60a47441f7b9b01c29bea4be761 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_306151bc60cf9d43ef87cb7e540ac790 = $(`<div id="html_306151bc60cf9d43ef87cb7e540ac790" style="width: 100.0%; height: 100.0%;">         <div style="             font-family: Arial, Helvetica, sans-serif;             min-width: 230px;         ">             <strong>İsmail Hakkı Tonguç Kütüphanesi</strong>             <br><br>              <b>İlçe:</b>             Esenyurt             <br>              <b>Adres:</b>             Sultaniye Mah. 618. Sk. No:1 Esenyurt/İstanbul             <br>              <b>Çalışma saatleri:</b>             09:00-21:00             <br>              <b>Çalışma günleri:</b>             Hergün         </div>         </div>`)[0];
+                popup_18b2c60a47441f7b9b01c29bea4be761.setContent(html_306151bc60cf9d43ef87cb7e540ac790);
+            
+        
+
+        marker_20fffb0e944e7640acfcdb112cd58315.bindPopup(popup_18b2c60a47441f7b9b01c29bea4be761)
+        ;
+
+        
+    
+    
+            marker_20fffb0e944e7640acfcdb112cd58315.bindTooltip(
+                `<div>
+                     İsmail Hakkı Tonguç Kütüphanesi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            marker_cluster_bd156fe6f06d1237b8fee4ffdc17ccbc.addTo(map_4e9843202bf9f35183e290a2550bb63b);
+        
+    
+        function geo_json_257a5488fb0530860734d3daed03dfda_pointToLayer(feature, latlng) {
             var opts = {
   "stroke": true,
   "color": "#3388ff",
@@ -1867,33 +1941,33 @@
             return new L.CircleMarker(latlng, opts)
         }
 
-        function geo_json_278c23d9338051e1f8404b3dacb11a37_onEachFeature(feature, layer) {
+        function geo_json_257a5488fb0530860734d3daed03dfda_onEachFeature(feature, layer) {
 
             layer.on({
             });
         };
-        var geo_json_278c23d9338051e1f8404b3dacb11a37 = L.geoJson(null, {
-                onEachFeature: geo_json_278c23d9338051e1f8404b3dacb11a37_onEachFeature,
+        var geo_json_257a5488fb0530860734d3daed03dfda = L.geoJson(null, {
+                onEachFeature: geo_json_257a5488fb0530860734d3daed03dfda_onEachFeature,
             
-                pointToLayer: geo_json_278c23d9338051e1f8404b3dacb11a37_pointToLayer,
+                pointToLayer: geo_json_257a5488fb0530860734d3daed03dfda_pointToLayer,
             ...{
 }
         });
 
-        function geo_json_278c23d9338051e1f8404b3dacb11a37_add (data) {
-            geo_json_278c23d9338051e1f8404b3dacb11a37
+        function geo_json_257a5488fb0530860734d3daed03dfda_add (data) {
+            geo_json_257a5488fb0530860734d3daed03dfda
                 .addData(data);
         }
-            geo_json_278c23d9338051e1f8404b3dacb11a37_add({"features": [{"geometry": {"coordinates": [29.1244133, 40.8690261], "type": "Point"}, "properties": {"kutuphane_adi": "Ta\u015f Mektep K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7647058, 41.1862817], "type": "Point"}, "properties": {"kutuphane_adi": "Cemil Meri\u00e7 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7460023, 41.1793593], "type": "Point"}, "properties": {"kutuphane_adi": "R\u0131fat Ilgaz K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.702602, 41.0312375], "type": "Point"}, "properties": {"kutuphane_adi": "Fakir Baykurt K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7113098, 41.0011771], "type": "Point"}, "properties": {"kutuphane_adi": "Sabahattin Ey\u00fcbo\u011flu K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.8743693, 40.9809416], "type": "Point"}, "properties": {"kutuphane_adi": "Bak\u0131rk\u00f6y \u00d6d\u00fcn\u00e7 K\u00fct\u00fcphane"}, "type": "Feature"}, {"geometry": {"coordinates": [28.860091, 40.9755004], "type": "Point"}, "properties": {"kutuphane_adi": "Baruthane K\u00fct\u00fcphane"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7871655, 40.9747892], "type": "Point"}, "properties": {"kutuphane_adi": "\u0130PA \u0130stanbul Kitapl\u0131\u011f\u0131"}, "type": "Feature"}, {"geometry": {"coordinates": [28.8956236, 41.038943], "type": "Point"}, "properties": {"kutuphane_adi": "Evliya \u00c7elebi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.902505, 41.0457831], "type": "Point"}, "properties": {"kutuphane_adi": "Suat Dervi\u015f K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.88711, 41.0728385], "type": "Point"}, "properties": {"kutuphane_adi": "S\u00e2miha Ayverdi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7854389, 41.1045658], "type": "Point"}, "properties": {"kutuphane_adi": "Rasim \u00d6zden\u00f6ren K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7529337, 41.0681151], "type": "Point"}, "properties": {"kutuphane_adi": "Sabahattin Ali K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0740307, 41.0790958], "type": "Point"}, "properties": {"kutuphane_adi": "Feza G\u00fcrsey K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0835867, 41.1082453], "type": "Point"}, "properties": {"kutuphane_adi": "\u00c7ubuklu Silolar K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9603068, 41.0409795], "type": "Point"}, "properties": {"kutuphane_adi": "Ok\u00e7ular Tekkesi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9694044, 41.0334055], "type": "Point"}, "properties": {"kutuphane_adi": "Peyami Safa K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9855591, 41.0394435], "type": "Point"}, "properties": {"kutuphane_adi": "Sevgi Soysal K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0072169, 41.041202], "type": "Point"}, "properties": {"kutuphane_adi": "Be\u015fikta\u015f \u0130skele K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.6511839, 41.0336452], "type": "Point"}, "properties": {"kutuphane_adi": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.6827686, 41.0334811], "type": "Point"}, "properties": {"kutuphane_adi": "\u0130smail Hakk\u0131 Tongu\u00e7 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9281987, 41.0829701], "type": "Point"}, "properties": {"kutuphane_adi": "Hasan H\u00fcseyin Korkmazgil K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9373954, 41.0438314], "type": "Point"}, "properties": {"kutuphane_adi": "Naile Ak\u0131nc\u0131 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9354595, 41.0482431], "type": "Point"}, "properties": {"kutuphane_adi": "Sesli K\u00fct\u00fcphane"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9398749, 41.0196101], "type": "Point"}, "properties": {"kutuphane_adi": "Ahmet Kabakl\u0131 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9440457, 41.0069951], "type": "Point"}, "properties": {"kutuphane_adi": "Bulgur Palas K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9504883, 41.0307407], "type": "Point"}, "properties": {"kutuphane_adi": "Kad\u0131n Eserleri K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9220713, 41.0146728], "type": "Point"}, "properties": {"kutuphane_adi": "Kara Surlar\u0131 Mevlanakap\u0131 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9622045, 41.0120472], "type": "Point"}, "properties": {"kutuphane_adi": "K\u00fct\u00fcphane Troleyb\u00fcs"}, "type": "Feature"}, {"geometry": {"coordinates": [28.8770823, 41.0285491], "type": "Point"}, "properties": {"kutuphane_adi": "Osman Nuri Ergin K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.8724483, 41.035921], "type": "Point"}, "properties": {"kutuphane_adi": "Sezai Karako\u00e7 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0437256, 40.9970443], "type": "Point"}, "properties": {"kutuphane_adi": "Afife Batur K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0251042, 40.9789898], "type": "Point"}, "properties": {"kutuphane_adi": "Moda \u0130skelesi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0308119, 40.9840957], "type": "Point"}, "properties": {"kutuphane_adi": "\u00d6zgen Berkol Do\u011fan K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.1613794, 40.905902], "type": "Point"}, "properties": {"kutuphane_adi": "Halil \u0130nalc\u0131k K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.1966004, 40.886181], "type": "Point"}, "properties": {"kutuphane_adi": "Muallim Cevdet K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7832456, 40.990127], "type": "Point"}, "properties": {"kutuphane_adi": "Atilla \u0130lhan K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7962117, 41.0525518], "type": "Point"}, "properties": {"kutuphane_adi": "Metin Alt\u0131ok K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7927495, 40.9979824], "type": "Point"}, "properties": {"kutuphane_adi": "Metin And K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.156483, 40.9275656], "type": "Point"}, "properties": {"kutuphane_adi": "Muzaffer \u0130zg\u00fc K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.2319759, 40.875952], "type": "Point"}, "properties": {"kutuphane_adi": "Hasan \u0130zzettin Dinamo K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.2064075, 41.0132894], "type": "Point"}, "properties": {"kutuphane_adi": "Ya\u015far Kemal K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0304981, 41.1541638], "type": "Point"}, "properties": {"kutuphane_adi": "Ahmet Bedevi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.2669677, 40.9691507], "type": "Point"}, "properties": {"kutuphane_adi": "\u0130lhan Varank K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.3001429, 40.8175569], "type": "Point"}, "properties": {"kutuphane_adi": "Necati Cumal\u0131 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.3031159, 40.8500468], "type": "Point"}, "properties": {"kutuphane_adi": "\u0130dris G\u00fcll\u00fcce K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.2380278, 41.0531537], "type": "Point"}, "properties": {"kutuphane_adi": "Fatma Aliye K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0799949, 41.0291621], "type": "Point"}, "properties": {"kutuphane_adi": "Salah Birsel K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9872128, 41.0564045], "type": "Point"}, "properties": {"kutuphane_adi": "Atat\u00fcrk M\u00fczesi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9872634, 41.0647782], "type": "Point"}, "properties": {"kutuphane_adi": "Habitat K\u00fct\u00fcphane"}, "type": "Feature"}, {"geometry": {"coordinates": [28.995647, 41.0665315], "type": "Point"}, "properties": {"kutuphane_adi": "Mecidiyek\u00f6y \u00d6d\u00fcn\u00e7 K\u00fct\u00fcphane"}, "type": "Feature"}], "type": "FeatureCollection"});
-        geo_json_278c23d9338051e1f8404b3dacb11a37.setStyle(function(feature) {return feature.properties.style;});
+            geo_json_257a5488fb0530860734d3daed03dfda_add({"features": [{"geometry": {"coordinates": [29.0437256, 40.9970443], "type": "Point"}, "properties": {"kutuphane_adi": "Afife Batur K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0304981, 41.1541638], "type": "Point"}, "properties": {"kutuphane_adi": "Ahmet Bedevi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9398749, 41.0196101], "type": "Point"}, "properties": {"kutuphane_adi": "Ahmet Kabakl\u0131 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9872128, 41.0564045], "type": "Point"}, "properties": {"kutuphane_adi": "Atat\u00fcrk M\u00fczesi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7832456, 40.990127], "type": "Point"}, "properties": {"kutuphane_adi": "Atilla \u0130lhan K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.8743693, 40.9809416], "type": "Point"}, "properties": {"kutuphane_adi": "Bak\u0131rk\u00f6y \u00d6d\u00fcn\u00e7 K\u00fct\u00fcphane"}, "type": "Feature"}, {"geometry": {"coordinates": [28.860091, 40.9755004], "type": "Point"}, "properties": {"kutuphane_adi": "Baruthane K\u00fct\u00fcphane"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0072169, 41.041202], "type": "Point"}, "properties": {"kutuphane_adi": "Be\u015fikta\u015f \u0130skele K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9440457, 41.0069951], "type": "Point"}, "properties": {"kutuphane_adi": "Bulgur Palas K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7647058, 41.1862817], "type": "Point"}, "properties": {"kutuphane_adi": "Cemil Meri\u00e7 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.8956236, 41.038943], "type": "Point"}, "properties": {"kutuphane_adi": "Evliya \u00c7elebi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.702602, 41.0312375], "type": "Point"}, "properties": {"kutuphane_adi": "Fakir Baykurt K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.2380278, 41.0531537], "type": "Point"}, "properties": {"kutuphane_adi": "Fatma Aliye K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0740307, 41.0790958], "type": "Point"}, "properties": {"kutuphane_adi": "Feza G\u00fcrsey K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.6511839, 41.0336452], "type": "Point"}, "properties": {"kutuphane_adi": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9872634, 41.0647782], "type": "Point"}, "properties": {"kutuphane_adi": "Habitat K\u00fct\u00fcphane"}, "type": "Feature"}, {"geometry": {"coordinates": [29.1613794, 40.905902], "type": "Point"}, "properties": {"kutuphane_adi": "Halil \u0130nalc\u0131k K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9281987, 41.0829701], "type": "Point"}, "properties": {"kutuphane_adi": "Hasan H\u00fcseyin Korkmazgil K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.2319759, 40.875952], "type": "Point"}, "properties": {"kutuphane_adi": "Hasan \u0130zzettin Dinamo K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9504883, 41.0307407], "type": "Point"}, "properties": {"kutuphane_adi": "Kad\u0131n Eserleri K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9220713, 41.0146728], "type": "Point"}, "properties": {"kutuphane_adi": "Kara Surlar\u0131 Mevlanakap\u0131 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9622045, 41.0120472], "type": "Point"}, "properties": {"kutuphane_adi": "K\u00fct\u00fcphane Troleyb\u00fcs"}, "type": "Feature"}, {"geometry": {"coordinates": [28.995647, 41.0665315], "type": "Point"}, "properties": {"kutuphane_adi": "Mecidiyek\u00f6y \u00d6d\u00fcn\u00e7 K\u00fct\u00fcphane"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7962117, 41.0525518], "type": "Point"}, "properties": {"kutuphane_adi": "Metin Alt\u0131ok K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7927495, 40.9979824], "type": "Point"}, "properties": {"kutuphane_adi": "Metin And K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0251042, 40.9789898], "type": "Point"}, "properties": {"kutuphane_adi": "Moda \u0130skelesi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.1966004, 40.886181], "type": "Point"}, "properties": {"kutuphane_adi": "Muallim Cevdet K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.156483, 40.9275656], "type": "Point"}, "properties": {"kutuphane_adi": "Muzaffer \u0130zg\u00fc K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9373954, 41.0438314], "type": "Point"}, "properties": {"kutuphane_adi": "Naile Ak\u0131nc\u0131 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.3001429, 40.8175569], "type": "Point"}, "properties": {"kutuphane_adi": "Necati Cumal\u0131 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9603068, 41.0409795], "type": "Point"}, "properties": {"kutuphane_adi": "Ok\u00e7ular Tekkesi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.8770823, 41.0285491], "type": "Point"}, "properties": {"kutuphane_adi": "Osman Nuri Ergin K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9694044, 41.0334055], "type": "Point"}, "properties": {"kutuphane_adi": "Peyami Safa K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7854389, 41.1045658], "type": "Point"}, "properties": {"kutuphane_adi": "Rasim \u00d6zden\u00f6ren K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7460023, 41.1793593], "type": "Point"}, "properties": {"kutuphane_adi": "R\u0131fat Ilgaz K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7529337, 41.0681151], "type": "Point"}, "properties": {"kutuphane_adi": "Sabahattin Ali K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7113098, 41.0011771], "type": "Point"}, "properties": {"kutuphane_adi": "Sabahattin Ey\u00fcbo\u011flu K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0799949, 41.0291621], "type": "Point"}, "properties": {"kutuphane_adi": "Salah Birsel K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9354595, 41.0482431], "type": "Point"}, "properties": {"kutuphane_adi": "Sesli K\u00fct\u00fcphane"}, "type": "Feature"}, {"geometry": {"coordinates": [28.9855591, 41.0394435], "type": "Point"}, "properties": {"kutuphane_adi": "Sevgi Soysal K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.8724483, 41.035921], "type": "Point"}, "properties": {"kutuphane_adi": "Sezai Karako\u00e7 K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.902505, 41.0457831], "type": "Point"}, "properties": {"kutuphane_adi": "Suat Dervi\u015f K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.88711, 41.0728385], "type": "Point"}, "properties": {"kutuphane_adi": "S\u00e2miha Ayverdi K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.1244133, 40.8690261], "type": "Point"}, "properties": {"kutuphane_adi": "Ta\u015f Mektep K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.2064075, 41.0132894], "type": "Point"}, "properties": {"kutuphane_adi": "Ya\u015far Kemal K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0835867, 41.1082453], "type": "Point"}, "properties": {"kutuphane_adi": "\u00c7ubuklu Silolar K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.0308119, 40.9840957], "type": "Point"}, "properties": {"kutuphane_adi": "\u00d6zgen Berkol Do\u011fan K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.7871655, 40.9747892], "type": "Point"}, "properties": {"kutuphane_adi": "\u0130PA \u0130stanbul Kitapl\u0131\u011f\u0131"}, "type": "Feature"}, {"geometry": {"coordinates": [29.3031159, 40.8500468], "type": "Point"}, "properties": {"kutuphane_adi": "\u0130dris G\u00fcll\u00fcce K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [29.2669677, 40.9691507], "type": "Point"}, "properties": {"kutuphane_adi": "\u0130lhan Varank K\u00fct\u00fcphanesi"}, "type": "Feature"}, {"geometry": {"coordinates": [28.6827686, 41.0334811], "type": "Point"}, "properties": {"kutuphane_adi": "\u0130smail Hakk\u0131 Tongu\u00e7 K\u00fct\u00fcphanesi"}, "type": "Feature"}], "type": "FeatureCollection"});
+        geo_json_257a5488fb0530860734d3daed03dfda.setStyle(function(feature) {return feature.properties.style;});
 
         
     
-            geo_json_278c23d9338051e1f8404b3dacb11a37.addTo(map_4664b0c7d779a5cdbac648b82b84fcf0);
+            geo_json_257a5488fb0530860734d3daed03dfda.addTo(map_4e9843202bf9f35183e290a2550bb63b);
         
     
-            var geo_json_278c23d9338051e1f8404b3dacb11a37searchControl = new L.Control.Search({
-                layer: geo_json_278c23d9338051e1f8404b3dacb11a37,
+            var geo_json_257a5488fb0530860734d3daed03dfdasearchControl = new L.Control.Search({
+                layer: geo_json_257a5488fb0530860734d3daed03dfda,
                 
                 propertyName: 'kutuphane_adi',
                 
@@ -1908,25 +1982,25 @@
                 hideMarkerOnCollapse: true
             
                 });
-                geo_json_278c23d9338051e1f8404b3dacb11a37searchControl.on('search:locationfound', function(e) {
-                    geo_json_278c23d9338051e1f8404b3dacb11a37.setStyle(function(feature){
+                geo_json_257a5488fb0530860734d3daed03dfdasearchControl.on('search:locationfound', function(e) {
+                    geo_json_257a5488fb0530860734d3daed03dfda.setStyle(function(feature){
                         return feature.properties.style
                     })
                     
                     if(e.layer._popup)
                         e.layer.openPopup();
                 })
-                geo_json_278c23d9338051e1f8404b3dacb11a37searchControl.on('search:collapsed', function(e) {
-                        geo_json_278c23d9338051e1f8404b3dacb11a37.setStyle(function(feature){
+                geo_json_257a5488fb0530860734d3daed03dfdasearchControl.on('search:collapsed', function(e) {
+                        geo_json_257a5488fb0530860734d3daed03dfda.setStyle(function(feature){
                             return feature.properties.style
                     });
                 });
-            map_4664b0c7d779a5cdbac648b82b84fcf0.addControl( geo_json_278c23d9338051e1f8404b3dacb11a37searchControl );
+            map_4e9843202bf9f35183e290a2550bb63b.addControl( geo_json_257a5488fb0530860734d3daed03dfdasearchControl );
 
         
     
-            map_4664b0c7d779a5cdbac648b82b84fcf0.fitBounds(
-                [[40.8690261, 29.1244133], [41.1862817, 28.7647058], [41.1793593, 28.7460023], [41.0312375, 28.702602], [41.0011771, 28.7113098], [40.9809416, 28.8743693], [40.9755004, 28.860091], [40.9747892, 28.7871655], [41.038943, 28.8956236], [41.0457831, 28.902505], [41.0728385, 28.88711], [41.1045658, 28.7854389], [41.0681151, 28.7529337], [41.0790958, 29.0740307], [41.1082453, 29.0835867], [41.0409795, 28.9603068], [41.0334055, 28.9694044], [41.0394435, 28.9855591], [41.041202, 29.0072169], [41.0336452, 28.6511839], [41.0334811, 28.6827686], [41.0829701, 28.9281987], [41.0438314, 28.9373954], [41.0482431, 28.9354595], [41.0196101, 28.9398749], [41.0069951, 28.9440457], [41.0307407, 28.9504883], [41.0146728, 28.9220713], [41.0120472, 28.9622045], [41.0285491, 28.8770823], [41.035921, 28.8724483], [40.9970443, 29.0437256], [40.9789898, 29.0251042], [40.9840957, 29.0308119], [40.905902, 29.1613794], [40.886181, 29.1966004], [40.990127, 28.7832456], [41.0525518, 28.7962117], [40.9979824, 28.7927495], [40.9275656, 29.156483], [40.875952, 29.2319759], [41.0132894, 29.2064075], [41.1541638, 29.0304981], [40.9691507, 29.2669677], [40.8175569, 29.3001429], [40.8500468, 29.3031159], [41.0531537, 29.2380278], [41.0291621, 29.0799949], [41.0564045, 28.9872128], [41.0647782, 28.9872634], [41.0665315, 28.995647]],
+            map_4e9843202bf9f35183e290a2550bb63b.fitBounds(
+                [[40.9970443, 29.0437256], [41.1541638, 29.0304981], [41.0196101, 28.9398749], [41.0564045, 28.9872128], [40.990127, 28.7832456], [40.9809416, 28.8743693], [40.9755004, 28.860091], [41.041202, 29.0072169], [41.0069951, 28.9440457], [41.1862817, 28.7647058], [41.038943, 28.8956236], [41.0312375, 28.702602], [41.0531537, 29.2380278], [41.0790958, 29.0740307], [41.0336452, 28.6511839], [41.0647782, 28.9872634], [40.905902, 29.1613794], [41.0829701, 28.9281987], [40.875952, 29.2319759], [41.0307407, 28.9504883], [41.0146728, 28.9220713], [41.0120472, 28.9622045], [41.0665315, 28.995647], [41.0525518, 28.7962117], [40.9979824, 28.7927495], [40.9789898, 29.0251042], [40.886181, 29.1966004], [40.9275656, 29.156483], [41.0438314, 28.9373954], [40.8175569, 29.3001429], [41.0409795, 28.9603068], [41.0285491, 28.8770823], [41.0334055, 28.9694044], [41.1045658, 28.7854389], [41.1793593, 28.7460023], [41.0681151, 28.7529337], [41.0011771, 28.7113098], [41.0291621, 29.0799949], [41.0482431, 28.9354595], [41.0394435, 28.9855591], [41.035921, 28.8724483], [41.0457831, 28.902505], [41.0728385, 28.88711], [40.8690261, 29.1244133], [41.0132894, 29.2064075], [41.1082453, 29.0835867], [40.9840957, 29.0308119], [40.9747892, 28.7871655], [40.8500468, 29.3031159], [40.9691507, 29.2669677], [41.0334811, 28.6827686]],
                 {}
             );
         
