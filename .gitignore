@@ -25,3 +25,12 @@ data/processed/*
 
 # Kişisel staj günlüğü
 docs/staj-gunlugu.md
+
+# SQLite veri tabanı dosyaları
+data/database/*.db
+data/database/*.db-shm
+data/database/*.db-wal
+data/database/*.db-journal
+
+# Klasör yapısının Git'te korunması
+!data/database/.gitkeep
