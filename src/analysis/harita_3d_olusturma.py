@@ -484,6 +484,13 @@ aciklama_paneli = """
     </div>
 </div>
 
+ <a
+    id="urbanai-ana-sayfa-butonu"
+    href="index.html"
+>
+    <span>←</span>
+    Ana sayfaya dön
+</a>  
 
 <style>
     #urbanai-bilgi-paneli {
@@ -621,6 +628,48 @@ aciklama_paneli = """
     Ekran dar olduğunda panelin fazla yer
     kaplamaması için boyutunu küçült.
     */
+        #urbanai-ana-sayfa-butonu {
+        position: fixed;
+        top: 18px;
+        right: 18px;
+        z-index: 10000;
+
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 11px 15px;
+
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 10px;
+
+        color: white;
+        background: rgba(22, 27, 34, 0.92);
+
+        font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+
+        box-shadow:
+            0 4px 16px rgba(0, 0, 0, 0.25);
+
+        backdrop-filter: blur(8px);
+
+        transition:
+            background 0.18s ease,
+            transform 0.18s ease;
+    }
+
+    #urbanai-ana-sayfa-butonu:hover {
+        background: rgba(35, 95, 159, 0.96);
+        transform: translateY(-2px);
+    }
+    
     @media (max-width: 600px) {
         #urbanai-bilgi-paneli {
             top: 10px;

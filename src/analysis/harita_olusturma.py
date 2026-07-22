@@ -3,6 +3,8 @@ from pathlib import Path
 
 import folium
 import pandas as pd
+
+from branca.element import Element
 from folium.plugins import MarkerCluster, Search
 
 

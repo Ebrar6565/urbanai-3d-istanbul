@@ -1,0 +1,2757 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="UrbanAI 3D İstanbul kentsel hizmet erişilebilirliği ve karar destek platformu."
+    >
+
+    <title>UrbanAI 3D İstanbul</title>
+
+    <style>
+        /* ==================================================
+           RENK VE TASARIM DEĞİŞKENLERİ
+        ================================================== */
+
+        :root {
+            --lacivert-950: #07111f;
+            --lacivert-900: #0d1b2f;
+            --lacivert-850: #12243d;
+            --lacivert-800: #17304f;
+
+            --mavi-700: #1768ac;
+            --mavi-600: #2381d5;
+            --mavi-500: #3b9aeb;
+            --mavi-100: #dff1ff;
+
+            --turkuaz-500: #36c5b2;
+            --turuncu-500: #f59e42;
+            --kirmizi-500: #e85b61;
+
+            --beyaz: #ffffff;
+            --zemin: #f4f7fb;
+            --kart: #ffffff;
+
+            --metin: #172033;
+            --metin-ikincil: #647087;
+            --cizgi: #dce4ee;
+
+            --golge-kucuk:
+                0 8px 24px rgba(22, 42, 68, 0.08);
+
+            --golge-buyuk:
+                0 24px 70px rgba(15, 35, 60, 0.15);
+
+            --gecis:
+                180ms ease;
+        }
+
+
+        /* ==================================================
+           TEMEL AYARLAR
+        ================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+
+            min-height: 100vh;
+
+            color: var(--metin);
+            background: var(--zemin);
+
+            font-family:
+                Inter,
+                ui-sans-serif,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        svg {
+            display: block;
+        }
+
+
+        /* ==================================================
+           ORTAK YERLEŞİM
+        ================================================== */
+
+        .kapsayici {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .bolum-basligi {
+            max-width: 720px;
+            margin-bottom: 30px;
+        }
+
+        .bolum-etiketi {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            margin-bottom: 13px;
+            padding: 7px 11px;
+
+            border: 1px solid rgba(35, 129, 213, 0.18);
+            border-radius: 999px;
+
+            color: var(--mavi-700);
+            background: rgba(223, 241, 255, 0.75);
+
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .bolum-etiketi::before {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+            background: var(--turkuaz-500);
+
+            content: "";
+        }
+
+        .bolum-basligi h2 {
+            margin: 0 0 12px;
+
+            color: var(--lacivert-900);
+
+            font-size: clamp(28px, 4vw, 42px);
+            line-height: 1.12;
+            letter-spacing: -0.035em;
+        }
+
+        .bolum-basligi p {
+            margin: 0;
+
+            color: var(--metin-ikincil);
+
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+
+        /* ==================================================
+           ÜST MENÜ
+        ================================================== */
+
+        .ust-menu {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            color: var(--beyaz);
+            background: rgba(7, 17, 31, 0.91);
+
+            backdrop-filter: blur(18px);
+        }
+
+        .ust-menu-icerik {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            min-height: 76px;
+        }
+
+        .marka {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            text-decoration: none;
+        }
+
+        .marka-isareti {
+            position: relative;
+
+            display: grid;
+            place-items: center;
+
+            width: 45px;
+            height: 45px;
+
+            overflow: hidden;
+
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    var(--mavi-500),
+                    var(--mavi-700)
+                );
+
+            box-shadow:
+                0 10px 30px rgba(35, 129, 213, 0.25);
+        }
+
+        .marka-isareti::after {
+            position: absolute;
+            right: -14px;
+            bottom: -16px;
+
+            width: 35px;
+            height: 35px;
+
+            border-radius: 50%;
+            background: rgba(54, 197, 178, 0.55);
+
+            content: "";
+        }
+
+        .marka-isareti svg {
+            position: relative;
+            z-index: 1;
+
+            width: 24px;
+            height: 24px;
+        }
+
+        .marka-adi {
+            margin-bottom: 2px;
+
+            font-size: 18px;
+            font-weight: 750;
+            letter-spacing: -0.015em;
+        }
+
+        .marka-aciklamasi {
+            color: rgba(255, 255, 255, 0.64);
+
+            font-size: 11px;
+        }
+
+        .menu-sag {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .menu-baglantilari {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .menu-baglantilari a {
+            padding: 9px 12px;
+
+            border-radius: 9px;
+
+            color: rgba(255, 255, 255, 0.72);
+
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 550;
+
+            transition:
+                color var(--gecis),
+                background var(--gecis);
+        }
+
+        .menu-baglantilari a:hover {
+            color: var(--beyaz);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .prototip-etiketi {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            padding: 8px 12px;
+
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+
+            color: rgba(255, 255, 255, 0.86);
+            background: rgba(255, 255, 255, 0.06);
+
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .prototip-noktasi {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+            background: var(--turkuaz-500);
+
+            box-shadow:
+                0 0 0 5px rgba(54, 197, 178, 0.12);
+        }
+
+
+        /* ==================================================
+           HERO / AÇILIŞ ALANI
+        ================================================== */
+
+        .hero {
+            position: relative;
+
+            overflow: hidden;
+
+            padding: 88px 0 100px;
+
+            color: var(--beyaz);
+
+            background:
+                radial-gradient(
+                    circle at 78% 18%,
+                    rgba(35, 129, 213, 0.23),
+                    transparent 31%
+                ),
+                radial-gradient(
+                    circle at 15% 80%,
+                    rgba(54, 197, 178, 0.13),
+                    transparent 26%
+                ),
+                linear-gradient(
+                    135deg,
+                    var(--lacivert-950),
+                    var(--lacivert-850)
+                );
+        }
+
+        .hero::before {
+            position: absolute;
+            inset: 0;
+
+            opacity: 0.32;
+
+            background-image:
+                linear-gradient(
+                    rgba(255, 255, 255, 0.035) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.035) 1px,
+                    transparent 1px
+                );
+
+            background-size: 42px 42px;
+
+            content: "";
+            pointer-events: none;
+        }
+
+        .hero-icerik {
+            position: relative;
+            z-index: 1;
+
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1.05fr)
+                minmax(380px, 0.95fr);
+
+            align-items: center;
+            gap: 70px;
+        }
+
+        .hero-metin {
+            max-width: 680px;
+        }
+
+        .hero-etiketi {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+
+            margin-bottom: 21px;
+            padding: 8px 13px;
+
+            border: 1px solid rgba(103, 190, 255, 0.20);
+            border-radius: 999px;
+
+            color: #bfe5ff;
+            background: rgba(35, 129, 213, 0.12);
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .hero-etiketi svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .hero h1 {
+            margin: 0 0 23px;
+
+            max-width: 740px;
+
+            font-size: clamp(42px, 6vw, 72px);
+            line-height: 1.02;
+            letter-spacing: -0.055em;
+        }
+
+        .vurgu {
+            color: #6bc7ff;
+        }
+
+        .hero-aciklama {
+            max-width: 650px;
+
+            margin: 0 0 31px;
+
+            color: rgba(255, 255, 255, 0.68);
+
+            font-size: 17px;
+            line-height: 1.75;
+        }
+
+        .hero-butonlari {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .buton {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            min-height: 48px;
+            padding: 0 18px;
+
+            border: 1px solid transparent;
+            border-radius: 11px;
+
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            transition:
+                transform var(--gecis),
+                box-shadow var(--gecis),
+                background var(--gecis);
+        }
+
+        .buton:hover {
+            transform: translateY(-2px);
+        }
+
+        .buton svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .buton-birincil {
+            color: var(--beyaz);
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--mavi-600),
+                    var(--mavi-700)
+                );
+
+            box-shadow:
+                0 13px 35px rgba(35, 129, 213, 0.28);
+        }
+
+        .buton-birincil:hover {
+            box-shadow:
+                0 16px 40px rgba(35, 129, 213, 0.38);
+        }
+
+        .buton-ikincil {
+            border-color: rgba(255, 255, 255, 0.14);
+
+            color: rgba(255, 255, 255, 0.90);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .buton-ikincil:hover {
+            background: rgba(255, 255, 255, 0.10);
+        }
+
+
+        /* ==================================================
+           HERO ANALİZ PANELİ
+        ================================================== */
+
+        .analiz-paneli {
+            position: relative;
+
+            padding: 21px;
+
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+
+            background: rgba(255, 255, 255, 0.065);
+
+            box-shadow:
+                0 35px 90px rgba(0, 0, 0, 0.28);
+
+            backdrop-filter: blur(18px);
+        }
+
+        .analiz-paneli::before {
+            position: absolute;
+            top: -18px;
+            right: 28px;
+
+            width: 90px;
+            height: 90px;
+
+            border-radius: 50%;
+
+            background: rgba(54, 197, 178, 0.12);
+
+            filter: blur(25px);
+
+            content: "";
+        }
+
+        .panel-ust {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 20px;
+        }
+
+        .panel-baslik {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-ikon {
+            display: grid;
+            place-items: center;
+
+            width: 34px;
+            height: 34px;
+
+            border-radius: 10px;
+
+            color: #86d5ff;
+            background: rgba(35, 129, 213, 0.15);
+        }
+
+        .panel-ikon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .panel-baslik strong {
+            display: block;
+
+            margin-bottom: 2px;
+
+            font-size: 13px;
+        }
+
+        .panel-baslik span {
+            color: rgba(255, 255, 255, 0.55);
+
+            font-size: 10px;
+        }
+
+        .canli-etiketi {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            padding: 6px 9px;
+
+            border-radius: 999px;
+
+            color: #8ce6d6;
+            background: rgba(54, 197, 178, 0.10);
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .canli-etiketi::before {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+            background: var(--turkuaz-500);
+
+            content: "";
+        }
+
+        .panel-ozet {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 9px;
+
+            margin-bottom: 21px;
+        }
+
+        .mini-kart {
+            padding: 13px;
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+
+            background: rgba(0, 0, 0, 0.11);
+        }
+
+        .mini-deger {
+            margin-bottom: 3px;
+
+            font-size: 19px;
+            font-weight: 750;
+        }
+
+        .mini-aciklama {
+            color: rgba(255, 255, 255, 0.50);
+
+            font-size: 9px;
+            line-height: 1.35;
+        }
+
+        .grafik-alani {
+            padding: 17px;
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        .grafik-basligi {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+
+            margin-bottom: 17px;
+        }
+
+        .grafik-basligi strong {
+            font-size: 12px;
+        }
+
+        .grafik-basligi span {
+            color: rgba(255, 255, 255, 0.47);
+
+            font-size: 9px;
+        }
+
+        .puan-satiri {
+            display: grid;
+            grid-template-columns: 92px 1fr 38px;
+            align-items: center;
+            gap: 10px;
+
+            margin: 12px 0;
+        }
+
+        .puan-ilce {
+            color: rgba(255, 255, 255, 0.78);
+
+            font-size: 10px;
+        }
+
+        .puan-iz {
+            height: 7px;
+
+            overflow: hidden;
+
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .puan-dolgu {
+            height: 100%;
+
+            border-radius: inherit;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--mavi-500),
+                    var(--turkuaz-500)
+                );
+        }
+
+        .puan-degeri {
+            text-align: right;
+
+            color: #cceaff;
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .model-notu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            margin-top: 17px;
+            padding-top: 14px;
+
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+            color: rgba(255, 255, 255, 0.46);
+
+            font-size: 9px;
+        }
+
+        .model-notu svg {
+            flex: 0 0 auto;
+
+            width: 14px;
+            height: 14px;
+
+            color: #7ec7f8;
+        }
+
+
+        /* ==================================================
+           METRİKLER
+        ================================================== */
+
+        .metrik-bolumu {
+            position: relative;
+            z-index: 5;
+
+            margin-top: -38px;
+        }
+
+        .metrikler {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .metrik-karti {
+            position: relative;
+
+            overflow: hidden;
+
+            padding: 22px;
+
+            border: 1px solid var(--cizgi);
+            border-radius: 16px;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            box-shadow: var(--golge-kucuk);
+        }
+
+        .metrik-karti::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+
+            width: 52px;
+            height: 52px;
+
+            border-radius: 0 0 0 52px;
+            background: rgba(35, 129, 213, 0.06);
+
+            content: "";
+        }
+
+        .metrik-ust {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 18px;
+        }
+
+        .metrik-ikon {
+            display: grid;
+            place-items: center;
+
+            width: 37px;
+            height: 37px;
+
+            border-radius: 11px;
+
+            color: var(--mavi-700);
+            background: var(--mavi-100);
+        }
+
+        .metrik-ikon svg {
+            width: 19px;
+            height: 19px;
+        }
+
+        .metrik-numara {
+            margin-bottom: 5px;
+
+            color: var(--lacivert-900);
+
+            font-size: 31px;
+            font-weight: 780;
+            letter-spacing: -0.04em;
+        }
+
+        .metrik-aciklama {
+            color: var(--metin-ikincil);
+
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+
+        /* ==================================================
+           HARİTA MODÜLLERİ
+        ================================================== */
+
+        .moduller-bolumu {
+            padding: 100px 0 80px;
+        }
+
+        .moduller {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .modul-karti {
+            position: relative;
+
+            overflow: hidden;
+
+            border: 1px solid var(--cizgi);
+            border-radius: 23px;
+
+            background: var(--kart);
+
+            box-shadow: var(--golge-kucuk);
+
+            transition:
+                transform var(--gecis),
+                box-shadow var(--gecis);
+        }
+
+        .modul-karti:hover {
+            transform: translateY(-5px);
+
+            box-shadow: var(--golge-buyuk);
+        }
+
+        .modul-gorsel {
+            position: relative;
+
+            min-height: 270px;
+            overflow: hidden;
+        }
+
+        .modul-gorsel-2d {
+            background:
+                radial-gradient(
+                    circle at 18% 25%,
+                    rgba(54, 197, 178, 0.35),
+                    transparent 23%
+                ),
+                linear-gradient(
+                    145deg,
+                    #115d93,
+                    #2695d8
+                );
+        }
+
+        .modul-gorsel-3d {
+            background:
+                radial-gradient(
+                    circle at 76% 20%,
+                    rgba(245, 158, 66, 0.45),
+                    transparent 25%
+                ),
+                linear-gradient(
+                    145deg,
+                    #782b47,
+                    #d85f55
+                );
+        }
+
+        .modul-gorsel::before {
+            position: absolute;
+            inset: 0;
+
+            opacity: 0.22;
+
+            background-image:
+                linear-gradient(
+                    rgba(255, 255, 255, 0.18) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.18) 1px,
+                    transparent 1px
+                );
+
+            background-size: 32px 32px;
+
+            content: "";
+        }
+
+        .modul-tur-etiketi {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            z-index: 3;
+
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            padding: 7px 10px;
+
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 999px;
+
+            color: var(--beyaz);
+            background: rgba(7, 17, 31, 0.28);
+
+            backdrop-filter: blur(8px);
+
+            font-size: 10px;
+            font-weight: 750;
+        }
+
+        .modul-tur-etiketi::before {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+            background: var(--turkuaz-500);
+
+            content: "";
+        }
+
+
+        /* 2D harita ön izlemesi */
+
+        .harita-onizleme {
+            position: absolute;
+            inset: 33px;
+
+            overflow: hidden;
+
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 16px;
+
+            background: rgba(255, 255, 255, 0.11);
+
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.20);
+
+            backdrop-filter: blur(5px);
+        }
+
+        .harita-yol {
+            position: absolute;
+
+            width: 140%;
+            height: 13px;
+
+            border-radius: 999px;
+
+            background: rgba(255, 255, 255, 0.16);
+
+            transform: rotate(-14deg);
+        }
+
+        .harita-yol-1 {
+            top: 42%;
+            left: -20%;
+        }
+
+        .harita-yol-2 {
+            top: 68%;
+            left: -10%;
+
+            transform: rotate(17deg);
+        }
+
+        .harita-yol-3 {
+            top: 19%;
+            left: 13%;
+
+            transform: rotate(33deg);
+        }
+
+        .harita-noktasi {
+            position: absolute;
+
+            display: grid;
+            place-items: center;
+
+            width: 27px;
+            height: 27px;
+
+            border: 3px solid rgba(255, 255, 255, 0.84);
+            border-radius: 50% 50% 50% 6px;
+
+            color: var(--beyaz);
+            background: var(--turkuaz-500);
+
+            font-size: 9px;
+            font-weight: 700;
+
+            transform: rotate(-45deg);
+
+            box-shadow:
+                0 7px 18px rgba(0, 0, 0, 0.18);
+        }
+
+        .harita-noktasi span {
+            transform: rotate(45deg);
+        }
+
+        .nokta-1 {
+            top: 24%;
+            left: 28%;
+        }
+
+        .nokta-2 {
+            top: 53%;
+            left: 47%;
+        }
+
+        .nokta-3 {
+            top: 34%;
+            right: 20%;
+        }
+
+        .nokta-4 {
+            bottom: 14%;
+            left: 19%;
+        }
+
+        .kume {
+            position: absolute;
+
+            display: grid;
+            place-items: center;
+
+            width: 42px;
+            height: 42px;
+
+            border: 5px solid rgba(255, 255, 255, 0.32);
+            border-radius: 50%;
+
+            color: var(--beyaz);
+            background: var(--mavi-700);
+
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .kume-1 {
+            top: 16%;
+            right: 38%;
+        }
+
+        .kume-2 {
+            right: 27%;
+            bottom: 15%;
+        }
+
+
+        /* 3D ön izleme */
+
+        .ucboyut-sahne {
+            position: absolute;
+            inset: 32px;
+
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 13px;
+
+            padding: 33px 24px 27px;
+
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 16px;
+
+            background: rgba(255, 255, 255, 0.08);
+
+            perspective: 700px;
+
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.20);
+
+            backdrop-filter: blur(5px);
+        }
+
+        .ucboyut-zemin {
+            position: absolute;
+            right: 8%;
+            bottom: 20px;
+            left: 8%;
+
+            height: 73%;
+
+            border: 1px solid rgba(255, 255, 255, 0.16);
+
+            background:
+                linear-gradient(
+                    rgba(255, 255, 255, 0.08) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.08) 1px,
+                    transparent 1px
+                );
+
+            background-size: 24px 24px;
+
+            transform:
+                rotateX(64deg)
+                translateY(41%);
+
+            transform-origin: bottom;
+        }
+
+        .ucboyut-sutun {
+            position: relative;
+            z-index: 2;
+
+            width: 32px;
+
+            border-radius: 7px 7px 3px 3px;
+
+            box-shadow:
+                0 14px 20px rgba(0, 0, 0, 0.22);
+
+            transform: skewY(-3deg);
+        }
+
+        .sutun-1 {
+            height: 76px;
+            background: #f6ad55;
+        }
+
+        .sutun-2 {
+            height: 115px;
+            background: #ef6b68;
+        }
+
+        .sutun-3 {
+            height: 154px;
+            background: #e64d58;
+        }
+
+        .sutun-4 {
+            height: 97px;
+            background: #f29b4b;
+        }
+
+        .sutun-5 {
+            height: 57px;
+            background: #4f96d8;
+        }
+
+        .modul-icerigi {
+            padding: 28px;
+        }
+
+        .modul-baslik-satiri {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+
+            margin-bottom: 13px;
+        }
+
+        .modul-basligi {
+            margin: 0;
+
+            color: var(--lacivert-900);
+
+            font-size: 24px;
+            letter-spacing: -0.025em;
+        }
+
+        .modul-ikon {
+            display: grid;
+            flex: 0 0 auto;
+            place-items: center;
+
+            width: 40px;
+            height: 40px;
+
+            border-radius: 12px;
+
+            color: var(--mavi-700);
+            background: var(--mavi-100);
+        }
+
+        .modul-ikon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .modul-aciklamasi {
+            margin: 0 0 21px;
+
+            color: var(--metin-ikincil);
+
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .ozellikler {
+            display: grid;
+            gap: 11px;
+
+            margin-bottom: 25px;
+        }
+
+        .ozellik {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+
+            color: #465269;
+
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .ozellik-isareti {
+            display: grid;
+            flex: 0 0 auto;
+            place-items: center;
+
+            width: 20px;
+            height: 20px;
+
+            border-radius: 6px;
+
+            color: var(--mavi-700);
+            background: var(--mavi-100);
+        }
+
+        .ozellik-isareti svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .modul-buton {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            min-height: 48px;
+            padding: 0 16px;
+
+            border-radius: 11px;
+
+            color: var(--beyaz);
+            background: var(--lacivert-850);
+
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            transition:
+                transform var(--gecis),
+                background var(--gecis);
+        }
+
+        .modul-buton:hover {
+            transform: translateY(-2px);
+            background: var(--mavi-700);
+        }
+
+        .modul-buton svg {
+            width: 17px;
+            height: 17px;
+        }
+
+
+        /* ==================================================
+           İŞLEM AKIŞI
+        ================================================== */
+
+        .akis-bolumu {
+            padding: 82px 0;
+
+            background: var(--beyaz);
+        }
+
+        .akis {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 13px;
+        }
+
+        .akis-adimi {
+            position: relative;
+
+            padding: 20px;
+
+            border: 1px solid var(--cizgi);
+            border-radius: 15px;
+
+            background: #fbfcfe;
+        }
+
+        .akis-numara {
+            display: grid;
+            place-items: center;
+
+            width: 30px;
+            height: 30px;
+
+            margin-bottom: 17px;
+
+            border-radius: 9px;
+
+            color: var(--beyaz);
+            background: var(--mavi-700);
+
+            font-size: 11px;
+            font-weight: 750;
+        }
+
+        .akis-adimi h3 {
+            margin: 0 0 7px;
+
+            color: var(--lacivert-900);
+
+            font-size: 14px;
+        }
+
+        .akis-adimi p {
+            margin: 0;
+
+            color: var(--metin-ikincil);
+
+            font-size: 11px;
+            line-height: 1.55;
+        }
+
+        .akis-adimi:not(:last-child)::after {
+            position: absolute;
+            top: 34px;
+            right: -11px;
+            z-index: 3;
+
+            width: 20px;
+            height: 2px;
+
+            background: var(--cizgi);
+
+            content: "";
+        }
+
+
+        /* ==================================================
+           VERİ NOTU
+        ================================================== */
+
+        .veri-bolumu {
+            padding: 80px 0;
+        }
+
+        .veri-karti {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 19px;
+
+            padding: 25px;
+
+            border: 1px solid #f1ddb8;
+            border-radius: 17px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff8eb,
+                    #fffdf8
+                );
+        }
+
+        .veri-ikon {
+            display: grid;
+            place-items: center;
+
+            width: 43px;
+            height: 43px;
+
+            border-radius: 12px;
+
+            color: #a96b18;
+            background: #ffe9c0;
+        }
+
+        .veri-ikon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .veri-karti h2 {
+            margin: 0 0 7px;
+
+            color: #5b421e;
+
+            font-size: 16px;
+        }
+
+        .veri-karti p {
+            margin: 0;
+
+            color: #745d39;
+
+            font-size: 12px;
+            line-height: 1.65;
+        }
+
+
+        /* ==================================================
+           ALT BİLGİ
+        ================================================== */
+
+        .alt-bilgi {
+            padding: 38px 0;
+
+            color: rgba(255, 255, 255, 0.64);
+            background: var(--lacivert-950);
+        }
+
+        .alt-bilgi-icerik {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .alt-marka {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .alt-logo {
+            display: grid;
+            place-items: center;
+
+            width: 35px;
+            height: 35px;
+
+            border-radius: 10px;
+
+            color: var(--beyaz);
+            background: var(--mavi-700);
+
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .alt-marka strong {
+            display: block;
+
+            margin-bottom: 3px;
+
+            color: var(--beyaz);
+
+            font-size: 13px;
+        }
+
+        .alt-marka span {
+            font-size: 10px;
+        }
+
+        .alt-durum {
+            font-size: 10px;
+            text-align: right;
+        }
+
+
+        /* ==================================================
+           GÖRÜNÜM ANİMASYONU
+        ================================================== */
+
+        .gorunur-ol {
+            opacity: 0;
+
+            transform: translateY(18px);
+
+            transition:
+                opacity 600ms ease,
+                transform 600ms ease;
+        }
+
+        .gorunur-ol.aktif {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        /* ==================================================
+           TABLET VE MOBİL
+        ================================================== */
+
+        @media (max-width: 980px) {
+            .menu-baglantilari {
+                display: none;
+            }
+
+            .hero-icerik {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+
+            .hero-metin {
+                max-width: 750px;
+            }
+
+            .analiz-paneli {
+                max-width: 650px;
+            }
+
+            .metrikler {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .akis {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .akis-adimi:not(:last-child)::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .kapsayici {
+                width: min(100% - 28px, 1180px);
+            }
+
+            .ust-menu-icerik {
+                min-height: 67px;
+            }
+
+            .marka-aciklamasi,
+            .prototip-etiketi {
+                display: none;
+            }
+
+            .hero {
+                padding: 65px 0 82px;
+            }
+
+            .hero h1 {
+                font-size: clamp(38px, 12vw, 55px);
+            }
+
+            .hero-aciklama {
+                font-size: 15px;
+            }
+
+            .hero-butonlari {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .buton {
+                width: 100%;
+            }
+
+            .panel-ozet {
+                grid-template-columns: 1fr;
+            }
+
+            .metrik-bolumu {
+                margin-top: -25px;
+            }
+
+            .metrikler {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .moduller {
+                grid-template-columns: 1fr;
+            }
+
+            .moduller-bolumu {
+                padding-top: 75px;
+            }
+
+            .akis {
+                grid-template-columns: 1fr;
+            }
+
+            .veri-karti {
+                grid-template-columns: 1fr;
+            }
+
+            .alt-bilgi-icerik {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .alt-durum {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrikler {
+                grid-template-columns: 1fr;
+            }
+
+            .puan-satiri {
+                grid-template-columns: 82px 1fr 34px;
+            }
+
+            .modul-gorsel {
+                min-height: 230px;
+            }
+
+            .harita-onizleme,
+            .ucboyut-sahne {
+                inset: 25px;
+            }
+        }
+
+
+        /* Hareket azaltma tercihini destekle */
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
+
+            .gorunur-ol {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ==================================================
+         ÜST MENÜ
+    ================================================== -->
+
+    <header class="ust-menu">
+        <div class="kapsayici ust-menu-icerik">
+
+            <a class="marka" href="#anasayfa">
+                <div class="marka-isareti">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                    >
+                        <path
+                            d="M4 5.5L9 3L15 5.5L20 3V18.5L15 21L9 18.5L4 21V5.5Z"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linejoin="round"
+                        />
+
+                        <path
+                            d="M9 3V18.5M15 5.5V21"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        />
+                    </svg>
+                </div>
+
+                <div>
+                    <div class="marka-adi">
+                        UrbanAI 3D İstanbul
+                    </div>
+
+                    <div class="marka-aciklamasi">
+                        Kentsel karar destek platformu
+                    </div>
+                </div>
+            </a>
+
+            <div class="menu-sag">
+
+                <nav class="menu-baglantilari">
+                    <a href="#moduller">
+                        Haritalar
+                    </a>
+
+                    <a href="#nasil-calisir">
+                        Nasıl çalışır?
+                    </a>
+
+                    <a href="#veri-notu">
+                        Veri kapsamı
+                    </a>
+                </nav>
+
+                <div class="prototip-etiketi">
+                    <span class="prototip-noktasi"></span>
+                    Kütüphane modülü aktif
+                </div>
+
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- ==================================================
+         HERO
+    ================================================== -->
+
+    <main id="anasayfa">
+
+        <section class="hero">
+            <div class="kapsayici hero-icerik">
+
+                <div class="hero-metin">
+
+                    <div class="hero-etiketi">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M4 19V11M10 19V5M16 19V8M22 19H2"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+
+                        İBB açık verileri ve açık coğrafi veriler
+                    </div>
+
+                    <h1>
+                        Kentsel hizmetleri
+                        <span class="vurgu">
+                            veriye dayalı
+                        </span>
+                        inceleyin.
+                    </h1>
+
+                    <p class="hero-aciklama">
+                        Nüfus, mevcut hizmet noktaları ve coğrafi
+                        verileri bir araya getirerek İstanbul
+                        ilçelerinin hizmet erişimini analiz eden,
+                        açıklanabilir bir karar destek prototipi.
+                    </p>
+
+                    <div class="hero-butonlari">
+
+                        <a
+                            class="buton buton-birincil"
+                            href="kutuphane_oncelik_haritasi_3d.html"
+                        >
+                            3D öncelik haritasını aç
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M5 12H19M13 6L19 12L13 18"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                        </a>
+
+                        <a
+                            class="buton buton-ikincil"
+                            href="kutuphane_haritasi.html"
+                        >
+                            2D konum haritasını incele
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ANALİZ ÖZET PANELİ -->
+
+                <aside
+                    class="analiz-paneli"
+                    aria-label="Analiz özeti"
+                >
+
+                    <div class="panel-ust">
+
+                        <div class="panel-baslik">
+
+                            <div class="panel-ikon">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M4 18V12M10 18V5M16 18V9M22 18H2"
+                                        stroke="currentColor"
+                                        stroke-width="1.8"
+                                        stroke-linecap="round"
+                                    />
+                                </svg>
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Analiz özeti
+                                </strong>
+
+                                <span>
+                                    Kütüphane hizmet modülü
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="canli-etiketi">
+                            Hazır
+                        </div>
+
+                    </div>
+
+
+                    <div class="panel-ozet">
+
+                        <div class="mini-kart">
+                            <div class="mini-deger">
+                                29
+                            </div>
+
+                            <div class="mini-aciklama">
+                                Öncelik puanı oluşturulan ilçe
+                            </div>
+                        </div>
+
+                        <div class="mini-kart">
+                            <div class="mini-deger">
+                                10
+                            </div>
+
+                            <div class="mini-aciklama">
+                                Veri doğrulaması gereken ilçe
+                            </div>
+                        </div>
+
+                        <div class="mini-kart">
+                            <div class="mini-deger">
+                                51
+                            </div>
+
+                            <div class="mini-aciklama">
+                                Güvenilir koordinatlı kayıt
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="grafik-alani">
+
+                        <div class="grafik-basligi">
+                            <strong>
+                                Öncelikli ilk üç ilçe
+                            </strong>
+
+                            <span>
+                                Puan / 100
+                            </span>
+                        </div>
+
+                        <div class="puan-satiri">
+                            <div class="puan-ilce">
+                                Esenyurt
+                            </div>
+
+                            <div class="puan-iz">
+                                <div
+                                    class="puan-dolgu"
+                                    style="width: 99.3%;"
+                                ></div>
+                            </div>
+
+                            <div class="puan-degeri">
+                                99,3
+                            </div>
+                        </div>
+
+                        <div class="puan-satiri">
+                            <div class="puan-ilce">
+                                Pendik
+                            </div>
+
+                            <div class="puan-iz">
+                                <div
+                                    class="puan-dolgu"
+                                    style="width: 89.8%;"
+                                ></div>
+                            </div>
+
+                            <div class="puan-degeri">
+                                89,8
+                            </div>
+                        </div>
+
+                        <div class="puan-satiri">
+                            <div class="puan-ilce">
+                                Küçükçekmece
+                            </div>
+
+                            <div class="puan-iz">
+                                <div
+                                    class="puan-dolgu"
+                                    style="width: 88.5%;"
+                                ></div>
+                            </div>
+
+                            <div class="puan-degeri">
+                                88,5
+                            </div>
+                        </div>
+
+
+                        <div class="model-notu">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                aria-hidden="true"
+                            >
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="9"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                />
+
+                                <path
+                                    d="M12 11V16M12 8H12.01"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                    stroke-linecap="round"
+                                />
+                            </svg>
+
+                            Ana model:
+                            %60 hizmet açığı + %40 nüfus
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+        </section>
+
+
+        <!-- ==================================================
+             METRİKLER
+        ================================================== -->
+
+        <section class="metrik-bolumu">
+            <div class="kapsayici metrikler">
+
+                <article class="metrik-karti">
+
+                    <div class="metrik-ust">
+                        <div class="metrik-ikon">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M4 5.5L9 3L15 5.5L20 3V18.5L15 21L9 18.5L4 21V5.5Z"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="metrik-numara">
+                        39
+                    </div>
+
+                    <div class="metrik-aciklama">
+                        Analiz edilen İstanbul ilçesi
+                    </div>
+
+                </article>
+
+
+                <article class="metrik-karti">
+
+                    <div class="metrik-ust">
+                        <div class="metrik-ikon">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M6 3H18V21H6V3ZM9 7H15M9 11H15M9 15H13"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="metrik-numara">
+                        72
+                    </div>
+
+                    <div class="metrik-aciklama">
+                        Temizlenmiş İBB kütüphane kaydı
+                    </div>
+
+                </article>
+
+
+                <article class="metrik-karti">
+
+                    <div class="metrik-ust">
+                        <div class="metrik-ikon">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M12 21C16 16.7 19 13.1 19 9.5C19 5.9 15.9 3 12 3C8.1 3 5 5.9 5 9.5C5 13.1 8 16.7 12 21Z"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                />
+
+                                <circle
+                                    cx="12"
+                                    cy="9.5"
+                                    r="2.3"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="metrik-numara">
+                        51
+                    </div>
+
+                    <div class="metrik-aciklama">
+                        Güvenilir koordinatlı harita kaydı
+                    </div>
+
+                </article>
+
+
+                <article class="metrik-karti">
+
+                    <div class="metrik-ust">
+                        <div class="metrik-ikon">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                aria-hidden="true"
+                            >
+                                <rect
+                                    x="3"
+                                    y="5"
+                                    width="18"
+                                    height="16"
+                                    rx="2"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                />
+
+                                <path
+                                    d="M7 3V7M17 3V7M3 10H21"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                    stroke-linecap="round"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="metrik-numara">
+                        2025
+                    </div>
+
+                    <div class="metrik-aciklama">
+                        Kullanılan ilçe nüfus yılı
+                    </div>
+
+                </article>
+
+            </div>
+        </section>
+
+
+        <!-- ==================================================
+             HARİTA MODÜLLERİ
+        ================================================== -->
+
+        <section
+            id="moduller"
+            class="moduller-bolumu"
+        >
+            <div class="kapsayici">
+
+                <div class="bolum-basligi gorunur-ol">
+
+                    <div class="bolum-etiketi">
+                        Görselleştirme modülleri
+                    </div>
+
+                    <h2>
+                        Veriyi iki farklı bakış açısıyla keşfedin.
+                    </h2>
+
+                    <p>
+                        Mevcut hizmet noktalarını 2D haritada
+                        inceleyin veya ilçe öncelik puanlarını
+                        yükseltilmiş 3D alanlar üzerinde karşılaştırın.
+                    </p>
+
+                </div>
+
+
+                <div class="moduller">
+
+                    <!-- 2D MODÜL -->
+
+                    <article class="modul-karti gorunur-ol">
+
+                        <div class="modul-gorsel modul-gorsel-2d">
+
+                            <div class="modul-tur-etiketi">
+                                2D etkileşimli harita
+                            </div>
+
+                            <div class="harita-onizleme">
+
+                                <div class="harita-yol harita-yol-1"></div>
+                                <div class="harita-yol harita-yol-2"></div>
+                                <div class="harita-yol harita-yol-3"></div>
+
+                                <div class="harita-noktasi nokta-1">
+                                    <span>1</span>
+                                </div>
+
+                                <div class="harita-noktasi nokta-2">
+                                    <span>1</span>
+                                </div>
+
+                                <div class="harita-noktasi nokta-3">
+                                    <span>1</span>
+                                </div>
+
+                                <div class="harita-noktasi nokta-4">
+                                    <span>1</span>
+                                </div>
+
+                                <div class="kume kume-1">
+                                    18
+                                </div>
+
+                                <div class="kume kume-2">
+                                    10
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="modul-icerigi">
+
+                            <div class="modul-baslik-satiri">
+
+                                <h3 class="modul-basligi">
+                                    Kütüphane Konum Haritası
+                                </h3>
+
+                                <div class="modul-ikon">
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        aria-hidden="true"
+                                    >
+                                        <path
+                                            d="M4 5.5L9 3L15 5.5L20 3V18.5L15 21L9 18.5L4 21V5.5Z"
+                                            stroke="currentColor"
+                                            stroke-width="1.7"
+                                            stroke-linejoin="round"
+                                        />
+                                    </svg>
+                                </div>
+
+                            </div>
+
+                            <p class="modul-aciklamasi">
+                                Güvenilir koordinatı bulunan mevcut
+                                İBB kütüphanelerini arayın, kümeler
+                                hâlinde inceleyin ve çalışma
+                                bilgilerine erişin.
+                            </p>
+
+
+                            <div class="ozellikler">
+
+                                <div class="ozellik">
+                                    <span class="ozellik-isareti">
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            aria-hidden="true"
+                                        >
+                                            <path
+                                                d="M5 12L10 17L19 7"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                        </svg>
+                                    </span>
+
+                                    Kütüphane adına göre arama
+                                </div>
+
+                                <div class="ozellik">
+                                    <span class="ozellik-isareti">
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            aria-hidden="true"
+                                        >
+                                            <path
+                                                d="M5 12L10 17L19 7"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                        </svg>
+                                    </span>
+
+                                    Yakın konumlarda işaretçi kümelendirme
+                                </div>
+
+                                <div class="ozellik">
+                                    <span class="ozellik-isareti">
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            aria-hidden="true"
+                                        >
+                                            <path
+                                                d="M5 12L10 17L19 7"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                        </svg>
+                                    </span>
+
+                                    Adres ve çalışma bilgilerini görüntüleme
+                                </div>
+
+                            </div>
+
+
+                            <a
+                                class="modul-buton"
+                                href="kutuphane_haritasi.html"
+                            >
+                                <span>
+                                    2D haritayı aç
+                                </span>
+
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M5 12H19M13 6L19 12L13 18"
+                                        stroke="currentColor"
+                                        stroke-width="1.8"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </a>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- 3D MODÜL -->
+
+                    <article class="modul-karti gorunur-ol">
+
+                        <div class="modul-gorsel modul-gorsel-3d">
+
+                            <div class="modul-tur-etiketi">
+                                3D karar destek haritası
+                            </div>
+
+                            <div class="ucboyut-sahne">
+
+                                <div class="ucboyut-zemin"></div>
+
+                                <div class="ucboyut-sutun sutun-1"></div>
+                                <div class="ucboyut-sutun sutun-2"></div>
+                                <div class="ucboyut-sutun sutun-3"></div>
+                                <div class="ucboyut-sutun sutun-4"></div>
+                                <div class="ucboyut-sutun sutun-5"></div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="modul-icerigi">
+
+                            <div class="modul-baslik-satiri">
+
+                                <h3 class="modul-basligi">
+                                    İlçe Öncelik Haritası
+                                </h3>
+
+                                <div class="modul-ikon">
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        aria-hidden="true"
+                                    >
+                                        <path
+                                            d="M4 17L9 12L13 15L20 7"
+                                            stroke="currentColor"
+                                            stroke-width="1.8"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+
+                                        <path
+                                            d="M15 7H20V12"
+                                            stroke="currentColor"
+                                            stroke-width="1.8"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                    </svg>
+                                </div>
+
+                            </div>
+
+                            <p class="modul-aciklamasi">
+                                İlçe sınırlarını, nüfus ve hizmet
+                                açığı verilerinden üretilen öncelik
+                                puanlarına göre renkli ve yükseltilmiş
+                                alanlar olarak karşılaştırın.
+                            </p>
+
+
+                            <div class="ozellikler">
+
+                                <div class="ozellik">
+                                    <span class="ozellik-isareti">
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            aria-hidden="true"
+                                        >
+                                            <path
+                                                d="M5 12L10 17L19 7"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                        </svg>
+                                    </span>
+
+                                    İstanbul’un 39 ilçe sınır geometrisi
+                                </div>
+
+                                <div class="ozellik">
+                                    <span class="ozellik-isareti">
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            aria-hidden="true"
+                                        >
+                                            <path
+                                                d="M5 12L10 17L19 7"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                        </svg>
+                                    </span>
+
+                                    Açıklanabilir öncelik puanı ve sıralama
+                                </div>
+
+                                <div class="ozellik">
+                                    <span class="ozellik-isareti">
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            aria-hidden="true"
+                                        >
+                                            <path
+                                                d="M5 12L10 17L19 7"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                        </svg>
+                                    </span>
+
+                                    Veri doğrulaması gereken ilçelerin ayrılması
+                                </div>
+
+                            </div>
+
+
+                            <a
+                                class="modul-buton"
+                                href="kutuphane_oncelik_haritasi_3d.html"
+                            >
+                                <span>
+                                    3D haritayı aç
+                                </span>
+
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M5 12H19M13 6L19 12L13 18"
+                                        stroke="currentColor"
+                                        stroke-width="1.8"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ==================================================
+             NASIL ÇALIŞIR?
+        ================================================== -->
+
+        <section
+            id="nasil-calisir"
+            class="akis-bolumu"
+        >
+            <div class="kapsayici">
+
+                <div class="bolum-basligi gorunur-ol">
+
+                    <div class="bolum-etiketi">
+                        Veri işleme süreci
+                    </div>
+
+                    <h2>
+                        Ham veriden karar destek sonucuna.
+                    </h2>
+
+                    <p>
+                        Platform, açık verileri yalnızca
+                        görüntülemekle kalmaz; verileri temizler,
+                        birleştirir, kontrol eder ve açıklanabilir
+                        göstergelere dönüştürür.
+                    </p>
+
+                </div>
+
+
+                <div class="akis">
+
+                    <article class="akis-adimi gorunur-ol">
+                        <div class="akis-numara">
+                            01
+                        </div>
+
+                        <h3>
+                            Veri toplama
+                        </h3>
+
+                        <p>
+                            Kütüphane, nüfus ve ilçe sınırı
+                            verileri farklı kaynaklardan alınır.
+                        </p>
+                    </article>
+
+                    <article class="akis-adimi gorunur-ol">
+                        <div class="akis-numara">
+                            02
+                        </div>
+
+                        <h3>
+                            Temizleme
+                        </h3>
+
+                        <p>
+                            Eksik değerler, ilçe adları ve
+                            kayıt tutarlılığı kontrol edilir.
+                        </p>
+                    </article>
+
+                    <article class="akis-adimi gorunur-ol">
+                        <div class="akis-numara">
+                            03
+                        </div>
+
+                        <h3>
+                            Koordinatlandırma
+                        </h3>
+
+                        <p>
+                            Adresler konuma çevrilir ve şüpheli
+                            koordinatlar kalite kontrolünden geçer.
+                        </p>
+                    </article>
+
+                    <article class="akis-adimi gorunur-ol">
+                        <div class="akis-numara">
+                            04
+                        </div>
+
+                        <h3>
+                            Puanlama
+                        </h3>
+
+                        <p>
+                            Nüfus ve hizmet açığı normalize
+                            edilerek öncelik puanı hesaplanır.
+                        </p>
+                    </article>
+
+                    <article class="akis-adimi gorunur-ol">
+                        <div class="akis-numara">
+                            05
+                        </div>
+
+                        <h3>
+                            Görselleştirme
+                        </h3>
+
+                        <p>
+                            Sonuçlar 2D konum ve 3D ilçe
+                            öncelik haritalarında sunulur.
+                        </p>
+                    </article>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ==================================================
+             VERİ KAPSAMI
+        ================================================== -->
+
+        <section
+            id="veri-notu"
+            class="veri-bolumu"
+        >
+            <div class="kapsayici">
+
+                <div class="veri-karti gorunur-ol">
+
+                    <div class="veri-ikon">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M12 3L22 20H2L12 3Z"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M12 9V14M12 17H12.01"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h2>
+                            Veri kapsamı ve önemli sınırlılık
+                        </h2>
+
+                        <p>
+                            Sonuçlar kullanılan İBB kütüphane
+                            veri setindeki kayıtlarla sınırlıdır.
+                            Bir ilçede kayıt görünmemesi, o ilçede
+                            hiçbir kütüphane bulunmadığı anlamına
+                            gelmez. İlçe belediyeleri, üniversiteler,
+                            bakanlıklar veya özel kurumlara ait
+                            kütüphaneler veri setinde bulunmayabilir.
+                            Gri gösterilen ilçeler bu nedenle
+                            “düşük öncelik” değil, “veri doğrulaması
+                            gerekli” olarak değerlendirilir.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- ==================================================
+         ALT BİLGİ
+    ================================================== -->
+
+    <footer class="alt-bilgi">
+        <div class="kapsayici alt-bilgi-icerik">
+
+            <div class="alt-marka">
+
+                <div class="alt-logo">
+                    U
+                </div>
+
+                <div>
+                    <strong>
+                        UrbanAI 3D İstanbul
+                    </strong>
+
+                    <span>
+                        Açıklanabilir kentsel karar destek prototipi
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="alt-durum">
+                İlk hizmet modülü: İBB kütüphaneleri<br>
+                Analiz yılı: 2025
+            </div>
+
+        </div>
+    </footer>
+
+
+    <!-- ==================================================
+         SAYFA GÖRÜNÜM ANİMASYONU
+    ================================================== -->
+
+    <script>
+        const gorunecekOgeler = document.querySelectorAll(
+            ".gorunur-ol"
+        );
+
+        const gozlemci = new IntersectionObserver(
+            (kayitlar) => {
+                kayitlar.forEach((kayit) => {
+                    if (kayit.isIntersecting) {
+                        kayit.target.classList.add("aktif");
+                        gozlemci.unobserve(kayit.target);
+                    }
+                });
+            },
+            {
+                threshold: 0.12
+            }
+        );
+
+        gorunecekOgeler.forEach((oge) => {
+            gozlemci.observe(oge);
+        });
+    </script>
+
+</body>
+</html>
