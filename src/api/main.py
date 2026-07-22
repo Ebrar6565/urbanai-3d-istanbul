@@ -1,6 +1,7 @@
 from pathlib import Path
 import sqlite3
 
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException, Query
 
 
@@ -40,6 +41,41 @@ app = FastAPI(
     version="0.1.0",
 )
 
+# --------------------------------------------------
+# CORS AYARLARI
+# --------------------------------------------------
+
+# Frontend 8000 portunda, API ise 8001 portunda
+# çalıştığı için tarayıcı bunları farklı kaynaklar
+# olarak değerlendirir.
+izin_verilen_adresler = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+
+    # Yalnızca yerel frontend adresleri
+    # API'ye tarayıcı üzerinden erişebilir.
+    allow_origins=izin_verilen_adresler,
+
+    # Şu anda kullanıcı girişi, cookie veya
+    # kimlik doğrulama kullanmıyoruz.
+    allow_credentials=False,
+
+    # Mevcut API uçlarımız yalnızca veri okuyor.
+    allow_methods=[
+        "GET",
+    ],
+
+    # Tarayıcının gönderdiği standart başlıklara
+    # izin veriyoruz.
+    allow_headers=[
+        "*",
+    ],
+)
 
 # --------------------------------------------------
 # VERİ TABANI BAĞLANTISI

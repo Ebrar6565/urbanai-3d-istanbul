@@ -1,0 +1,592 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Esenyurt Geçerlilik Maskeleri
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f6fb;
+            color: #172033;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            padding: 34px 24px;
+            background: #ffffff;
+            border-bottom: 1px solid #dbe2ea;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+        }
+
+        .subtitle {
+            max-width: 900px;
+            margin: 0;
+            color: #667085;
+            line-height: 1.6;
+        }
+
+        main {
+            padding: 28px 24px 50px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .metric {
+            padding: 16px;
+            border: 1px solid #dce3eb;
+            border-radius: 12px;
+            background: #ffffff;
+        }
+
+        .metric-label {
+            color: #667085;
+            font-size: 12px;
+        }
+
+        .metric-value {
+            margin-top: 7px;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .notice {
+            margin-bottom: 24px;
+            padding: 16px 18px;
+            border-left: 4px solid #2563eb;
+            border-radius: 8px;
+            background: #eff6ff;
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(430px, 1fr));
+            gap: 20px;
+        }
+
+        .tile-card {
+            padding: 17px;
+            border: 1px solid #dce3eb;
+            border-radius: 14px;
+            background: #ffffff;
+        }
+
+        .tile-card h2 {
+            margin: 0 0 14px;
+            font-size: 17px;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .image-label {
+            margin-bottom: 7px;
+            color: #667085;
+            font-size: 12px;
+        }
+
+        .image-grid img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 9px;
+            background: #000000;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 13px;
+            padding-top: 12px;
+            border-top: 1px solid #edf1f5;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>
+                Esenyurt
+                Segmentasyon Geçerlilik Maskeleri
+            </h1>
+
+            <p class="subtitle">
+                Siyah mozaik boşluklarının gerçek bir arazi
+                sınıfı olarak değerlendirilmesini önlemek
+                için her segmentasyon karosuna geçerlilik
+                maskesi eklenmiştir.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="metrics">
+            <div class="metric">
+                <div class="metric-label">
+                    Karo sayısı
+                </div>
+
+                <div class="metric-value">
+                    9
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    Ortalama geçerli piksel
+                </div>
+
+                <div class="metric-value">
+                    %94.02
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    En düşük geçerli piksel
+                </div>
+
+                <div class="metric-value">
+                    %75.30
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    En yüksek geçerli piksel
+                </div>
+
+                <div class="metric-value">
+                    %100.00
+                </div>
+            </div>
+        </section>
+
+        <section class="notice">
+            <strong>Beyaz alan:</strong>
+            Model tahmini yapılabilecek gerçek Sentinel-2
+            pikselleridir.
+
+            <br>
+
+            <strong>Siyah alan:</strong>
+            Uydu verisi bulunmayan mozaik boşluklarıdır.
+            Model sonucu bu alanlarda dikkate alınmayacaktır.
+        </section>
+
+        <section class="grid">
+            
+            <article class="tile-card">
+                <h2>ESENYURT_SEG_01_01</h2>
+
+                <div class="image-grid">
+                    <div>
+                        <div class="image-label">
+                            RGB uydu karosu
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_01_01.png"
+                            alt="ESENYURT_SEG_01_01 RGB uydu karosu"
+                        >
+                    </div>
+
+                    <div>
+                        <div class="image-label">
+                            Geçerlilik maskesi
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/validity_masks/ESENYURT_SEG_01_01_valid_mask.png"
+                            alt="ESENYURT_SEG_01_01 geçerlilik maskesi"
+                        >
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <span>
+                        Geçerli:
+                        %90.79
+                    </span>
+
+                    <span>
+                        Veri yok:
+                        %9.21
+                    </span>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <h2>ESENYURT_SEG_01_02</h2>
+
+                <div class="image-grid">
+                    <div>
+                        <div class="image-label">
+                            RGB uydu karosu
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_01_02.png"
+                            alt="ESENYURT_SEG_01_02 RGB uydu karosu"
+                        >
+                    </div>
+
+                    <div>
+                        <div class="image-label">
+                            Geçerlilik maskesi
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/validity_masks/ESENYURT_SEG_01_02_valid_mask.png"
+                            alt="ESENYURT_SEG_01_02 geçerlilik maskesi"
+                        >
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <span>
+                        Geçerli:
+                        %93.07
+                    </span>
+
+                    <span>
+                        Veri yok:
+                        %6.93
+                    </span>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <h2>ESENYURT_SEG_01_03</h2>
+
+                <div class="image-grid">
+                    <div>
+                        <div class="image-label">
+                            RGB uydu karosu
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_01_03.png"
+                            alt="ESENYURT_SEG_01_03 RGB uydu karosu"
+                        >
+                    </div>
+
+                    <div>
+                        <div class="image-label">
+                            Geçerlilik maskesi
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/validity_masks/ESENYURT_SEG_01_03_valid_mask.png"
+                            alt="ESENYURT_SEG_01_03 geçerlilik maskesi"
+                        >
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <span>
+                        Geçerli:
+                        %75.30
+                    </span>
+
+                    <span>
+                        Veri yok:
+                        %24.70
+                    </span>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <h2>ESENYURT_SEG_02_01</h2>
+
+                <div class="image-grid">
+                    <div>
+                        <div class="image-label">
+                            RGB uydu karosu
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_02_01.png"
+                            alt="ESENYURT_SEG_02_01 RGB uydu karosu"
+                        >
+                    </div>
+
+                    <div>
+                        <div class="image-label">
+                            Geçerlilik maskesi
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/validity_masks/ESENYURT_SEG_02_01_valid_mask.png"
+                            alt="ESENYURT_SEG_02_01 geçerlilik maskesi"
+                        >
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <span>
+                        Geçerli:
+                        %100.00
+                    </span>
+
+                    <span>
+                        Veri yok:
+                        %0.00
+                    </span>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <h2>ESENYURT_SEG_02_02</h2>
+
+                <div class="image-grid">
+                    <div>
+                        <div class="image-label">
+                            RGB uydu karosu
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_02_02.png"
+                            alt="ESENYURT_SEG_02_02 RGB uydu karosu"
+                        >
+                    </div>
+
+                    <div>
+                        <div class="image-label">
+                            Geçerlilik maskesi
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/validity_masks/ESENYURT_SEG_02_02_valid_mask.png"
+                            alt="ESENYURT_SEG_02_02 geçerlilik maskesi"
+                        >
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <span>
+                        Geçerli:
+                        %100.00
+                    </span>
+
+                    <span>
+                        Veri yok:
+                        %0.00
+                    </span>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <h2>ESENYURT_SEG_02_03</h2>
+
+                <div class="image-grid">
+                    <div>
+                        <div class="image-label">
+                            RGB uydu karosu
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_02_03.png"
+                            alt="ESENYURT_SEG_02_03 RGB uydu karosu"
+                        >
+                    </div>
+
+                    <div>
+                        <div class="image-label">
+                            Geçerlilik maskesi
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/validity_masks/ESENYURT_SEG_02_03_valid_mask.png"
+                            alt="ESENYURT_SEG_02_03 geçerlilik maskesi"
+                        >
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <span>
+                        Geçerli:
+                        %100.00
+                    </span>
+
+                    <span>
+                        Veri yok:
+                        %0.00
+                    </span>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <h2>ESENYURT_SEG_03_01</h2>
+
+                <div class="image-grid">
+                    <div>
+                        <div class="image-label">
+                            RGB uydu karosu
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_03_01.png"
+                            alt="ESENYURT_SEG_03_01 RGB uydu karosu"
+                        >
+                    </div>
+
+                    <div>
+                        <div class="image-label">
+                            Geçerlilik maskesi
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/validity_masks/ESENYURT_SEG_03_01_valid_mask.png"
+                            alt="ESENYURT_SEG_03_01 geçerlilik maskesi"
+                        >
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <span>
+                        Geçerli:
+                        %100.00
+                    </span>
+
+                    <span>
+                        Veri yok:
+                        %0.00
+                    </span>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <h2>ESENYURT_SEG_03_02</h2>
+
+                <div class="image-grid">
+                    <div>
+                        <div class="image-label">
+                            RGB uydu karosu
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_03_02.png"
+                            alt="ESENYURT_SEG_03_02 RGB uydu karosu"
+                        >
+                    </div>
+
+                    <div>
+                        <div class="image-label">
+                            Geçerlilik maskesi
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/validity_masks/ESENYURT_SEG_03_02_valid_mask.png"
+                            alt="ESENYURT_SEG_03_02 geçerlilik maskesi"
+                        >
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <span>
+                        Geçerli:
+                        %95.25
+                    </span>
+
+                    <span>
+                        Veri yok:
+                        %4.75
+                    </span>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <h2>ESENYURT_SEG_03_03</h2>
+
+                <div class="image-grid">
+                    <div>
+                        <div class="image-label">
+                            RGB uydu karosu
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_03_03.png"
+                            alt="ESENYURT_SEG_03_03 RGB uydu karosu"
+                        >
+                    </div>
+
+                    <div>
+                        <div class="image-label">
+                            Geçerlilik maskesi
+                        </div>
+
+                        <img
+                            src="assets/sentinel2/esenyurt/validity_masks/ESENYURT_SEG_03_03_valid_mask.png"
+                            alt="ESENYURT_SEG_03_03 geçerlilik maskesi"
+                        >
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <span>
+                        Geçerli:
+                        %91.75
+                    </span>
+
+                    <span>
+                        Veri yok:
+                        %8.25
+                    </span>
+                </div>
+            </article>
+            
+        </section>
+
+    </main>
+</body>
+</html>
+    

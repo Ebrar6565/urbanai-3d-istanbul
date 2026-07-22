@@ -1,0 +1,575 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Esenyurt Segmentasyon Girdileri
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f6fb;
+            color: #172033;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            padding: 34px 24px;
+            background: #ffffff;
+            border-bottom: 1px solid #dbe2ea;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+        }
+
+        .subtitle {
+            max-width: 900px;
+            margin: 0;
+            color: #667085;
+            line-height: 1.6;
+        }
+
+        main {
+            padding: 28px 24px 50px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(175px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .metric {
+            padding: 16px;
+            border: 1px solid #dce3eb;
+            border-radius: 12px;
+            background: #ffffff;
+        }
+
+        .metric-label {
+            color: #667085;
+            font-size: 12px;
+        }
+
+        .metric-value {
+            margin-top: 7px;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .notice {
+            margin-bottom: 24px;
+            padding: 16px 18px;
+            border-left: 4px solid #d97706;
+            border-radius: 8px;
+            background: #fffbeb;
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .tile-card {
+            overflow: hidden;
+            border: 1px solid #dce3eb;
+            border-radius: 14px;
+            background: #ffffff;
+        }
+
+        .tile-card img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            background: #111827;
+            image-rendering: auto;
+        }
+
+        .tile-body {
+            padding: 15px;
+        }
+
+        h2 {
+            margin: 0 0 13px;
+            font-size: 17px;
+        }
+
+        dl {
+            display: grid;
+            gap: 8px;
+            margin: 0;
+        }
+
+        dl div {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #edf1f5;
+        }
+
+        dt {
+            color: #667085;
+            font-size: 12px;
+        }
+
+        dd {
+            margin: 0;
+            text-align: right;
+            font-size: 12px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>
+                Esenyurt
+                Segmentasyon Girdileri
+            </h1>
+
+            <p class="subtitle">
+                Sentinel-2 RGB mozaiği, semantik
+                segmentasyon modelinin çıkarım aşamasında
+                kullanılması için sabit boyutlu ve coğrafi
+                bilgili karolara ayrılmıştır.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="metrics">
+            <div class="metric">
+                <div class="metric-label">
+                    Aday karo
+                </div>
+
+                <div class="metric-value">
+                    9
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    Kaydedilen karo
+                </div>
+
+                <div class="metric-value">
+                    9
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    Atlanan karo
+                </div>
+
+                <div class="metric-value">
+                    0
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    Ortalama geçerli piksel
+                </div>
+
+                <div class="metric-value">
+                    %94.02
+                </div>
+            </div>
+        </section>
+
+        <section class="notice">
+            Bu karolar İstanbul için hazırlanmış model
+            girdileridir; henüz sınıf etiketi içermez.
+            Örtüşen karoların farklı eğitim ve doğrulama
+            gruplarına konulması veri sızıntısına yol açar.
+        </section>
+
+        <section class="grid">
+            
+            <article class="tile-card">
+                <img
+                    src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_01_01.png"
+                    alt="ESENYURT_SEG_01_01 segmentasyon girdisi"
+                >
+
+                <div class="tile-body">
+                    <h2>
+                        ESENYURT_SEG_01_01
+                    </h2>
+
+                    <dl>
+                        <div>
+                            <dt>Konum</dt>
+                            <dd>
+                                Satır 1,
+                                sütun 1
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Boyut</dt>
+                            <dd>
+                                128
+                                ×
+                                128
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %90.79
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <img
+                    src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_01_02.png"
+                    alt="ESENYURT_SEG_01_02 segmentasyon girdisi"
+                >
+
+                <div class="tile-body">
+                    <h2>
+                        ESENYURT_SEG_01_02
+                    </h2>
+
+                    <dl>
+                        <div>
+                            <dt>Konum</dt>
+                            <dd>
+                                Satır 1,
+                                sütun 2
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Boyut</dt>
+                            <dd>
+                                128
+                                ×
+                                128
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %93.07
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <img
+                    src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_01_03.png"
+                    alt="ESENYURT_SEG_01_03 segmentasyon girdisi"
+                >
+
+                <div class="tile-body">
+                    <h2>
+                        ESENYURT_SEG_01_03
+                    </h2>
+
+                    <dl>
+                        <div>
+                            <dt>Konum</dt>
+                            <dd>
+                                Satır 1,
+                                sütun 3
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Boyut</dt>
+                            <dd>
+                                128
+                                ×
+                                128
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %75.30
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <img
+                    src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_02_01.png"
+                    alt="ESENYURT_SEG_02_01 segmentasyon girdisi"
+                >
+
+                <div class="tile-body">
+                    <h2>
+                        ESENYURT_SEG_02_01
+                    </h2>
+
+                    <dl>
+                        <div>
+                            <dt>Konum</dt>
+                            <dd>
+                                Satır 2,
+                                sütun 1
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Boyut</dt>
+                            <dd>
+                                128
+                                ×
+                                128
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <img
+                    src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_02_02.png"
+                    alt="ESENYURT_SEG_02_02 segmentasyon girdisi"
+                >
+
+                <div class="tile-body">
+                    <h2>
+                        ESENYURT_SEG_02_02
+                    </h2>
+
+                    <dl>
+                        <div>
+                            <dt>Konum</dt>
+                            <dd>
+                                Satır 2,
+                                sütun 2
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Boyut</dt>
+                            <dd>
+                                128
+                                ×
+                                128
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <img
+                    src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_02_03.png"
+                    alt="ESENYURT_SEG_02_03 segmentasyon girdisi"
+                >
+
+                <div class="tile-body">
+                    <h2>
+                        ESENYURT_SEG_02_03
+                    </h2>
+
+                    <dl>
+                        <div>
+                            <dt>Konum</dt>
+                            <dd>
+                                Satır 2,
+                                sütun 3
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Boyut</dt>
+                            <dd>
+                                128
+                                ×
+                                128
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <img
+                    src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_03_01.png"
+                    alt="ESENYURT_SEG_03_01 segmentasyon girdisi"
+                >
+
+                <div class="tile-body">
+                    <h2>
+                        ESENYURT_SEG_03_01
+                    </h2>
+
+                    <dl>
+                        <div>
+                            <dt>Konum</dt>
+                            <dd>
+                                Satır 3,
+                                sütun 1
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Boyut</dt>
+                            <dd>
+                                128
+                                ×
+                                128
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <img
+                    src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_03_02.png"
+                    alt="ESENYURT_SEG_03_02 segmentasyon girdisi"
+                >
+
+                <div class="tile-body">
+                    <h2>
+                        ESENYURT_SEG_03_02
+                    </h2>
+
+                    <dl>
+                        <div>
+                            <dt>Konum</dt>
+                            <dd>
+                                Satır 3,
+                                sütun 2
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Boyut</dt>
+                            <dd>
+                                128
+                                ×
+                                128
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %95.25
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="tile-card">
+                <img
+                    src="assets/sentinel2/esenyurt/segmentation_tiles/ESENYURT_SEG_03_03.png"
+                    alt="ESENYURT_SEG_03_03 segmentasyon girdisi"
+                >
+
+                <div class="tile-body">
+                    <h2>
+                        ESENYURT_SEG_03_03
+                    </h2>
+
+                    <dl>
+                        <div>
+                            <dt>Konum</dt>
+                            <dd>
+                                Satır 3,
+                                sütun 3
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Boyut</dt>
+                            <dd>
+                                128
+                                ×
+                                128
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %91.75
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+        </section>
+
+    </main>
+</body>
+</html>
+    

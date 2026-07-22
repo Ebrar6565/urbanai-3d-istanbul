@@ -1,0 +1,707 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Esenyurt
+        WorldCover Aday Alanları
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f6fb;
+            color: #172033;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            padding: 36px 24px 28px;
+            background: #ffffff;
+            border-bottom: 1px solid #dbe2ea;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+        }
+
+        .subtitle {
+            max-width: 900px;
+            margin: 0;
+            color: #667085;
+            line-height: 1.6;
+        }
+
+        main {
+            padding: 28px 24px 50px;
+        }
+
+        .notice {
+            margin-bottom: 22px;
+            padding: 16px 18px;
+            border-left: 4px solid #2563eb;
+            border-radius: 9px;
+            background: #eff6ff;
+            line-height: 1.6;
+        }
+
+        .warning {
+            border-left-color: #d97706;
+            background: #fffbeb;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 15px;
+            border: 1px solid #dce3eb;
+            border-radius: 12px;
+            background: #ffffff;
+        }
+
+        .legend span {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 13px;
+        }
+
+        .class-dot {
+            display: inline-block;
+            width: 13px;
+            height: 13px;
+            flex: 0 0 13px;
+            border-radius: 3px;
+        }
+
+        .built {
+            background: rgb(220, 50, 47);
+        }
+
+        .vegetation {
+            background: rgb(46, 125, 50);
+        }
+
+        .open {
+            background: rgb(205, 160, 90);
+        }
+
+        .water {
+            background: rgb(40, 105, 190);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .candidate-card {
+            overflow: hidden;
+            border: 1px solid #dce3eb;
+            border-radius: 14px;
+            background: #ffffff;
+        }
+
+        .image-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            padding: 18px;
+            background:
+                repeating-conic-gradient(
+                    #eef2f6 0% 25%,
+                    #ffffff 0% 50%
+                )
+                50% / 20px 20px;
+        }
+
+        .image-panel img {
+            display: block;
+            width: 100%;
+            max-height: 340px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        .candidate-body {
+            padding: 18px;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            margin-bottom: 9px;
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 20px;
+        }
+
+        .dominant {
+            margin: 0 0 16px;
+            color: #475467;
+            line-height: 1.5;
+        }
+
+        .land-values {
+            display: grid;
+            gap: 9px;
+            margin-bottom: 17px;
+        }
+
+        .land-values div {
+            display: grid;
+            grid-template-columns: 14px 1fr auto;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        dl {
+            display: grid;
+            gap: 9px;
+            margin: 0;
+        }
+
+        dl div {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            padding-top: 9px;
+            border-top: 1px solid #edf1f5;
+        }
+
+        dt {
+            color: #667085;
+            font-size: 12px;
+        }
+
+        dd {
+            margin: 0;
+            max-width: 58%;
+            text-align: right;
+            font-size: 12px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>
+                Esenyurt
+                Aday Alan Arazi Örtüsü
+            </h1>
+
+            <p class="subtitle">
+                Hizmet boşluğu analizinden seçilen gerçek
+                aday hücrelerin 2021 yılı
+                ESA WorldCover arazi örtüsü dağılımları.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="notice">
+            Bu aşamada model eğitilmemiştir.
+            Hazır ESA WorldCover arazi örtüsü haritası
+            aday hücrelerin koordinatlarıyla eşleştirilmiş
+            ve sınıf pikselleri sayılmıştır.
+        </section>
+
+        <section class="notice warning">
+            Arazi örtüsü sonucu, bölgenin hukuken veya
+            teknik olarak kütüphane yapımına uygun olduğunu
+            göstermez. Parsel, imar, mülkiyet, ulaşım ve
+            güncel saha bilgileri ayrıca incelenmelidir.
+        </section>
+
+        <section class="legend">
+            <span>
+                <i class="class-dot built"></i>
+                Yapılaşmış alan
+            </span>
+
+            <span>
+                <i class="class-dot vegetation"></i>
+                Bitkisel ve yeşil alan
+            </span>
+
+            <span>
+                <i class="class-dot open"></i>
+                Açık veya çıplak alan
+            </span>
+
+            <span>
+                <i class="class-dot water"></i>
+                Su ve sulak alan
+            </span>
+        </section>
+
+        <section class="grid">
+            
+            <article class="candidate-card">
+                <div class="image-panel">
+                    <img
+                        src="assets/sentinel2/esenyurt/worldcover_2021/16-0030_worldcover_2021.png"
+                        alt="16-0030 WorldCover arazi örtüsü maskesi"
+                    >
+                </div>
+
+                <div class="candidate-body">
+                    <span class="rank-badge">
+                        1. aday
+                    </span>
+
+                    <h2>16-0030</h2>
+
+                    <p class="dominant">
+                        Baskın arazi sınıfı:
+                        <strong>Yapılaşmış alan</strong>
+                    </p>
+
+                    <div class="land-values">
+                        <div>
+                            <span class="class-dot built"></span>
+                            Yapılaşmış
+                            <strong>
+                                %45.64
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot vegetation"></span>
+                            Bitkisel / yeşil
+                            <strong>
+                                %22.73
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot open"></span>
+                            Açık / çıplak
+                            <strong>
+                                %31.54
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot water"></span>
+                            Su / sulak alan
+                            <strong>
+                                %0.09
+                            </strong>
+                        </div>
+                    </div>
+
+                    <dl>
+                        <div>
+                            <dt>En yakın kütüphane</dt>
+                            <dd>Gülten Akın Kütüphanesi</dd>
+                        </div>
+
+                        <div>
+                            <dt>Kütüphaneye uzaklık</dt>
+                            <dd>
+                                6.87
+                                km
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>WorldCover kapsaması</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Aday hücre alanı</dt>
+                            <dd>
+                                0.3441
+                                km²
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="candidate-card">
+                <div class="image-panel">
+                    <img
+                        src="assets/sentinel2/esenyurt/worldcover_2021/16-0017_worldcover_2021.png"
+                        alt="16-0017 WorldCover arazi örtüsü maskesi"
+                    >
+                </div>
+
+                <div class="candidate-body">
+                    <span class="rank-badge">
+                        2. aday
+                    </span>
+
+                    <h2>16-0017</h2>
+
+                    <p class="dominant">
+                        Baskın arazi sınıfı:
+                        <strong>Yapılaşmış alan</strong>
+                    </p>
+
+                    <div class="land-values">
+                        <div>
+                            <span class="class-dot built"></span>
+                            Yapılaşmış
+                            <strong>
+                                %88.35
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot vegetation"></span>
+                            Bitkisel / yeşil
+                            <strong>
+                                %9.49
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot open"></span>
+                            Açık / çıplak
+                            <strong>
+                                %2.17
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot water"></span>
+                            Su / sulak alan
+                            <strong>
+                                %0.00
+                            </strong>
+                        </div>
+                    </div>
+
+                    <dl>
+                        <div>
+                            <dt>En yakın kütüphane</dt>
+                            <dd>Gülten Akın Kütüphanesi</dd>
+                        </div>
+
+                        <div>
+                            <dt>Kütüphaneye uzaklık</dt>
+                            <dd>
+                                6.80
+                                km
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>WorldCover kapsaması</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Aday hücre alanı</dt>
+                            <dd>
+                                0.0738
+                                km²
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="candidate-card">
+                <div class="image-panel">
+                    <img
+                        src="assets/sentinel2/esenyurt/worldcover_2021/16-0016_worldcover_2021.png"
+                        alt="16-0016 WorldCover arazi örtüsü maskesi"
+                    >
+                </div>
+
+                <div class="candidate-body">
+                    <span class="rank-badge">
+                        3. aday
+                    </span>
+
+                    <h2>16-0016</h2>
+
+                    <p class="dominant">
+                        Baskın arazi sınıfı:
+                        <strong>Yapılaşmış alan</strong>
+                    </p>
+
+                    <div class="land-values">
+                        <div>
+                            <span class="class-dot built"></span>
+                            Yapılaşmış
+                            <strong>
+                                %67.30
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot vegetation"></span>
+                            Bitkisel / yeşil
+                            <strong>
+                                %31.46
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot open"></span>
+                            Açık / çıplak
+                            <strong>
+                                %1.25
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot water"></span>
+                            Su / sulak alan
+                            <strong>
+                                %0.00
+                            </strong>
+                        </div>
+                    </div>
+
+                    <dl>
+                        <div>
+                            <dt>En yakın kütüphane</dt>
+                            <dd>Gülten Akın Kütüphanesi</dd>
+                        </div>
+
+                        <div>
+                            <dt>Kütüphaneye uzaklık</dt>
+                            <dd>
+                                6.13
+                                km
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>WorldCover kapsaması</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Aday hücre alanı</dt>
+                            <dd>
+                                0.2808
+                                km²
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="candidate-card">
+                <div class="image-panel">
+                    <img
+                        src="assets/sentinel2/esenyurt/worldcover_2021/16-0029_worldcover_2021.png"
+                        alt="16-0029 WorldCover arazi örtüsü maskesi"
+                    >
+                </div>
+
+                <div class="candidate-body">
+                    <span class="rank-badge">
+                        4. aday
+                    </span>
+
+                    <h2>16-0029</h2>
+
+                    <p class="dominant">
+                        Baskın arazi sınıfı:
+                        <strong>Yapılaşmış alan</strong>
+                    </p>
+
+                    <div class="land-values">
+                        <div>
+                            <span class="class-dot built"></span>
+                            Yapılaşmış
+                            <strong>
+                                %80.32
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot vegetation"></span>
+                            Bitkisel / yeşil
+                            <strong>
+                                %17.27
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot open"></span>
+                            Açık / çıplak
+                            <strong>
+                                %2.40
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot water"></span>
+                            Su / sulak alan
+                            <strong>
+                                %0.00
+                            </strong>
+                        </div>
+                    </div>
+
+                    <dl>
+                        <div>
+                            <dt>En yakın kütüphane</dt>
+                            <dd>Gülten Akın Kütüphanesi</dd>
+                        </div>
+
+                        <div>
+                            <dt>Kütüphaneye uzaklık</dt>
+                            <dd>
+                                6.12
+                                km
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>WorldCover kapsaması</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Aday hücre alanı</dt>
+                            <dd>
+                                0.5620
+                                km²
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="candidate-card">
+                <div class="image-panel">
+                    <img
+                        src="assets/sentinel2/esenyurt/worldcover_2021/16-0042_worldcover_2021.png"
+                        alt="16-0042 WorldCover arazi örtüsü maskesi"
+                    >
+                </div>
+
+                <div class="candidate-body">
+                    <span class="rank-badge">
+                        5. aday
+                    </span>
+
+                    <h2>16-0042</h2>
+
+                    <p class="dominant">
+                        Baskın arazi sınıfı:
+                        <strong>Yapılaşmış alan</strong>
+                    </p>
+
+                    <div class="land-values">
+                        <div>
+                            <span class="class-dot built"></span>
+                            Yapılaşmış
+                            <strong>
+                                %49.19
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot vegetation"></span>
+                            Bitkisel / yeşil
+                            <strong>
+                                %39.91
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot open"></span>
+                            Açık / çıplak
+                            <strong>
+                                %10.90
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span class="class-dot water"></span>
+                            Su / sulak alan
+                            <strong>
+                                %0.00
+                            </strong>
+                        </div>
+                    </div>
+
+                    <dl>
+                        <div>
+                            <dt>En yakın kütüphane</dt>
+                            <dd>Gülten Akın Kütüphanesi</dd>
+                        </div>
+
+                        <div>
+                            <dt>Kütüphaneye uzaklık</dt>
+                            <dd>
+                                6.10
+                                km
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>WorldCover kapsaması</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Aday hücre alanı</dt>
+                            <dd>
+                                0.2025
+                                km²
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+        </section>
+
+    </main>
+</body>
+</html>
+    

@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Esenyurt Sentinel-2 RGB Alanları
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f6fb;
+            color: #172033;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            padding: 38px 24px 28px;
+            background: #ffffff;
+            border-bottom: 1px solid #dbe2ea;
+        }
+
+        .header-inner,
+        main {
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            max-width: 880px;
+            margin: 0;
+            color: #657083;
+            line-height: 1.6;
+        }
+
+        .metadata {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .metadata span {
+            padding: 8px 11px;
+            border: 1px solid #d9e0e8;
+            border-radius: 999px;
+            background: #f8fafc;
+            font-size: 13px;
+        }
+
+        main {
+            padding: 30px 24px 50px;
+        }
+
+        .notice {
+            margin-bottom: 24px;
+            padding: 16px 18px;
+            border-left: 4px solid #2563eb;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .patch-card {
+            overflow: hidden;
+            border: 1px solid #dce3eb;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+        }
+
+        .patch-card img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            background: #dbe3ec;
+        }
+
+        .patch-body {
+            padding: 17px;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            margin-bottom: 9px;
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        h2 {
+            margin: 0 0 15px;
+            font-size: 19px;
+        }
+
+        dl {
+            display: grid;
+            gap: 10px;
+            margin: 0;
+        }
+
+        dl div {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            padding-top: 9px;
+            border-top: 1px solid #edf1f5;
+        }
+
+        dt {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        dd {
+            margin: 0;
+            text-align: right;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        code {
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-inner">
+            <h1>
+                Esenyurt Sentinel-2 RGB Alanları
+            </h1>
+
+            <p class="subtitle">
+                Hizmet boşluğu analizinden seçilen pilot
+                hücrelerin gerçek renkli Sentinel-2
+                görüntüleri. Sistem ilçe parametresiyle
+                çalıştığı için aynı işlem başka ilçelere
+                de uygulanabilir.
+            </p>
+
+            <div class="metadata">
+                <span>İlçe kodu: esenyurt</span>
+                <span>Tarih: 20.07.2026</span>
+                <span>Platform: Sentinel-2B</span>
+                <span>Bulut oranı: %0.0632</span>
+                <span>Yama sayısı: 5</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="notice">
+            <strong>Seçim yöntemi:</strong>
+            Bulut oranı %1.0 ve altında olan sahneler arasından en yeni tarih seçildi.
+
+            <br><br>
+
+            <strong>Sentinel-2 sahne kimliği:</strong>
+            <code>S2B_MSIL2A_20260720T085559_R007_T35TPF_20260720T225308</code>
+
+            <br><br>
+
+            PNG dosyaları yalnızca görsel inceleme
+            içindir. Semantik segmentasyon aşamasında
+            coğrafi bilgiyi ve ham piksel değerlerini
+            koruyan GeoTIFF dosyaları kullanılacaktır.
+        </section>
+
+        <section class="grid">
+            
+            <article class="patch-card">
+                <img
+                    src="assets/sentinel2/esenyurt/ESENYURT_01_rgb.png"
+                    alt="ESENYURT_01 Sentinel-2 RGB uydu görüntüsü"
+                >
+
+                <div class="patch-body">
+                    <span class="rank-badge">
+                        1. aday
+                    </span>
+
+                    <h2>ESENYURT_01</h2>
+
+                    <dl>
+                        <div>
+                            <dt>Hücre</dt>
+                            <dd>16-0030</dd>
+                        </div>
+
+                        <div>
+                            <dt>Kütüphaneye uzaklık</dt>
+                            <dd>
+                                6.87 km
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Görüntü boyutu</dt>
+                            <dd>
+                                156
+                                ×
+                                156
+                                piksel
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="patch-card">
+                <img
+                    src="assets/sentinel2/esenyurt/ESENYURT_02_rgb.png"
+                    alt="ESENYURT_02 Sentinel-2 RGB uydu görüntüsü"
+                >
+
+                <div class="patch-body">
+                    <span class="rank-badge">
+                        2. aday
+                    </span>
+
+                    <h2>ESENYURT_02</h2>
+
+                    <dl>
+                        <div>
+                            <dt>Hücre</dt>
+                            <dd>16-0017</dd>
+                        </div>
+
+                        <div>
+                            <dt>Kütüphaneye uzaklık</dt>
+                            <dd>
+                                6.80 km
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Görüntü boyutu</dt>
+                            <dd>
+                                156
+                                ×
+                                156
+                                piksel
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="patch-card">
+                <img
+                    src="assets/sentinel2/esenyurt/ESENYURT_03_rgb.png"
+                    alt="ESENYURT_03 Sentinel-2 RGB uydu görüntüsü"
+                >
+
+                <div class="patch-body">
+                    <span class="rank-badge">
+                        3. aday
+                    </span>
+
+                    <h2>ESENYURT_03</h2>
+
+                    <dl>
+                        <div>
+                            <dt>Hücre</dt>
+                            <dd>16-0016</dd>
+                        </div>
+
+                        <div>
+                            <dt>Kütüphaneye uzaklık</dt>
+                            <dd>
+                                6.13 km
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Görüntü boyutu</dt>
+                            <dd>
+                                156
+                                ×
+                                156
+                                piksel
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="patch-card">
+                <img
+                    src="assets/sentinel2/esenyurt/ESENYURT_04_rgb.png"
+                    alt="ESENYURT_04 Sentinel-2 RGB uydu görüntüsü"
+                >
+
+                <div class="patch-body">
+                    <span class="rank-badge">
+                        4. aday
+                    </span>
+
+                    <h2>ESENYURT_04</h2>
+
+                    <dl>
+                        <div>
+                            <dt>Hücre</dt>
+                            <dd>16-0029</dd>
+                        </div>
+
+                        <div>
+                            <dt>Kütüphaneye uzaklık</dt>
+                            <dd>
+                                6.12 km
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Görüntü boyutu</dt>
+                            <dd>
+                                156
+                                ×
+                                156
+                                piksel
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+            <article class="patch-card">
+                <img
+                    src="assets/sentinel2/esenyurt/ESENYURT_05_rgb.png"
+                    alt="ESENYURT_05 Sentinel-2 RGB uydu görüntüsü"
+                >
+
+                <div class="patch-body">
+                    <span class="rank-badge">
+                        5. aday
+                    </span>
+
+                    <h2>ESENYURT_05</h2>
+
+                    <dl>
+                        <div>
+                            <dt>Hücre</dt>
+                            <dd>16-0042</dd>
+                        </div>
+
+                        <div>
+                            <dt>Kütüphaneye uzaklık</dt>
+                            <dd>
+                                6.10 km
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Görüntü boyutu</dt>
+                            <dd>
+                                156
+                                ×
+                                156
+                                piksel
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Geçerli piksel</dt>
+                            <dd>
+                                %100.00
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </article>
+            
+        </section>
+    </main>
+</body>
+</html>
+    

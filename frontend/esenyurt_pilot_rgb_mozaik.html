@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Esenyurt Sentinel-2 RGB Mozaik
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f6fb;
+            color: #172033;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            padding: 34px 24px;
+            background: #ffffff;
+            border-bottom: 1px solid #dbe2ea;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+        }
+
+        .subtitle {
+            max-width: 900px;
+            margin: 0;
+            color: #667085;
+            line-height: 1.6;
+        }
+
+        main {
+            padding: 28px 24px 50px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .metric {
+            padding: 16px;
+            border: 1px solid #dce3eb;
+            border-radius: 12px;
+            background: #ffffff;
+        }
+
+        .metric-label {
+            color: #667085;
+            font-size: 12px;
+        }
+
+        .metric-value {
+            margin-top: 7px;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .panel {
+            margin-bottom: 24px;
+            padding: 20px;
+            border: 1px solid #dce3eb;
+            border-radius: 14px;
+            background: #ffffff;
+        }
+
+        .mosaic-image {
+            display: block;
+            width: 100%;
+            max-height: 720px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #101827;
+        }
+
+        .note {
+            margin-top: 15px;
+            padding: 14px;
+            border-left: 4px solid #2563eb;
+            background: #eff6ff;
+            line-height: 1.6;
+        }
+
+        .warning {
+            border-left-color: #d97706;
+            background: #fffbeb;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .overlap-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .overlap-table th,
+        .overlap-table td {
+            padding: 10px;
+            border: 1px solid #dce3eb;
+            text-align: center;
+        }
+
+        .overlap-table th {
+            background: #f8fafc;
+        }
+
+        code {
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>
+                Esenyurt
+                Sentinel-2 RGB Mozaik
+            </h1>
+
+            <p class="subtitle">
+                Hizmet boşluğu analizinden seçilen
+                5 uydu yaması,
+                coğrafi koordinatları korunarak tek bir
+                raster görüntüde birleştirilmiştir.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="metrics">
+            <div class="metric">
+                <div class="metric-label">
+                    Kaynak yama
+                </div>
+
+                <div class="metric-value">
+                    5
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    Mozaik boyutu
+                </div>
+
+                <div class="metric-value">
+                    265
+                    ×
+                    241
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    Geçerli piksel
+                </div>
+
+                <div class="metric-value">
+                    %89.18
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    Geçerli alan
+                </div>
+
+                <div class="metric-value">
+                    5.70 km²
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    En yüksek örtüşme
+                </div>
+
+                <div class="metric-value">
+                    %66.17
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>
+                Birleştirilmiş RGB görüntüsü
+            </h2>
+
+            <img
+                class="mosaic-image"
+                src="assets/sentinel2/esenyurt/esenyurt_pilot_rgb_mozaik.png"
+                alt="Esenyurt pilot alanlarının birleştirilmiş Sentinel-2 RGB görüntüsü"
+            >
+
+            <div class="note">
+                PNG yalnızca görsel inceleme için
+                hazırlanmıştır. Semantik segmentasyon
+                aşamasında ham piksel değerlerini ve
+                koordinat bilgisini koruyan GeoTIFF
+                kullanılacaktır.
+            </div>
+
+            <div class="note warning">
+                Örtüşen uydu yamaları birbirinden bağımsız
+                eğitim ve doğrulama verisi değildir.
+                Makine öğrenmesi veri ayrımı coğrafi
+                gruplar üzerinden yapılmalıdır.
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>
+                Yama örtüşme matrisi
+            </h2>
+
+            <p>
+                Her değer, iki uydu yamasının daha küçük
+                olan yamanın alanına göre yüzde kaç
+                örtüştüğünü gösterir.
+            </p>
+
+            <div class="table-wrapper">
+                <table class="dataframe overlap-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ESENYURT_01</th>
+      <th>ESENYURT_02</th>
+      <th>ESENYURT_03</th>
+      <th>ESENYURT_04</th>
+      <th>ESENYURT_05</th>
+    </tr>
+    <tr>
+      <th>patch_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>ESENYURT_01</th>
+      <td>100.00</td>
+      <td>66.17</td>
+      <td>28.47</td>
+      <td>48.07</td>
+      <td>32.56</td>
+    </tr>
+    <tr>
+      <th>ESENYURT_02</th>
+      <td>66.17</td>
+      <td>100.00</td>
+      <td>48.93</td>
+      <td>41.15</td>
+      <td>21.78</td>
+    </tr>
+    <tr>
+      <th>ESENYURT_03</th>
+      <td>28.47</td>
+      <td>48.93</td>
+      <td>100.00</td>
+      <td>57.11</td>
+      <td>25.08</td>
+    </tr>
+    <tr>
+      <th>ESENYURT_04</th>
+      <td>48.07</td>
+      <td>41.15</td>
+      <td>57.11</td>
+      <td>100.00</td>
+      <td>64.69</td>
+    </tr>
+    <tr>
+      <th>ESENYURT_05</th>
+      <td>32.56</td>
+      <td>21.78</td>
+      <td>25.08</td>
+      <td>64.69</td>
+      <td>100.00</td>
+    </tr>
+  </tbody>
+</table>
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>
+                Uydu sahnesi
+            </h2>
+
+            <p>
+                <strong>Sahne kimliği:</strong>
+                <code>S2B_MSIL2A_20260720T085559_R007_T35TPF_20260720T225308</code>
+            </p>
+
+            <p>
+                <strong>Tarih:</strong>
+                2026-07-20T08:55:59.024000+00:00
+            </p>
+
+            <p>
+                <strong>Platform:</strong>
+                Sentinel-2B
+            </p>
+
+            <p>
+                <strong>Koordinat sistemi:</strong>
+                EPSG:32635
+            </p>
+
+            <p>
+                <strong>Piksel çözünürlüğü:</strong>
+                10.00
+                ×
+                10.00 metre
+            </p>
+        </section>
+
+    </main>
+</body>
+</html>
+    

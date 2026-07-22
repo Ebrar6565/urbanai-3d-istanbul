@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_673af3ebc5319abe19eb815067f797cc {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    
+                    <style>
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+    
+                    <style>
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+    
+                    <style>
+                        .foliumpopup {
+                            margin: auto;
+                        }
+                       .foliumpopup table{
+                            margin: auto;
+                        }
+                        .foliumpopup tr{
+                            text-align: left;
+                        }
+                        .foliumpopup th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+    
+                    <style>
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+    
+                    <style>
+                        .foliumpopup {
+                            margin: auto;
+                        }
+                       .foliumpopup table{
+                            margin: auto;
+                        }
+                        .foliumpopup tr{
+                            text-align: left;
+                        }
+                        .foliumpopup th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+</head>
+<body>
+    
+    
+    <div style="
+        position: fixed;
+        top: 18px;
+        left: 55px;
+        z-index: 9999;
+        width: 385px;
+        padding: 17px 19px;
+        border-radius: 13px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.17);
+        font-family: Arial, sans-serif;
+        color: #172033;
+    ">
+        <div style="
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        ">
+            Esenyurt Pilot Uydu Analiz Alanları
+        </div>
+
+        <div style="
+            font-size: 11px;
+            line-height: 1.6;
+            color: #5e6878;
+        ">
+            İlçedeki ilk 5 aday hücrenin
+            çevresinde 1500 ×
+            1500 metrelik uydu
+            görüntüsü sorgu alanları hazırlanmıştır.
+            İlçe adı ve analiz ayarları komut satırından
+            alınmaktadır.
+        </div>
+    </div>
+    
+    
+            <div class="folium-map" id="map_673af3ebc5319abe19eb815067f797cc" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_673af3ebc5319abe19eb815067f797cc = L.map(
+                "map_673af3ebc5319abe19eb815067f797cc",
+                {
+                    center: [41.090640223604694, 28.640423212144327],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_673af3ebc5319abe19eb815067f797cc);
+
+            
+
+        
+    
+            var tile_layer_2623002cc9c3196685249e296e4d0e45 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_2623002cc9c3196685249e296e4d0e45.addTo(map_673af3ebc5319abe19eb815067f797cc);
+        
+    
+        function geo_json_fd065c6bb938bd7d9aabe31b965ed714_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#111827", "fillColor": "transparent", "fillOpacity": 0, "weight": 3};
+            }
+        }
+
+        function geo_json_fd065c6bb938bd7d9aabe31b965ed714_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_fd065c6bb938bd7d9aabe31b965ed714 = L.geoJson(null, {
+                onEachFeature: geo_json_fd065c6bb938bd7d9aabe31b965ed714_onEachFeature,
+            
+                style: geo_json_fd065c6bb938bd7d9aabe31b965ed714_styler,
+            ...{
+}
+        });
+
+        function geo_json_fd065c6bb938bd7d9aabe31b965ed714_add (data) {
+            geo_json_fd065c6bb938bd7d9aabe31b965ed714
+                .addData(data);
+        }
+            geo_json_fd065c6bb938bd7d9aabe31b965ed714_add({"features": [{"geometry": {"coordinates": [[[28.655587, 41.075888], [28.6558133, 41.0757374], [28.6566517, 41.0751586], [28.6599901, 41.073021], [28.6642434, 41.0702848], [28.6663253, 41.0688733], [28.6664954, 41.0687564], [28.6726049, 41.0645578], [28.6751713, 41.063779], [28.6777226, 41.063279], [28.678956, 41.0630386], [28.6795848, 41.0628992], [28.6802073, 41.0627648], [28.6807374, 41.0626405], [28.6812804, 41.0625949], [28.6823812, 41.0625678], [28.682601, 41.0625538], [28.6826958, 41.0625222], [28.6834702, 41.0621494], [28.6844464, 41.0618818], [28.6859752, 41.0613954], [28.6863026, 41.0612437], [28.687071, 41.0603984], [28.6872964, 41.0602118], [28.6883063, 41.0596558], [28.6894934, 41.0591765], [28.6903953, 41.0588508], [28.6904611, 41.058994], [28.6909366, 41.0588628], [28.6911405, 41.0587187], [28.6912008, 41.0584726], [28.6915751, 41.0577969], [28.6823155, 41.0550028], [28.6825883, 41.0543806], [28.6829263, 41.0538224], [28.6834091, 41.0532075], [28.6838305, 41.0527829], [28.6855227, 41.0512657], [28.6873871, 41.0497236], [28.6891349, 41.0481165], [28.6896903, 41.0474748], [28.6897495, 41.0474064], [28.6901914, 41.0466011], [28.6906026, 41.0455458], [28.6907422, 41.0447037], [28.6907422, 41.0438622], [28.6906455, 41.043073], [28.6911982, 41.0427131], [28.6913511, 41.0427293], [28.6914986, 41.0427091], [28.6916113, 41.0426565], [28.6922818, 41.0424218], [28.6928558, 41.0422519], [28.6941594, 41.0419606], [28.6952591, 41.0416773], [28.6955701, 41.0415501], [28.6967142, 41.0415941], [28.6971527, 41.0416045], [28.6969703, 41.0413213], [28.696745, 41.0410097], [28.6963631, 41.0406689], [28.6961893, 41.0404797], [28.6952368, 41.0395375], [28.6940896, 41.0386104], [28.6933601, 41.0380196], [28.6928529, 41.0375852], [28.6923892, 41.037039], [28.6921048, 41.0368219], [28.6917776, 41.0366318], [28.6912465, 41.036478], [28.6906028, 41.0363283], [28.6904973, 41.0361524], [28.6905277, 41.0358346], [28.690694, 41.0355393], [28.690989, 41.0348595], [28.6910538, 41.0345797], [28.691017, 41.0317593], [28.6923412, 41.0316059], [28.6932474, 41.0315453], [28.6936176, 41.0315615], [28.6940896, 41.031602], [28.694433, 41.0316586], [28.6948407, 41.0316708], [28.6952678, 41.031618], [28.6963457, 41.0314372], [28.6972203, 41.0292482], [28.6981237, 41.0290566], [28.6996686, 41.0288826], [28.7009025, 41.028834], [28.7014389, 41.0288098], [28.7018894, 41.02876], [28.7016605, 41.0273371], [28.7015533, 41.0267525], [28.7015447, 41.0246762], [28.7014711, 41.0232411], [28.7014631, 41.021927], [28.7011492, 41.0196471], [28.7010097, 41.0185705], [28.7007199, 41.0172782], [28.7002285, 41.0155129], [28.6985314, 41.0139401], [28.6967452, 41.0124465], [28.6968988, 41.0123739], [28.6981345, 41.0118156], [28.6992073, 41.0112463], [28.6999896, 41.0107955], [28.7008461, 41.010212], [28.7018986, 41.0094053], [28.7016447, 41.0089709], [28.7012835, 41.0083194], [28.7008917, 41.0077711], [28.7008569, 41.0076861], [28.7008756, 41.007593], [28.7006664, 41.0073582], [28.700602, 41.0071841], [28.7003375, 41.0069012], [28.7003231, 41.0067631], [28.7000924, 41.0064312], [28.6991765, 41.0057395], [28.6992426, 41.0057107], [28.6994502, 41.0054122], [28.6994916, 41.0050143], [28.6992417, 41.0036574], [28.6991322, 41.0025003], [28.6989514, 41.0013514], [28.6988636, 41.0004166], [28.698349, 41.0000752], [28.6977643, 40.9998484], [28.6973405, 40.9997918], [28.6972152, 40.9998056], [28.6970623, 40.9998386], [28.6964393, 40.9998708], [28.6950821, 40.999808], [28.6943418, 40.9997392], [28.6936949, 40.9997091], [28.6930174, 40.999701], [28.6921102, 40.9998282], [28.6910984, 41.0001071], [28.69012, 41.0005003], [28.6888701, 41.0014234], [28.6878592, 41.0022492], [28.6859345, 41.0038257], [28.6855159, 41.004106], [28.6847103, 41.0045443], [28.683913, 41.0049386], [28.6834949, 41.0050831], [28.6827922, 41.005326], [28.681824, 41.0055512], [28.6807859, 41.0057106], [28.679574, 41.0057926], [28.6778865, 41.0058228], [28.6735278, 41.0059616], [28.6691744, 41.0060258], [28.6686203, 41.006062], [28.6677155, 41.0061397], [28.666775, 41.0062474], [28.6654086, 41.0065117], [28.6640744, 41.0068807], [28.6632374, 41.0071765], [28.6619817, 41.0076532], [28.6614509, 41.0078565], [28.6608558, 41.0080876], [28.6597675, 41.008519], [28.6569008, 41.0096081], [28.6544449, 41.0105411], [28.6507908, 41.0118961], [28.6504485, 41.0120178], [28.6497503, 41.0122655], [28.64946, 41.01237], [28.6457342, 41.0138407], [28.644797, 41.0141734], [28.644544, 41.0142742], [28.6443745, 41.0143398], [28.6441257, 41.0144421], [28.6422822, 41.015144], [28.6411088, 41.0156093], [28.6402286, 41.0159443], [28.6339136, 41.0183207], [28.6334213, 41.0185131], [28.6325248, 41.0188499], [28.6312098, 41.0193914], [28.6304382, 41.019743], [28.6301891, 41.0198954], [28.6299994, 41.0200318], [28.6297143, 41.02022], [28.6288213, 41.0210158], [28.6288751, 41.0215989], [28.6289469, 41.0225248], [28.6289097, 41.0234457], [28.6287762, 41.0242022], [28.6284934, 41.0250326], [28.6281626, 41.0257901], [28.6274684, 41.0269782], [28.6268683, 41.0279194], [28.6262487, 41.0288603], [28.6239849, 41.0325489], [28.6238618, 41.0328323], [28.6235022, 41.0336605], [28.623388, 41.0340122], [28.6233609, 41.0348983], [28.6235551, 41.0357162], [28.6238714, 41.0364216], [28.6253505, 41.0384562], [28.6259288, 41.0393627], [28.6263535, 41.0402453], [28.6267598, 41.0413115], [28.6268291, 41.0414934], [28.6276988, 41.0437759], [28.6278388, 41.0446414], [28.6280891, 41.0525846], [28.6279518, 41.0534159], [28.6276518, 41.0541], [28.62722, 41.0549668], [28.626643, 41.056125], [28.6251414, 41.0588932], [28.6208733, 41.0667609], [28.6207986, 41.066886], [28.620542, 41.0677635], [28.620542, 41.0686819], [28.6207408, 41.0695321], [28.6258617, 41.0799931], [28.6268377, 41.0814269], [28.6280485, 41.0828232], [28.6293341, 41.0840167], [28.6290997, 41.0840578], [28.6288851, 41.0841448], [28.6287081, 41.084262], [28.6285633, 41.0843914], [28.6284372, 41.0846401], [28.6283648, 41.0849777], [28.6283924, 41.0852227], [28.628515, 41.0855094], [28.6291012, 41.0861866], [28.6303674, 41.0856899], [28.6335702, 41.0887553], [28.6340379, 41.0903211], [28.6343947, 41.0925794], [28.6355939, 41.0950118], [28.6363357, 41.0953395], [28.6372055, 41.0957238], [28.6392616, 41.0960169], [28.6385392, 41.0981109], [28.6395951, 41.0981109], [28.6444854, 41.0951793], [28.6447337, 41.0947201], [28.6448532, 41.0944064], [28.6456254, 41.0922363], [28.6458793, 41.0916954], [28.6460767, 41.0914202], [28.6466522, 41.0908879], [28.6485635, 41.089033], [28.649723, 41.0879375], [28.6506395, 41.0870717], [28.6511806, 41.0865487], [28.6515214, 41.0861906], [28.6517817, 41.0856838], [28.6522225, 41.084382], [28.6523349, 41.0839786], [28.6527813, 41.0827047], [28.6528632, 41.0823304], [28.652833, 41.0818505], [28.6527715, 41.0809856], [28.6528116, 41.0806676], [28.6528941, 41.0804244], [28.6530594, 41.0800073], [28.6533882, 41.0794072], [28.6539071, 41.0784679], [28.6545772, 41.0772289], [28.6548037, 41.0767807], [28.655159, 41.0761728], [28.655587, 41.075888]]], "type": "Polygon"}, "id": "0", "properties": {"district_name": "Esenyurt"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+    geo_json_fd065c6bb938bd7d9aabe31b965ed714.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature => {
+        if (feature === null) {
+            return '';
+        } else if (typeof(feature)=='object') {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = ["district_name"];
+    let aliases = ["\u0130l\u00e7e:"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i]}</th>
+            
+            <td>${handleObject(layer.feature.properties[v])}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  "sticky": true,
+  "className": "foliumtooltip",
+});
+                     
+    
+            geo_json_fd065c6bb938bd7d9aabe31b965ed714.addTo(map_673af3ebc5319abe19eb815067f797cc);
+        
+    
+        function geo_json_946f0f99c9d086ab3528c6d66e42dffe_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#7f1d1d", "fillColor": "#dc2626", "fillOpacity": 0.62, "weight": 2};
+            }
+        }
+        function geo_json_946f0f99c9d086ab3528c6d66e42dffe_highlighter(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#000000", "fillOpacity": 0.85, "weight": 3};
+            }
+        }
+
+        function geo_json_946f0f99c9d086ab3528c6d66e42dffe_onEachFeature(feature, layer) {
+
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                            geo_json_946f0f99c9d086ab3528c6d66e42dffe.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                        const highlightStyle = geo_json_946f0f99c9d086ab3528c6d66e42dffe_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_946f0f99c9d086ab3528c6d66e42dffe = L.geoJson(null, {
+                onEachFeature: geo_json_946f0f99c9d086ab3528c6d66e42dffe_onEachFeature,
+            
+                style: geo_json_946f0f99c9d086ab3528c6d66e42dffe_styler,
+            ...{
+}
+        });
+
+        function geo_json_946f0f99c9d086ab3528c6d66e42dffe_add (data) {
+            geo_json_946f0f99c9d086ab3528c6d66e42dffe
+                .addData(data);
+        }
+            geo_json_946f0f99c9d086ab3528c6d66e42dffe_add({"features": [{"geometry": {"coordinates": [[[28.637173935398128, 41.09189741101953], [28.637269184716388, 41.09573287894041], [28.6392616, 41.0960169], [28.6385392, 41.098110899999995], [28.6395951, 41.0981109], [28.644485400000004, 41.09517929999999], [28.6447337, 41.0947201], [28.6448532, 41.0944064], [28.6456254, 41.09223630000001], [28.645842459483212, 41.09177388436147], [28.637173935398128, 41.09189741101953]]], "type": "Polygon"}, "id": "0", "properties": {"analysis_year": 2025, "candidate_review": "Evet", "cell_area_km2": 0.3441, "cell_area_ratio": 0.612, "cell_id": "16-0030", "center_latitude": 41.095002, "center_longitude": 28.640931, "district_candidate_rank": 1, "district_distance_score": 100.0, "district_id": 16, "district_name": "Esenyurt", "facility_count": 2, "global_candidate_rank": 184, "global_distance_score": 22.023, "global_preliminary_score": 45.204, "id": "29", "nearest_library_distance_km": 6.867, "nearest_library_distance_m": 6867.16, "nearest_library_district": "Esenyurt", "nearest_library_id": 24, "nearest_library_name": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi", "population_2025": 1003905, "preliminary_need_score": 99.787, "priority_level": "Y\u00fcksek", "priority_rank": 1, "priority_score": 99.291, "service_gap_class": "G\u00fc\u00e7l\u00fc aday inceleme alan\u0131", "service_per_100k": 0.199}, "type": "Feature"}, {"geometry": {"coordinates": [[[28.637173935398128, 41.09189741101953], [28.634293408890727, 41.09193831412403], [28.6343947, 41.0925794], [28.6355939, 41.09501179999999], [28.6363357, 41.095339499999994], [28.6372055, 41.0957238], [28.637269184716388, 41.09573287894041], [28.637173935398128, 41.09189741101953]]], "type": "Polygon"}, "id": "1", "properties": {"analysis_year": 2025, "candidate_review": "Evet", "cell_area_km2": 0.0738, "cell_area_ratio": 0.131, "cell_id": "16-0017", "center_latitude": 41.09378, "center_longitude": 28.636107, "district_candidate_rank": 2, "district_distance_score": 98.163, "district_id": 16, "district_name": "Esenyurt", "facility_count": 2, "global_candidate_rank": 186, "global_distance_score": 21.619, "global_preliminary_score": 44.92, "id": "16", "nearest_library_distance_km": 6.796, "nearest_library_distance_m": 6796.31, "nearest_library_district": "Esenyurt", "nearest_library_id": 24, "nearest_library_name": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi", "population_2025": 1003905, "preliminary_need_score": 98.501, "priority_level": "Y\u00fcksek", "priority_rank": 1, "priority_score": 99.291, "service_gap_class": "G\u00fc\u00e7l\u00fc aday inceleme alan\u0131", "service_per_100k": 0.199}, "type": "Feature"}, {"geometry": {"coordinates": [[[28.637173935398128, 41.09189741101953], [28.637006269731845, 41.08514409939742], [28.628410883191304, 41.08526592310334], [28.628515, 41.08550939999999], [28.6291012, 41.0861866], [28.6303674, 41.0856899], [28.6335702, 41.08875529999999], [28.6340379, 41.0903211], [28.634293408890727, 41.09193831412403], [28.637173935398128, 41.09189741101953]]], "type": "Polygon"}, "id": "2", "properties": {"analysis_year": 2025, "candidate_review": "Evet", "cell_area_km2": 0.2808, "cell_area_ratio": 0.499, "cell_id": "16-0016", "center_latitude": 41.087424, "center_longitude": 28.634639, "district_candidate_rank": 3, "district_distance_score": 80.952, "district_id": 16, "district_name": "Esenyurt", "facility_count": 2, "global_candidate_rank": 204, "global_distance_score": 17.828, "global_preliminary_score": 42.267, "id": "15", "nearest_library_distance_km": 6.131, "nearest_library_distance_m": 6131.2, "nearest_library_district": "Esenyurt", "nearest_library_id": 24, "nearest_library_name": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi", "population_2025": 1003905, "preliminary_need_score": 86.454, "priority_level": "Y\u00fcksek", "priority_rank": 1, "priority_score": 99.291, "service_gap_class": "G\u00fc\u00e7l\u00fc aday inceleme alan\u0131", "service_per_100k": 0.199}, "type": "Feature"}, {"geometry": {"coordinates": [[[28.645931882083946, 41.085016916279486], [28.637006269731845, 41.08514409939742], [28.637173935398128, 41.09189741101953], [28.645842459483212, 41.09177388436147], [28.6458793, 41.0916954], [28.6460767, 41.0914202], [28.646091383616188, 41.0914066187523], [28.645931882083946, 41.085016916279486]]], "type": "Polygon"}, "id": "3", "properties": {"analysis_year": 2025, "candidate_review": "Evet", "cell_area_km2": 0.562, "cell_area_ratio": 0.999, "cell_id": "16-0029", "center_latitude": 41.088275, "center_longitude": 28.641549, "district_candidate_rank": 4, "district_distance_score": 80.668, "district_id": 16, "district_name": "Esenyurt", "facility_count": 2, "global_candidate_rank": 205, "global_distance_score": 17.766, "global_preliminary_score": 42.223, "id": "28", "nearest_library_distance_km": 6.12, "nearest_library_distance_m": 6119.78, "nearest_library_district": "Esenyurt", "nearest_library_id": 24, "nearest_library_name": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi", "population_2025": 1003905, "preliminary_need_score": 86.255, "priority_level": "Y\u00fcksek", "priority_rank": 1, "priority_score": 99.291, "service_gap_class": "G\u00fc\u00e7l\u00fc aday inceleme alan\u0131", "service_per_100k": 0.199}, "type": "Feature"}, {"geometry": {"coordinates": [[[28.645931882083946, 41.085016916279486], [28.646091383616188, 41.0914066187523], [28.6466522, 41.09088789999999], [28.648563499999998, 41.089033], [28.649723000000005, 41.08793750000001], [28.6506395, 41.0870717], [28.651180600000004, 41.086548699999994], [28.6515214, 41.086190599999995], [28.651781700000004, 41.0856838], [28.652037106364364, 41.0849295230446], [28.645931882083946, 41.085016916279486]]], "type": "Polygon"}, "id": "4", "properties": {"analysis_year": 2025, "candidate_review": "Evet", "cell_area_km2": 0.2025, "cell_area_ratio": 0.36, "cell_id": "16-0042", "center_latitude": 41.088508, "center_longitude": 28.647581, "district_candidate_rank": 5, "district_distance_score": 80.124, "district_id": 16, "district_name": "Esenyurt", "facility_count": 2, "global_candidate_rank": 207, "global_distance_score": 17.646, "global_preliminary_score": 42.14, "id": "41", "nearest_library_distance_km": 6.099, "nearest_library_distance_m": 6099.27, "nearest_library_district": "Esenyurt", "nearest_library_id": 24, "nearest_library_name": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi", "population_2025": 1003905, "preliminary_need_score": 85.874, "priority_level": "Y\u00fcksek", "priority_rank": 1, "priority_score": 99.291, "service_gap_class": "G\u00fc\u00e7l\u00fc aday inceleme alan\u0131", "service_per_100k": 0.199}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+    geo_json_946f0f99c9d086ab3528c6d66e42dffe.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature => {
+        if (feature === null) {
+            return '';
+        } else if (typeof(feature)=='object') {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = ["district_name", "district_candidate_rank", "nearest_library_distance_km"];
+    let aliases = ["\u0130l\u00e7e:", "Aday s\u0131ras\u0131:", "K\u00fct\u00fcphaneye uzakl\u0131k (km):"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i].toLocaleString()}</th>
+            
+            <td>${handleObject(layer.feature.properties[v]).toLocaleString()}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  "sticky": true,
+  "className": "foliumtooltip",
+});
+                     
+    
+    geo_json_946f0f99c9d086ab3528c6d66e42dffe.bindPopup(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature => {
+        if (feature === null) {
+            return '';
+        } else if (typeof(feature)=='object') {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = ["cell_id", "district_candidate_rank", "global_candidate_rank", "nearest_library_name", "nearest_library_distance_km", "global_preliminary_score", "preliminary_need_score"];
+    let aliases = ["H\u00fccre:", "\u0130l\u00e7e i\u00e7i s\u0131ra:", "Genel s\u0131ra:", "En yak\u0131n k\u00fct\u00fcphane:", "Uzakl\u0131k (km):", "Genel \u00f6n eleme puan\u0131:", "\u0130l\u00e7e i\u00e7i \u00f6n eleme puan\u0131:"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i].toLocaleString()}</th>
+            
+            <td>${handleObject(layer.feature.properties[v]).toLocaleString()}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  "className": "foliumpopup",
+});
+                     
+    
+            geo_json_946f0f99c9d086ab3528c6d66e42dffe.addTo(map_673af3ebc5319abe19eb815067f797cc);
+        
+    
+        function geo_json_77f9ad300042620d3b33e3d747a4ea43_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#1d4ed8", "dashArray": "7, 5", "fillColor": "#2563eb", "fillOpacity": 0.16, "weight": 2};
+            }
+        }
+        function geo_json_77f9ad300042620d3b33e3d747a4ea43_highlighter(feature) {
+            switch(feature.id) {
+                default:
+                    return {"fillOpacity": 0.28, "weight": 4};
+            }
+        }
+
+        function geo_json_77f9ad300042620d3b33e3d747a4ea43_onEachFeature(feature, layer) {
+
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                            geo_json_77f9ad300042620d3b33e3d747a4ea43.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                        const highlightStyle = geo_json_77f9ad300042620d3b33e3d747a4ea43_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_77f9ad300042620d3b33e3d747a4ea43 = L.geoJson(null, {
+                onEachFeature: geo_json_77f9ad300042620d3b33e3d747a4ea43_onEachFeature,
+            
+                style: geo_json_77f9ad300042620d3b33e3d747a4ea43_styler,
+            ...{
+}
+        });
+
+        function geo_json_77f9ad300042620d3b33e3d747a4ea43_add (data) {
+            geo_json_77f9ad300042620d3b33e3d747a4ea43
+                .addData(data);
+        }
+            geo_json_77f9ad300042620d3b33e3d747a4ea43_add({"features": [{"geometry": {"coordinates": [[[28.64968889540217, 41.08812138406792], [28.650026916838417, 41.10162790582794], [28.632171174527038, 41.10188229887495], [28.63183680700575, 41.08837565687983], [28.64968889540217, 41.08812138406792]]], "type": "Polygon"}, "id": "0", "properties": {"cell_id": "16-0030", "district_candidate_rank": 1, "district_name": "Esenyurt", "district_slug": "esenyurt", "global_candidate_rank": 184, "global_preliminary_score": 45.204, "max_latitude": 41.1018823, "max_longitude": 28.6500269, "min_latitude": 41.0881214, "min_longitude": 28.6318368, "nearest_library_distance_km": 6.867, "nearest_library_name": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi", "patch_height_m": 1500, "patch_id": "ESENYURT_01", "patch_width_m": 1500, "preliminary_need_score": 99.787}, "type": "Feature"}, {"geometry": {"coordinates": [[[28.64486559267363, 41.086899380798975], [28.645202611596662, 41.10040593820867], [28.627347157236457, 41.10065957749754], [28.627013792038774, 41.087152900207975], [28.64486559267363, 41.086899380798975]]], "type": "Polygon"}, "id": "1", "properties": {"cell_id": "16-0017", "district_candidate_rank": 2, "district_name": "Esenyurt", "district_slug": "esenyurt", "global_candidate_rank": 186, "global_preliminary_score": 44.92, "max_latitude": 41.1006596, "max_longitude": 28.6452026, "min_latitude": 41.0868994, "min_longitude": 28.6270138, "nearest_library_distance_km": 6.796, "nearest_library_name": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi", "patch_height_m": 1500, "patch_id": "ESENYURT_02", "patch_width_m": 1500, "preliminary_need_score": 98.501}, "type": "Feature"}, {"geometry": {"coordinates": [[[28.643396268286104, 41.080543849721565], [28.643732910962505, 41.094050432040234], [28.625879164509243, 41.09430381176062], [28.625546174400128, 41.080797109680844], [28.643396268286104, 41.080543849721565]]], "type": "Polygon"}, "id": "2", "properties": {"cell_id": "16-0016", "district_candidate_rank": 3, "district_name": "Esenyurt", "district_slug": "esenyurt", "global_candidate_rank": 204, "global_preliminary_score": 42.267, "max_latitude": 41.0943038, "max_longitude": 28.6437329, "min_latitude": 41.0805438, "min_longitude": 28.6255462, "nearest_library_distance_km": 6.131, "nearest_library_name": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi", "patch_height_m": 1500, "patch_id": "ESENYURT_03", "patch_width_m": 1500, "preliminary_need_score": 86.454}, "type": "Feature"}, {"geometry": {"coordinates": [[[28.650305621978685, 41.08139463967684], [28.65064368973662, 41.09490117305517], [28.63278977452684, 41.09515562787508], [28.632455359442282, 41.081648974228436], [28.650305621978685, 41.08139463967684]]], "type": "Polygon"}, "id": "3", "properties": {"cell_id": "16-0029", "district_candidate_rank": 4, "district_name": "Esenyurt", "district_slug": "esenyurt", "global_candidate_rank": 205, "global_preliminary_score": 42.223, "max_latitude": 41.0951556, "max_longitude": 28.6506437, "min_latitude": 41.0813946, "min_longitude": 28.6324554, "nearest_library_distance_km": 6.12, "nearest_library_name": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi", "patch_height_m": 1500, "patch_id": "ESENYURT_04", "patch_width_m": 1500, "preliminary_need_score": 86.255}, "type": "Feature"}, {"geometry": {"coordinates": [[[28.65633780838592, 41.08162633938204], [28.656677114270956, 41.09513283107385], [28.638823190314028, 41.09538822195273], [28.63848753710085, 41.081881609550685], [28.65633780838592, 41.08162633938204]]], "type": "Polygon"}, "id": "4", "properties": {"cell_id": "16-0042", "district_candidate_rank": 5, "district_name": "Esenyurt", "district_slug": "esenyurt", "global_candidate_rank": 207, "global_preliminary_score": 42.14, "max_latitude": 41.0953882, "max_longitude": 28.6566771, "min_latitude": 41.0816263, "min_longitude": 28.6384875, "nearest_library_distance_km": 6.099, "nearest_library_name": "G\u00fclten Ak\u0131n K\u00fct\u00fcphanesi", "patch_height_m": 1500, "patch_id": "ESENYURT_05", "patch_width_m": 1500, "preliminary_need_score": 85.874}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+    geo_json_77f9ad300042620d3b33e3d747a4ea43.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature => {
+        if (feature === null) {
+            return '';
+        } else if (typeof(feature)=='object') {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = ["patch_id", "district_candidate_rank"];
+    let aliases = ["Uydu yamas\u0131:", "Aday s\u0131ras\u0131:"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i]}</th>
+            
+            <td>${handleObject(layer.feature.properties[v])}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  "sticky": true,
+  "className": "foliumtooltip",
+});
+                     
+    
+    geo_json_77f9ad300042620d3b33e3d747a4ea43.bindPopup(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature => {
+        if (feature === null) {
+            return '';
+        } else if (typeof(feature)=='object') {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = ["patch_id", "cell_id", "district_candidate_rank", "nearest_library_distance_km", "patch_width_m", "patch_height_m", "min_longitude", "min_latitude", "max_longitude", "max_latitude"];
+    let aliases = ["Yama kimli\u011fi:", "H\u00fccre kimli\u011fi:", "Aday s\u0131ras\u0131:", "K\u00fct\u00fcphaneye uzakl\u0131k (km):", "Yama geni\u015fli\u011fi (m):", "Yama y\u00fcksekli\u011fi (m):", "Minimum boylam:", "Minimum enlem:", "Maksimum boylam:", "Maksimum enlem:"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i].toLocaleString()}</th>
+            
+            <td>${handleObject(layer.feature.properties[v]).toLocaleString()}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  "className": "foliumpopup",
+});
+                     
+    
+            geo_json_77f9ad300042620d3b33e3d747a4ea43.addTo(map_673af3ebc5319abe19eb815067f797cc);
+        
+    
+            var circle_marker_947f34c7da7c74f04e15eb511b7451d3 = L.circleMarker(
+                [41.095001781353886, 28.64093096491031],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1d4ed8", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_673af3ebc5319abe19eb815067f797cc);
+        
+    
+            circle_marker_947f34c7da7c74f04e15eb511b7451d3.bindTooltip(
+                `<div>
+                     ESENYURT_01 – 1. aday
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7395a85deddb164af512c60e0166cc69 = L.circleMarker(
+                [41.09377941920832, 28.636107304805755],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1d4ed8", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_673af3ebc5319abe19eb815067f797cc);
+        
+    
+            circle_marker_7395a85deddb164af512c60e0166cc69.bindTooltip(
+                `<div>
+                     ESENYURT_02 – 2. aday
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cd34ce066d01b7f88fabf9ea2ba5295d = L.circleMarker(
+                [41.08742377086054, 28.634638645937386],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1d4ed8", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_673af3ebc5319abe19eb815067f797cc);
+        
+    
+            circle_marker_cd34ce066d01b7f88fabf9ea2ba5295d.bindTooltip(
+                `<div>
+                     ESENYURT_03 – 3. aday
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1f8306c3deb795e797d7496e75b7939f = L.circleMarker(
+                [41.0882750736418, 28.64154862788609],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1d4ed8", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_673af3ebc5319abe19eb815067f797cc);
+        
+    
+            circle_marker_1f8306c3deb795e797d7496e75b7939f.bindTooltip(
+                `<div>
+                     ESENYURT_04 – 4. aday
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9a7c6d327412e7b6d8ca934b987f8aa1 = L.circleMarker(
+                [41.088507220312266, 28.647581429040873],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1d4ed8", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_673af3ebc5319abe19eb815067f797cc);
+        
+    
+            circle_marker_9a7c6d327412e7b6d8ca934b987f8aa1.bindTooltip(
+                `<div>
+                     ESENYURT_05 – 5. aday
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            map_673af3ebc5319abe19eb815067f797cc.fitBounds(
+                [[41.080543849721565, 28.625546174400128], [41.10188229887495, 28.656677114270956]],
+                {}
+            );
+        
+    
+            var layer_control_0d880dcb7dc19214fb69a16cf1adc20b_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_2623002cc9c3196685249e296e4d0e45,
+                },
+                overlays :  {
+                    "Esenyurt il\u00e7e s\u0131n\u0131r\u0131" : geo_json_fd065c6bb938bd7d9aabe31b965ed714,
+                    "Se\u00e7ilen aday h\u00fccreler" : geo_json_946f0f99c9d086ab3528c6d66e42dffe,
+                    "1500 metrelik uydu yamalar\u0131" : geo_json_77f9ad300042620d3b33e3d747a4ea43,
+                },
+            };
+            let layer_control_0d880dcb7dc19214fb69a16cf1adc20b = L.control.layers(
+                layer_control_0d880dcb7dc19214fb69a16cf1adc20b_layers.base_layers,
+                layer_control_0d880dcb7dc19214fb69a16cf1adc20b_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_673af3ebc5319abe19eb815067f797cc);
+
+        
+</script>
+</html>

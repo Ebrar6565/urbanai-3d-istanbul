@@ -17,7 +17,7 @@
 
     <style>
         /* ==================================================
-           RENK VE TASARIM DEĞİŞKENLERİ
+           RENKLER
         ================================================== */
 
         :root {
@@ -68,7 +68,6 @@
 
         body {
             margin: 0;
-
             min-height: 100vh;
 
             color: var(--metin);
@@ -99,15 +98,19 @@
             display: block;
         }
 
-
-        /* ==================================================
-           ORTAK YERLEŞİM
-        ================================================== */
-
         .kapsayici {
-            width: min(1180px, calc(100% - 40px));
+            width: min(
+                1180px,
+                calc(100% - 40px)
+            );
+
             margin: 0 auto;
         }
+
+
+        /* ==================================================
+           ORTAK BÖLÜM BAŞLIĞI
+        ================================================== */
 
         .bolum-basligi {
             max-width: 720px;
@@ -122,15 +125,27 @@
             margin-bottom: 13px;
             padding: 7px 11px;
 
-            border: 1px solid rgba(35, 129, 213, 0.18);
+            border:
+                1px solid rgba(
+                    35,
+                    129,
+                    213,
+                    0.18
+                );
+
             border-radius: 999px;
 
             color: var(--mavi-700);
-            background: rgba(223, 241, 255, 0.75);
+            background:
+                rgba(
+                    223,
+                    241,
+                    255,
+                    0.75
+                );
 
             font-size: 12px;
             font-weight: 700;
-            letter-spacing: 0.02em;
         }
 
         .bolum-etiketi::before {
@@ -148,7 +163,13 @@
 
             color: var(--lacivert-900);
 
-            font-size: clamp(28px, 4vw, 42px);
+            font-size:
+                clamp(
+                    28px,
+                    4vw,
+                    42px
+                );
+
             line-height: 1.12;
             letter-spacing: -0.035em;
         }
@@ -173,10 +194,18 @@
             z-index: 100;
 
             border-bottom:
-                1px solid rgba(255, 255, 255, 0.08);
+                1px solid
+                rgba(255, 255, 255, 0.08);
 
             color: var(--beyaz);
-            background: rgba(7, 17, 31, 0.91);
+
+            background:
+                rgba(
+                    7,
+                    17,
+                    31,
+                    0.91
+                );
 
             backdrop-filter: blur(18px);
         }
@@ -208,7 +237,10 @@
 
             overflow: hidden;
 
-            border: 1px solid rgba(255, 255, 255, 0.16);
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.16);
+
             border-radius: 14px;
 
             background:
@@ -219,7 +251,8 @@
                 );
 
             box-shadow:
-                0 10px 30px rgba(35, 129, 213, 0.25);
+                0 10px 30px
+                rgba(35, 129, 213, 0.25);
         }
 
         .marka-isareti::after {
@@ -231,7 +264,14 @@
             height: 35px;
 
             border-radius: 50%;
-            background: rgba(54, 197, 178, 0.55);
+
+            background:
+                rgba(
+                    54,
+                    197,
+                    178,
+                    0.55
+                );
 
             content: "";
         }
@@ -249,11 +289,16 @@
 
             font-size: 18px;
             font-weight: 750;
-            letter-spacing: -0.015em;
         }
 
         .marka-aciklamasi {
-            color: rgba(255, 255, 255, 0.64);
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.64
+                );
 
             font-size: 11px;
         }
@@ -275,7 +320,13 @@
 
             border-radius: 9px;
 
-            color: rgba(255, 255, 255, 0.72);
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.72
+                );
 
             text-decoration: none;
 
@@ -289,7 +340,14 @@
 
         .menu-baglantilari a:hover {
             color: var(--beyaz);
-            background: rgba(255, 255, 255, 0.08);
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.08
+                );
         }
 
         .prototip-etiketi {
@@ -299,11 +357,27 @@
 
             padding: 8px 12px;
 
-            border: 1px solid rgba(255, 255, 255, 0.16);
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.16);
+
             border-radius: 999px;
 
-            color: rgba(255, 255, 255, 0.86);
-            background: rgba(255, 255, 255, 0.06);
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.86
+                );
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.06
+                );
 
             font-size: 11px;
             font-weight: 600;
@@ -317,12 +391,13 @@
             background: var(--turkuaz-500);
 
             box-shadow:
-                0 0 0 5px rgba(54, 197, 178, 0.12);
+                0 0 0 5px
+                rgba(54, 197, 178, 0.12);
         }
 
 
         /* ==================================================
-           HERO / AÇILIŞ ALANI
+           HERO
         ================================================== */
 
         .hero {
@@ -360,12 +435,14 @@
 
             background-image:
                 linear-gradient(
-                    rgba(255, 255, 255, 0.035) 1px,
+                    rgba(255, 255, 255, 0.035)
+                    1px,
                     transparent 1px
                 ),
                 linear-gradient(
                     90deg,
-                    rgba(255, 255, 255, 0.035) 1px,
+                    rgba(255, 255, 255, 0.035)
+                    1px,
                     transparent 1px
                 );
 
@@ -380,6 +457,7 @@
             z-index: 1;
 
             display: grid;
+
             grid-template-columns:
                 minmax(0, 1.05fr)
                 minmax(380px, 0.95fr);
@@ -400,11 +478,26 @@
             margin-bottom: 21px;
             padding: 8px 13px;
 
-            border: 1px solid rgba(103, 190, 255, 0.20);
+            border:
+                1px solid
+                rgba(
+                    103,
+                    190,
+                    255,
+                    0.20
+                );
+
             border-radius: 999px;
 
             color: #bfe5ff;
-            background: rgba(35, 129, 213, 0.12);
+
+            background:
+                rgba(
+                    35,
+                    129,
+                    213,
+                    0.12
+                );
 
             font-size: 12px;
             font-weight: 700;
@@ -420,7 +513,13 @@
 
             max-width: 740px;
 
-            font-size: clamp(42px, 6vw, 72px);
+            font-size:
+                clamp(
+                    42px,
+                    6vw,
+                    72px
+                );
+
             line-height: 1.02;
             letter-spacing: -0.055em;
         }
@@ -434,7 +533,13 @@
 
             margin: 0 0 31px;
 
-            color: rgba(255, 255, 255, 0.68);
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.68
+                );
 
             font-size: 17px;
             line-height: 1.75;
@@ -455,7 +560,9 @@
             min-height: 48px;
             padding: 0 18px;
 
-            border: 1px solid transparent;
+            border:
+                1px solid transparent;
+
             border-radius: 11px;
 
             text-decoration: none;
@@ -480,6 +587,7 @@
 
         .buton-birincil {
             color: var(--beyaz);
+
             background:
                 linear-gradient(
                     135deg,
@@ -488,28 +596,39 @@
                 );
 
             box-shadow:
-                0 13px 35px rgba(35, 129, 213, 0.28);
-        }
-
-        .buton-birincil:hover {
-            box-shadow:
-                0 16px 40px rgba(35, 129, 213, 0.38);
+                0 13px 35px
+                rgba(35, 129, 213, 0.28);
         }
 
         .buton-ikincil {
-            border-color: rgba(255, 255, 255, 0.14);
+            border-color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.14
+                );
 
-            color: rgba(255, 255, 255, 0.90);
-            background: rgba(255, 255, 255, 0.06);
-        }
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.90
+                );
 
-        .buton-ikincil:hover {
-            background: rgba(255, 255, 255, 0.10);
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.06
+                );
         }
 
 
         /* ==================================================
-           HERO ANALİZ PANELİ
+           ANALİZ PANELİ
         ================================================== */
 
         .analiz-paneli {
@@ -517,32 +636,25 @@
 
             padding: 21px;
 
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.12);
+
             border-radius: 22px;
 
-            background: rgba(255, 255, 255, 0.065);
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.065
+                );
 
             box-shadow:
-                0 35px 90px rgba(0, 0, 0, 0.28);
+                0 35px 90px
+                rgba(0, 0, 0, 0.28);
 
             backdrop-filter: blur(18px);
-        }
-
-        .analiz-paneli::before {
-            position: absolute;
-            top: -18px;
-            right: 28px;
-
-            width: 90px;
-            height: 90px;
-
-            border-radius: 50%;
-
-            background: rgba(54, 197, 178, 0.12);
-
-            filter: blur(25px);
-
-            content: "";
         }
 
         .panel-ust {
@@ -569,7 +681,14 @@
             border-radius: 10px;
 
             color: #86d5ff;
-            background: rgba(35, 129, 213, 0.15);
+
+            background:
+                rgba(
+                    35,
+                    129,
+                    213,
+                    0.15
+                );
         }
 
         .panel-ikon svg {
@@ -586,7 +705,13 @@
         }
 
         .panel-baslik span {
-            color: rgba(255, 255, 255, 0.55);
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.55
+                );
 
             font-size: 10px;
         }
@@ -601,7 +726,14 @@
             border-radius: 999px;
 
             color: #8ce6d6;
-            background: rgba(54, 197, 178, 0.10);
+
+            background:
+                rgba(
+                    54,
+                    197,
+                    178,
+                    0.10
+                );
 
             font-size: 10px;
             font-weight: 700;
@@ -619,7 +751,10 @@
 
         .panel-ozet {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
             gap: 9px;
 
             margin-bottom: 21px;
@@ -628,10 +763,19 @@
         .mini-kart {
             padding: 13px;
 
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
             border-radius: 12px;
 
-            background: rgba(0, 0, 0, 0.11);
+            background:
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.11
+                );
         }
 
         .mini-deger {
@@ -642,7 +786,13 @@
         }
 
         .mini-aciklama {
-            color: rgba(255, 255, 255, 0.50);
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.50
+                );
 
             font-size: 9px;
             line-height: 1.35;
@@ -651,10 +801,19 @@
         .grafik-alani {
             padding: 17px;
 
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
             border-radius: 15px;
 
-            background: rgba(0, 0, 0, 0.12);
+            background:
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.12
+                );
         }
 
         .grafik-basligi {
@@ -670,14 +829,23 @@
         }
 
         .grafik-basligi span {
-            color: rgba(255, 255, 255, 0.47);
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.47
+                );
 
             font-size: 9px;
         }
 
         .puan-satiri {
             display: grid;
-            grid-template-columns: 92px 1fr 38px;
+
+            grid-template-columns:
+                92px 1fr 38px;
+
             align-items: center;
             gap: 10px;
 
@@ -685,7 +853,13 @@
         }
 
         .puan-ilce {
-            color: rgba(255, 255, 255, 0.78);
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.78
+                );
 
             font-size: 10px;
         }
@@ -696,7 +870,14 @@
             overflow: hidden;
 
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.08);
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.08
+                );
         }
 
         .puan-dolgu {
@@ -729,16 +910,22 @@
             margin-top: 17px;
             padding-top: 14px;
 
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-top:
+                1px solid
+                rgba(255, 255, 255, 0.08);
 
-            color: rgba(255, 255, 255, 0.46);
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.46
+                );
 
             font-size: 9px;
         }
 
         .model-notu svg {
-            flex: 0 0 auto;
-
             width: 14px;
             height: 14px;
 
@@ -759,7 +946,10 @@
 
         .metrikler {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
             gap: 14px;
         }
 
@@ -770,26 +960,20 @@
 
             padding: 22px;
 
-            border: 1px solid var(--cizgi);
+            border:
+                1px solid var(--cizgi);
+
             border-radius: 16px;
 
-            background: rgba(255, 255, 255, 0.96);
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.96
+                );
 
             box-shadow: var(--golge-kucuk);
-        }
-
-        .metrik-karti::after {
-            position: absolute;
-            top: 0;
-            right: 0;
-
-            width: 52px;
-            height: 52px;
-
-            border-radius: 0 0 0 52px;
-            background: rgba(35, 129, 213, 0.06);
-
-            content: "";
         }
 
         .metrik-ust {
@@ -825,7 +1009,6 @@
 
             font-size: 31px;
             font-weight: 780;
-            letter-spacing: -0.04em;
         }
 
         .metrik-aciklama {
@@ -846,16 +1029,22 @@
 
         .moduller {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(0, 1fr)
+                );
+
             gap: 24px;
         }
 
         .modul-karti {
-            position: relative;
-
             overflow: hidden;
 
-            border: 1px solid var(--cizgi);
+            border:
+                1px solid var(--cizgi);
+
             border-radius: 23px;
 
             background: var(--kart);
@@ -869,7 +1058,6 @@
 
         .modul-karti:hover {
             transform: translateY(-5px);
-
             box-shadow: var(--golge-buyuk);
         }
 
@@ -916,12 +1104,14 @@
 
             background-image:
                 linear-gradient(
-                    rgba(255, 255, 255, 0.18) 1px,
+                    rgba(255, 255, 255, 0.18)
+                    1px,
                     transparent 1px
                 ),
                 linear-gradient(
                     90deg,
-                    rgba(255, 255, 255, 0.18) 1px,
+                    rgba(255, 255, 255, 0.18)
+                    1px,
                     transparent 1px
                 );
 
@@ -936,36 +1126,27 @@
             right: 18px;
             z-index: 3;
 
-            display: flex;
-            align-items: center;
-            gap: 7px;
-
             padding: 7px 10px;
 
-            border: 1px solid rgba(255, 255, 255, 0.22);
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.22);
+
             border-radius: 999px;
 
             color: var(--beyaz);
-            background: rgba(7, 17, 31, 0.28);
 
-            backdrop-filter: blur(8px);
+            background:
+                rgba(
+                    7,
+                    17,
+                    31,
+                    0.28
+                );
 
             font-size: 10px;
             font-weight: 750;
         }
-
-        .modul-tur-etiketi::before {
-            width: 6px;
-            height: 6px;
-
-            border-radius: 50%;
-            background: var(--turkuaz-500);
-
-            content: "";
-        }
-
-
-        /* 2D harita ön izlemesi */
 
         .harita-onizleme {
             position: absolute;
@@ -973,13 +1154,19 @@
 
             overflow: hidden;
 
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.18);
+
             border-radius: 16px;
 
-            background: rgba(255, 255, 255, 0.11);
-
-            box-shadow:
-                0 20px 40px rgba(0, 0, 0, 0.20);
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.11
+                );
 
             backdrop-filter: blur(5px);
         }
@@ -992,7 +1179,13 @@
 
             border-radius: 999px;
 
-            background: rgba(255, 255, 255, 0.16);
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.16
+                );
 
             transform: rotate(-14deg);
         }
@@ -1025,8 +1218,12 @@
             width: 27px;
             height: 27px;
 
-            border: 3px solid rgba(255, 255, 255, 0.84);
-            border-radius: 50% 50% 50% 6px;
+            border:
+                3px solid
+                rgba(255, 255, 255, 0.84);
+
+            border-radius:
+                50% 50% 50% 6px;
 
             color: var(--beyaz);
             background: var(--turkuaz-500);
@@ -1035,9 +1232,6 @@
             font-weight: 700;
 
             transform: rotate(-45deg);
-
-            box-shadow:
-                0 7px 18px rgba(0, 0, 0, 0.18);
         }
 
         .harita-noktasi span {
@@ -1073,7 +1267,10 @@
             width: 42px;
             height: 42px;
 
-            border: 5px solid rgba(255, 255, 255, 0.32);
+            border:
+                5px solid
+                rgba(255, 255, 255, 0.32);
+
             border-radius: 50%;
 
             color: var(--beyaz);
@@ -1093,9 +1290,6 @@
             bottom: 15%;
         }
 
-
-        /* 3D ön izleme */
-
         .ucboyut-sahne {
             position: absolute;
             inset: 32px;
@@ -1107,17 +1301,21 @@
 
             padding: 33px 24px 27px;
 
-            border: 1px solid rgba(255, 255, 255, 0.16);
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.16);
+
             border-radius: 16px;
 
-            background: rgba(255, 255, 255, 0.08);
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.08
+                );
 
             perspective: 700px;
-
-            box-shadow:
-                0 20px 40px rgba(0, 0, 0, 0.20);
-
-            backdrop-filter: blur(5px);
         }
 
         .ucboyut-zemin {
@@ -1128,16 +1326,20 @@
 
             height: 73%;
 
-            border: 1px solid rgba(255, 255, 255, 0.16);
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.16);
 
             background:
                 linear-gradient(
-                    rgba(255, 255, 255, 0.08) 1px,
+                    rgba(255, 255, 255, 0.08)
+                    1px,
                     transparent 1px
                 ),
                 linear-gradient(
                     90deg,
-                    rgba(255, 255, 255, 0.08) 1px,
+                    rgba(255, 255, 255, 0.08)
+                    1px,
                     transparent 1px
                 );
 
@@ -1156,10 +1358,12 @@
 
             width: 32px;
 
-            border-radius: 7px 7px 3px 3px;
+            border-radius:
+                7px 7px 3px 3px;
 
             box-shadow:
-                0 14px 20px rgba(0, 0, 0, 0.22);
+                0 14px 20px
+                rgba(0, 0, 0, 0.22);
 
             transform: skewY(-3deg);
         }
@@ -1208,12 +1412,10 @@
             color: var(--lacivert-900);
 
             font-size: 24px;
-            letter-spacing: -0.025em;
         }
 
         .modul-ikon {
             display: grid;
-            flex: 0 0 auto;
             place-items: center;
 
             width: 40px;
@@ -1259,8 +1461,9 @@
 
         .ozellik-isareti {
             display: grid;
-            flex: 0 0 auto;
             place-items: center;
+
+            flex: 0 0 auto;
 
             width: 20px;
             height: 20px;
@@ -1322,16 +1525,19 @@
 
         .akis {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
             gap: 13px;
         }
 
         .akis-adimi {
-            position: relative;
-
             padding: 20px;
 
-            border: 1px solid var(--cizgi);
+            border:
+                1px solid var(--cizgi);
+
             border-radius: 15px;
 
             background: #fbfcfe;
@@ -1372,20 +1578,6 @@
             line-height: 1.55;
         }
 
-        .akis-adimi:not(:last-child)::after {
-            position: absolute;
-            top: 34px;
-            right: -11px;
-            z-index: 3;
-
-            width: 20px;
-            height: 2px;
-
-            background: var(--cizgi);
-
-            content: "";
-        }
-
 
         /* ==================================================
            VERİ NOTU
@@ -1397,12 +1589,17 @@
 
         .veri-karti {
             display: grid;
-            grid-template-columns: auto 1fr;
+
+            grid-template-columns:
+                auto 1fr;
+
             gap: 19px;
 
             padding: 25px;
 
-            border: 1px solid #f1ddb8;
+            border:
+                1px solid #f1ddb8;
+
             border-radius: 17px;
 
             background:
@@ -1456,7 +1653,14 @@
         .alt-bilgi {
             padding: 38px 0;
 
-            color: rgba(255, 255, 255, 0.64);
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.64
+                );
+
             background: var(--lacivert-950);
         }
 
@@ -1499,12 +1703,12 @@
             font-size: 13px;
         }
 
-        .alt-marka span {
+        .alt-marka span,
+        .alt-durum {
             font-size: 10px;
         }
 
         .alt-durum {
-            font-size: 10px;
             text-align: right;
         }
 
@@ -1516,7 +1720,8 @@
         .gorunur-ol {
             opacity: 0;
 
-            transform: translateY(18px);
+            transform:
+                translateY(18px);
 
             transition:
                 opacity 600ms ease,
@@ -1525,7 +1730,9 @@
 
         .gorunur-ol.aktif {
             opacity: 1;
-            transform: translateY(0);
+
+            transform:
+                translateY(0);
         }
 
 
@@ -1543,31 +1750,31 @@
                 gap: 50px;
             }
 
-            .hero-metin {
-                max-width: 750px;
-            }
-
             .analiz-paneli {
                 max-width: 650px;
             }
 
             .metrikler {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns:
+                    repeat(2, 1fr);
             }
 
             .akis {
                 grid-template-columns:
-                    repeat(2, minmax(0, 1fr));
-            }
-
-            .akis-adimi:not(:last-child)::after {
-                display: none;
+                    repeat(
+                        2,
+                        minmax(0, 1fr)
+                    );
             }
         }
 
         @media (max-width: 760px) {
             .kapsayici {
-                width: min(100% - 28px, 1180px);
+                width:
+                    min(
+                        100% - 28px,
+                        1180px
+                    );
             }
 
             .ust-menu-icerik {
@@ -1584,7 +1791,12 @@
             }
 
             .hero h1 {
-                font-size: clamp(38px, 12vw, 55px);
+                font-size:
+                    clamp(
+                        38px,
+                        12vw,
+                        55px
+                    );
             }
 
             .hero-aciklama {
@@ -1592,7 +1804,6 @@
             }
 
             .hero-butonlari {
-                align-items: stretch;
                 flex-direction: column;
             }
 
@@ -1604,20 +1815,13 @@
                 grid-template-columns: 1fr;
             }
 
-            .metrik-bolumu {
-                margin-top: -25px;
-            }
-
             .metrikler {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns:
+                    1fr 1fr;
             }
 
             .moduller {
                 grid-template-columns: 1fr;
-            }
-
-            .moduller-bolumu {
-                padding-top: 75px;
             }
 
             .akis {
@@ -1644,29 +1848,27 @@
             }
 
             .puan-satiri {
-                grid-template-columns: 82px 1fr 34px;
+                grid-template-columns:
+                    82px 1fr 34px;
             }
 
             .modul-gorsel {
                 min-height: 230px;
             }
-
-            .harita-onizleme,
-            .ucboyut-sahne {
-                inset: 25px;
-            }
         }
 
-
-        /* Hareket azaltma tercihini destekle */
-
-        @media (prefers-reduced-motion: reduce) {
+        @media (
+            prefers-reduced-motion:
+            reduce
+        ) {
             *,
             *::before,
             *::after {
-                scroll-behavior: auto !important;
-                transition-duration: 0.01ms !important;
-                animation-duration: 0.01ms !important;
+                scroll-behavior:
+                    auto !important;
+
+                transition-duration:
+                    0.01ms !important;
             }
 
             .gorunur-ol {
@@ -1686,8 +1888,12 @@
     <header class="ust-menu">
         <div class="kapsayici ust-menu-icerik">
 
-            <a class="marka" href="#anasayfa">
+            <a
+                class="marka"
+                href="#anasayfa"
+            >
                 <div class="marka-isareti">
+
                     <svg
                         viewBox="0 0 24 24"
                         fill="none"
@@ -1706,6 +1912,7 @@
                             stroke-width="1.7"
                         />
                     </svg>
+
                 </div>
 
                 <div>
@@ -1718,6 +1925,7 @@
                     </div>
                 </div>
             </a>
+
 
             <div class="menu-sag">
 
@@ -1737,20 +1945,24 @@
 
                 <div class="prototip-etiketi">
                     <span class="prototip-noktasi"></span>
+
                     Kütüphane modülü aktif
                 </div>
 
             </div>
-
         </div>
     </header>
 
 
     <!-- ==================================================
-         HERO
+         ANA İÇERİK
     ================================================== -->
 
     <main id="anasayfa">
+
+        <!-- ==================================================
+             HERO
+        ================================================== -->
 
         <section class="hero">
             <div class="kapsayici hero-icerik">
@@ -1758,6 +1970,7 @@
                 <div class="hero-metin">
 
                     <div class="hero-etiketi">
+
                         <svg
                             viewBox="0 0 24 24"
                             fill="none"
@@ -1774,20 +1987,26 @@
                         İBB açık verileri ve açık coğrafi veriler
                     </div>
 
+
                     <h1>
                         Kentsel hizmetleri
+
                         <span class="vurgu">
                             veriye dayalı
                         </span>
+
                         inceleyin.
                     </h1>
 
+
                     <p class="hero-aciklama">
-                        Nüfus, mevcut hizmet noktaları ve coğrafi
-                        verileri bir araya getirerek İstanbul
-                        ilçelerinin hizmet erişimini analiz eden,
-                        açıklanabilir bir karar destek prototipi.
+                        Nüfus, mevcut hizmet noktaları ve
+                        coğrafi verileri bir araya getirerek
+                        İstanbul ilçelerinin hizmet erişimini
+                        analiz eden, açıklanabilir bir karar
+                        destek prototipi.
                     </p>
+
 
                     <div class="hero-butonlari">
 
@@ -1812,6 +2031,7 @@
                             </svg>
                         </a>
 
+
                         <a
                             class="buton buton-ikincil"
                             href="kutuphane_haritasi.html"
@@ -1820,11 +2040,12 @@
                         </a>
 
                     </div>
-
                 </div>
 
 
-                <!-- ANALİZ ÖZET PANELİ -->
+                <!-- ==================================================
+                     CANLI ANALİZ PANELİ
+                ================================================== -->
 
                 <aside
                     class="analiz-paneli"
@@ -1859,11 +2080,14 @@
                                     Kütüphane hizmet modülü
                                 </span>
                             </div>
-
                         </div>
 
-                        <div class="canli-etiketi">
-                            Hazır
+
+                        <div
+                            class="canli-etiketi"
+                            id="api-durum"
+                        >
+                            Bağlanıyor...
                         </div>
 
                     </div>
@@ -1872,33 +2096,50 @@
                     <div class="panel-ozet">
 
                         <div class="mini-kart">
-                            <div class="mini-deger">
+
+                            <div
+                                class="mini-deger"
+                                id="mini-puanli-ilce"
+                            >
                                 29
                             </div>
 
                             <div class="mini-aciklama">
                                 Öncelik puanı oluşturulan ilçe
                             </div>
+
                         </div>
 
+
                         <div class="mini-kart">
-                            <div class="mini-deger">
+
+                            <div
+                                class="mini-deger"
+                                id="mini-dogrulama-ilce"
+                            >
                                 10
                             </div>
 
                             <div class="mini-aciklama">
                                 Veri doğrulaması gereken ilçe
                             </div>
+
                         </div>
 
+
                         <div class="mini-kart">
-                            <div class="mini-deger">
+
+                            <div
+                                class="mini-deger"
+                                id="mini-guvenilir-koordinat"
+                            >
                                 51
                             </div>
 
                             <div class="mini-aciklama">
                                 Güvenilir koordinatlı kayıt
                             </div>
+
                         </div>
 
                     </div>
@@ -1916,59 +2157,76 @@
                             </span>
                         </div>
 
-                        <div class="puan-satiri">
-                            <div class="puan-ilce">
-                                Esenyurt
+
+                        <div
+                            id="oncelikli-ilceler-listesi"
+                            aria-live="polite"
+                        >
+
+                            <div class="puan-satiri">
+
+                                <div class="puan-ilce">
+                                    Esenyurt
+                                </div>
+
+                                <div class="puan-iz">
+                                    <div
+                                        class="puan-dolgu"
+                                        style="width: 99.3%;"
+                                    ></div>
+                                </div>
+
+                                <div class="puan-degeri">
+                                    99,3
+                                </div>
+
                             </div>
 
-                            <div class="puan-iz">
-                                <div
-                                    class="puan-dolgu"
-                                    style="width: 99.3%;"
-                                ></div>
+
+                            <div class="puan-satiri">
+
+                                <div class="puan-ilce">
+                                    Pendik
+                                </div>
+
+                                <div class="puan-iz">
+                                    <div
+                                        class="puan-dolgu"
+                                        style="width: 89.8%;"
+                                    ></div>
+                                </div>
+
+                                <div class="puan-degeri">
+                                    89,8
+                                </div>
+
                             </div>
 
-                            <div class="puan-degeri">
-                                99,3
-                            </div>
-                        </div>
 
-                        <div class="puan-satiri">
-                            <div class="puan-ilce">
-                                Pendik
-                            </div>
+                            <div class="puan-satiri">
 
-                            <div class="puan-iz">
-                                <div
-                                    class="puan-dolgu"
-                                    style="width: 89.8%;"
-                                ></div>
-                            </div>
+                                <div class="puan-ilce">
+                                    Küçükçekmece
+                                </div>
 
-                            <div class="puan-degeri">
-                                89,8
-                            </div>
-                        </div>
+                                <div class="puan-iz">
+                                    <div
+                                        class="puan-dolgu"
+                                        style="width: 88.5%;"
+                                    ></div>
+                                </div>
 
-                        <div class="puan-satiri">
-                            <div class="puan-ilce">
-                                Küçükçekmece
+                                <div class="puan-degeri">
+                                    88,5
+                                </div>
+
                             </div>
 
-                            <div class="puan-iz">
-                                <div
-                                    class="puan-dolgu"
-                                    style="width: 88.5%;"
-                                ></div>
-                            </div>
-
-                            <div class="puan-degeri">
-                                88,5
-                            </div>
                         </div>
 
 
                         <div class="model-notu">
+
                             <svg
                                 viewBox="0 0 24 24"
                                 fill="none"
@@ -1995,7 +2253,6 @@
                         </div>
 
                     </div>
-
                 </aside>
 
             </div>
@@ -2003,7 +2260,7 @@
 
 
         <!-- ==================================================
-             METRİKLER
+             METRİK KARTLARI
         ================================================== -->
 
         <section class="metrik-bolumu">
@@ -2028,7 +2285,10 @@
                         </div>
                     </div>
 
-                    <div class="metrik-numara">
+                    <div
+                        class="metrik-numara"
+                        id="metrik-ilce-sayisi"
+                    >
                         39
                     </div>
 
@@ -2059,7 +2319,10 @@
                         </div>
                     </div>
 
-                    <div class="metrik-numara">
+                    <div
+                        class="metrik-numara"
+                        id="metrik-kutuphane-sayisi"
+                    >
                         72
                     </div>
 
@@ -2096,7 +2359,10 @@
                         </div>
                     </div>
 
-                    <div class="metrik-numara">
+                    <div
+                        class="metrik-numara"
+                        id="metrik-guvenilir-koordinat"
+                    >
                         51
                     </div>
 
@@ -2136,7 +2402,10 @@
                         </div>
                     </div>
 
-                    <div class="metrik-numara">
+                    <div
+                        class="metrik-numara"
+                        id="metrik-analiz-yili"
+                    >
                         2025
                     </div>
 
@@ -2167,13 +2436,15 @@
                     </div>
 
                     <h2>
-                        Veriyi iki farklı bakış açısıyla keşfedin.
+                        Veriyi iki farklı bakış
+                        açısıyla keşfedin.
                     </h2>
 
                     <p>
                         Mevcut hizmet noktalarını 2D haritada
                         inceleyin veya ilçe öncelik puanlarını
-                        yükseltilmiş 3D alanlar üzerinde karşılaştırın.
+                        yükseltilmiş 3D alanlar üzerinde
+                        karşılaştırın.
                     </p>
 
                 </div>
@@ -2181,7 +2452,7 @@
 
                 <div class="moduller">
 
-                    <!-- 2D MODÜL -->
+                    <!-- 2D HARİTA KARTI -->
 
                     <article class="modul-karti gorunur-ol">
 
@@ -2222,7 +2493,6 @@
                                 </div>
 
                             </div>
-
                         </div>
 
 
@@ -2251,6 +2521,7 @@
 
                             </div>
 
+
                             <p class="modul-aciklamasi">
                                 Güvenilir koordinatı bulunan mevcut
                                 İBB kütüphanelerini arayın, kümeler
@@ -2262,6 +2533,7 @@
                             <div class="ozellikler">
 
                                 <div class="ozellik">
+
                                     <span class="ozellik-isareti">
                                         <svg
                                             viewBox="0 0 24 24"
@@ -2281,7 +2553,9 @@
                                     Kütüphane adına göre arama
                                 </div>
 
+
                                 <div class="ozellik">
+
                                     <span class="ozellik-isareti">
                                         <svg
                                             viewBox="0 0 24 24"
@@ -2301,7 +2575,9 @@
                                     Yakın konumlarda işaretçi kümelendirme
                                 </div>
 
+
                                 <div class="ozellik">
+
                                     <span class="ozellik-isareti">
                                         <svg
                                             viewBox="0 0 24 24"
@@ -2348,11 +2624,10 @@
                             </a>
 
                         </div>
-
                     </article>
 
 
-                    <!-- 3D MODÜL -->
+                    <!-- 3D HARİTA KARTI -->
 
                     <article class="modul-karti gorunur-ol">
 
@@ -2373,7 +2648,6 @@
                                 <div class="ucboyut-sutun sutun-5"></div>
 
                             </div>
-
                         </div>
 
 
@@ -2411,17 +2685,20 @@
 
                             </div>
 
+
                             <p class="modul-aciklamasi">
                                 İlçe sınırlarını, nüfus ve hizmet
                                 açığı verilerinden üretilen öncelik
-                                puanlarına göre renkli ve yükseltilmiş
-                                alanlar olarak karşılaştırın.
+                                puanlarına göre renkli ve
+                                yükseltilmiş alanlar olarak
+                                karşılaştırın.
                             </p>
 
 
                             <div class="ozellikler">
 
                                 <div class="ozellik">
+
                                     <span class="ozellik-isareti">
                                         <svg
                                             viewBox="0 0 24 24"
@@ -2441,7 +2718,9 @@
                                     İstanbul’un 39 ilçe sınır geometrisi
                                 </div>
 
+
                                 <div class="ozellik">
+
                                     <span class="ozellik-isareti">
                                         <svg
                                             viewBox="0 0 24 24"
@@ -2461,7 +2740,9 @@
                                     Açıklanabilir öncelik puanı ve sıralama
                                 </div>
 
+
                                 <div class="ozellik">
+
                                     <span class="ozellik-isareti">
                                         <svg
                                             viewBox="0 0 24 24"
@@ -2508,11 +2789,9 @@
                             </a>
 
                         </div>
-
                     </article>
 
                 </div>
-
             </div>
         </section>
 
@@ -2539,9 +2818,10 @@
 
                     <p>
                         Platform, açık verileri yalnızca
-                        görüntülemekle kalmaz; verileri temizler,
-                        birleştirir, kontrol eder ve açıklanabilir
-                        göstergelere dönüştürür.
+                        görüntülemekle kalmaz; verileri
+                        temizler, birleştirir, kontrol eder
+                        ve açıklanabilir göstergelere
+                        dönüştürür.
                     </p>
 
                 </div>
@@ -2550,6 +2830,7 @@
                 <div class="akis">
 
                     <article class="akis-adimi gorunur-ol">
+
                         <div class="akis-numara">
                             01
                         </div>
@@ -2562,9 +2843,12 @@
                             Kütüphane, nüfus ve ilçe sınırı
                             verileri farklı kaynaklardan alınır.
                         </p>
+
                     </article>
 
+
                     <article class="akis-adimi gorunur-ol">
+
                         <div class="akis-numara">
                             02
                         </div>
@@ -2577,9 +2861,12 @@
                             Eksik değerler, ilçe adları ve
                             kayıt tutarlılığı kontrol edilir.
                         </p>
+
                     </article>
 
+
                     <article class="akis-adimi gorunur-ol">
+
                         <div class="akis-numara">
                             03
                         </div>
@@ -2590,11 +2877,15 @@
 
                         <p>
                             Adresler konuma çevrilir ve şüpheli
-                            koordinatlar kalite kontrolünden geçer.
+                            koordinatlar kalite kontrolünden
+                            geçer.
                         </p>
+
                     </article>
 
+
                     <article class="akis-adimi gorunur-ol">
+
                         <div class="akis-numara">
                             04
                         </div>
@@ -2607,9 +2898,12 @@
                             Nüfus ve hizmet açığı normalize
                             edilerek öncelik puanı hesaplanır.
                         </p>
+
                     </article>
 
+
                     <article class="akis-adimi gorunur-ol">
+
                         <div class="akis-numara">
                             05
                         </div>
@@ -2622,10 +2916,10 @@
                             Sonuçlar 2D konum ve 3D ilçe
                             öncelik haritalarında sunulur.
                         </p>
+
                     </article>
 
                 </div>
-
             </div>
         </section>
 
@@ -2664,6 +2958,7 @@
                         </svg>
                     </div>
 
+
                     <div>
                         <h2>
                             Veri kapsamı ve önemli sınırlılık
@@ -2674,17 +2969,17 @@
                             veri setindeki kayıtlarla sınırlıdır.
                             Bir ilçede kayıt görünmemesi, o ilçede
                             hiçbir kütüphane bulunmadığı anlamına
-                            gelmez. İlçe belediyeleri, üniversiteler,
-                            bakanlıklar veya özel kurumlara ait
-                            kütüphaneler veri setinde bulunmayabilir.
-                            Gri gösterilen ilçeler bu nedenle
-                            “düşük öncelik” değil, “veri doğrulaması
-                            gerekli” olarak değerlendirilir.
+                            gelmez. İlçe belediyeleri,
+                            üniversiteler, bakanlıklar veya özel
+                            kurumlara ait kütüphaneler veri
+                            setinde bulunmayabilir. Gri gösterilen
+                            ilçeler bu nedenle “düşük öncelik”
+                            değil, “veri doğrulaması gerekli”
+                            olarak değerlendirilir.
                         </p>
                     </div>
 
                 </div>
-
             </div>
         </section>
 
@@ -2710,15 +3005,23 @@
                     </strong>
 
                     <span>
-                        Açıklanabilir kentsel karar destek prototipi
+                        Açıklanabilir kentsel karar
+                        destek prototipi
                     </span>
                 </div>
 
             </div>
 
+
             <div class="alt-durum">
-                İlk hizmet modülü: İBB kütüphaneleri<br>
-                Analiz yılı: 2025
+                İlk hizmet modülü:
+                İBB kütüphaneleri
+                <br>
+
+                Analiz yılı:
+                <span id="alt-analiz-yili">
+                    2025
+                </span>
             </div>
 
         </div>
@@ -2726,31 +3029,428 @@
 
 
     <!-- ==================================================
-         SAYFA GÖRÜNÜM ANİMASYONU
+         JAVASCRIPT
     ================================================== -->
 
     <script>
-        const gorunecekOgeler = document.querySelectorAll(
-            ".gorunur-ol"
-        );
+        // --------------------------------------------------
+        // GÖRÜNÜM ANİMASYONU
+        // --------------------------------------------------
 
-        const gozlemci = new IntersectionObserver(
-            (kayitlar) => {
-                kayitlar.forEach((kayit) => {
-                    if (kayit.isIntersecting) {
-                        kayit.target.classList.add("aktif");
-                        gozlemci.unobserve(kayit.target);
-                    }
-                });
-            },
-            {
-                threshold: 0.12
+        const gorunecekOgeler =
+            document.querySelectorAll(
+                ".gorunur-ol"
+            );
+
+        const gozlemci =
+            new IntersectionObserver(
+                (kayitlar) => {
+
+                    kayitlar.forEach(
+                        (kayit) => {
+
+                            if (
+                                kayit.isIntersecting
+                            ) {
+                                kayit.target
+                                    .classList
+                                    .add(
+                                        "aktif"
+                                    );
+
+                                gozlemci
+                                    .unobserve(
+                                        kayit.target
+                                    );
+                            }
+                        }
+                    );
+                },
+                {
+                    threshold: 0.12
+                }
+            );
+
+        gorunecekOgeler.forEach(
+            (oge) => {
+                gozlemci.observe(
+                    oge
+                );
             }
         );
 
-        gorunecekOgeler.forEach((oge) => {
-            gozlemci.observe(oge);
-        });
+
+        // --------------------------------------------------
+        // API ADRESİ
+        // --------------------------------------------------
+
+        /*
+        Ana sayfa localhost üzerinden açıldıysa
+        API'ye localhost ile bağlanır.
+
+        Ana sayfa 127.0.0.1 üzerinden açıldıysa
+        API'ye 127.0.0.1 ile bağlanır.
+        */
+
+        const apiSunucusu =
+            window.location.hostname
+                === "localhost"
+
+                ? "http://localhost:8001"
+
+                : "http://127.0.0.1:8001";
+
+
+        // --------------------------------------------------
+        // HTML METNİ GÜNCELLE
+        // --------------------------------------------------
+
+        function metniGuncelle(
+            ogeKimligi,
+            yeniDeger
+        ) {
+            const oge =
+                document.getElementById(
+                    ogeKimligi
+                );
+
+            if (oge) {
+                oge.textContent =
+                    yeniDeger;
+            }
+        }
+
+
+        // --------------------------------------------------
+        // ÖNCELİK SATIRI OLUŞTUR
+        // --------------------------------------------------
+
+        function oncelikSatiriOlustur(
+            ilceKaydi
+        ) {
+            const satir =
+                document.createElement(
+                    "div"
+                );
+
+            satir.className =
+                "puan-satiri";
+
+
+            const ilceAdi =
+                document.createElement(
+                    "div"
+                );
+
+            ilceAdi.className =
+                "puan-ilce";
+
+            ilceAdi.textContent =
+                ilceKaydi.ilce;
+
+
+            const puanIzi =
+                document.createElement(
+                    "div"
+                );
+
+            puanIzi.className =
+                "puan-iz";
+
+
+            const puanDolgusu =
+                document.createElement(
+                    "div"
+                );
+
+            puanDolgusu.className =
+                "puan-dolgu";
+
+
+            const sayisalPuan =
+                Number(
+                    ilceKaydi
+                        .oncelik_puani
+                );
+
+
+            const guvenliPuan =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+
+                        Number.isFinite(
+                            sayisalPuan
+                        )
+                            ? sayisalPuan
+                            : 0
+                    )
+                );
+
+
+            puanDolgusu.style.width =
+                `${guvenliPuan}%`;
+
+
+            puanIzi.appendChild(
+                puanDolgusu
+            );
+
+
+            const puanDegeri =
+                document.createElement(
+                    "div"
+                );
+
+            puanDegeri.className =
+                "puan-degeri";
+
+
+            puanDegeri.textContent =
+                guvenliPuan
+                    .toLocaleString(
+                        "tr-TR",
+                        {
+                            minimumFractionDigits:
+                                1,
+
+                            maximumFractionDigits:
+                                1
+                        }
+                    );
+
+
+            satir.appendChild(
+                ilceAdi
+            );
+
+            satir.appendChild(
+                puanIzi
+            );
+
+            satir.appendChild(
+                puanDegeri
+            );
+
+
+            return satir;
+        }
+
+
+        // --------------------------------------------------
+        // API VERİLERİNİ YÜKLE
+        // --------------------------------------------------
+
+        async function apiVerileriniYukle() {
+
+            const apiDurum =
+                document.getElementById(
+                    "api-durum"
+                );
+
+
+            if (apiDurum) {
+                apiDurum.textContent =
+                    "Bağlanıyor...";
+            }
+
+
+            try {
+                const [
+                    ozetYaniti,
+                    oncelikYaniti
+                ] = await Promise.all(
+                    [
+                        fetch(
+                            `${apiSunucusu}/api/ozet`,
+                            {
+                                cache:
+                                    "no-store"
+                            }
+                        ),
+
+                        fetch(
+                            `${apiSunucusu}/api/oncelikli-ilceler?limit=3`,
+                            {
+                                cache:
+                                    "no-store"
+                            }
+                        )
+                    ]
+                );
+
+
+                if (
+                    !ozetYaniti.ok
+                    ||
+                    !oncelikYaniti.ok
+                ) {
+                    throw new Error(
+                        "API geçerli bir cevap döndürmedi."
+                    );
+                }
+
+
+                const ozetVerisi =
+                    await ozetYaniti.json();
+
+
+                const oncelikVerisi =
+                    await oncelikYaniti.json();
+
+
+                // ------------------------------------------
+                // ÜST PANEL SAYILARI
+                // ------------------------------------------
+
+                metniGuncelle(
+                    "mini-puanli-ilce",
+
+                    ozetVerisi
+                        .puanli_ilce_sayisi
+                );
+
+
+                metniGuncelle(
+                    "mini-dogrulama-ilce",
+
+                    ozetVerisi
+                        .veri_dogrulamasi_gereken_ilce
+                );
+
+
+                metniGuncelle(
+                    "mini-guvenilir-koordinat",
+
+                    ozetVerisi
+                        .koordinat_durumlari
+                        .verified
+                );
+
+
+                // ------------------------------------------
+                // METRİK KARTLARI
+                // ------------------------------------------
+
+                metniGuncelle(
+                    "metrik-ilce-sayisi",
+
+                    ozetVerisi
+                        .tablo_kayit_sayilari
+                        .districts
+                );
+
+
+                metniGuncelle(
+                    "metrik-kutuphane-sayisi",
+
+                    ozetVerisi
+                        .tablo_kayit_sayilari
+                        .facilities
+                );
+
+
+                metniGuncelle(
+                    "metrik-guvenilir-koordinat",
+
+                    ozetVerisi
+                        .koordinat_durumlari
+                        .verified
+                );
+
+
+                metniGuncelle(
+                    "metrik-analiz-yili",
+
+                    ozetVerisi
+                        .analiz_yili
+                );
+
+
+                metniGuncelle(
+                    "alt-analiz-yili",
+
+                    ozetVerisi
+                        .analiz_yili
+                );
+
+
+                // ------------------------------------------
+                // ÖNCELİKLİ İLK ÜÇ İLÇE
+                // ------------------------------------------
+
+                const oncelikListesi =
+                    document.getElementById(
+                        "oncelikli-ilceler-listesi"
+                    );
+
+
+                if (
+                    oncelikListesi
+                    &&
+                    Array.isArray(
+                        oncelikVerisi.ilceler
+                    )
+                ) {
+                    oncelikListesi
+                        .innerHTML = "";
+
+
+                    oncelikVerisi
+                        .ilceler
+                        .forEach(
+                            (ilceKaydi) => {
+
+                                oncelikListesi
+                                    .appendChild(
+                                        oncelikSatiriOlustur(
+                                            ilceKaydi
+                                        )
+                                    );
+                            }
+                        );
+                }
+
+
+                // ------------------------------------------
+                // BAĞLANTI BAŞARILI
+                // ------------------------------------------
+
+                if (apiDurum) {
+                    apiDurum.textContent =
+                        "Canlı";
+
+                    apiDurum.title =
+                        "Veriler FastAPI üzerinden alındı.";
+                }
+
+            } catch (hata) {
+
+                console.error(
+                    "UrbanAI API bağlantı hatası:",
+                    hata
+                );
+
+
+                /*
+                API kapalıysa HTML içindeki sabit
+                yedek değerler gösterilmeye devam eder.
+                */
+
+                if (apiDurum) {
+                    apiDurum.textContent =
+                        "API bağlantısı yok";
+
+                    apiDurum.title =
+                        "Sabit yedek veriler gösteriliyor.";
+                }
+            }
+        }
+
+
+        // Sayfa açıldığı anda API verilerini yükle.
+        apiVerileriniYukle();
     </script>
 
 </body>
