@@ -3,23 +3,20 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import unicodedata
-
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
-import folium
 import geopandas as gpd
+import numpy as np
 import pandas as pd
-
-from folium.features import GeoJsonPopup, GeoJsonTooltip
 from shapely import union_all
-from shapely.geometry import box, shape
+from shapely.geometry import box
 
 
 # ==========================================================
-# PROJE YOLLARI
+# PROJE VE KOORDİNAT AYARLARI
 # ==========================================================
 
 PROJE_KOKU = Path(__file__).resolve().parents[2]
@@ -38,20 +35,7 @@ ADAY_SIRALAMA_CSV_YOLU = (
     / "aday_hucre_on_siralama.csv"
 )
 
-VERITABANI_YOLU = (
-    PROJE_KOKU
-    / "data"
-    / "database"
-    / "urbanai.db"
-)
-
-
-# ==========================================================
-# KOORDİNAT SİSTEMLERİ
-# ==========================================================
-
 COGRAFI_CRS = "EPSG:4326"
-
 METRIK_CRS = "EPSG:32635"
 
 
@@ -77,14 +61,56 @@ TURKCE_KARAKTER_TABLOSU = str.maketrans(
 )
 
 
+def slug_olustur(
+    metin: str,
+) -> str:
+    """
+    İlçe adını güvenli dosya ve klasör adına dönüştürür.
+    """
+
+    temiz = (
+        metin
+        .translate(
+            TURKCE_KARAKTER_TABLOSU
+        )
+        .lower()
+        .strip()
+    )
+
+    temiz = unicodedata.normalize(
+        "NFKD",
+        temiz,
+    )
+
+    temiz = "".join(
+        karakter
+        for karakter in temiz
+        if not unicodedata.combining(
+            karakter
+        )
+    )
+
+    temiz = re.sub(
+        r"[^a-z0-9]+",
+        "_",
+        temiz,
+    ).strip("_")
+
+    if not temiz:
+        raise ValueError(
+            "İlçe adından güvenli klasör adı oluşturulamadı."
+        )
+
+    return temiz
+
+
 # ==========================================================
 # KOMUT SATIRI ARGÜMANLARI
 # ==========================================================
 
 def argumanlari_oku() -> argparse.Namespace:
     """
-    İlçe, aday sayısı ve uydu yaması büyüklüğünü
-    komut satırından alır.
+    İlçe, aday kaynağı, aday sayısı ve yama boyutunu okur.
     """
 
     parser = argparse.ArgumentParser(
@@ -97,20 +123,38 @@ def argumanlari_oku() -> argparse.Namespace:
     parser.add_argument(
         "--ilce",
         required=True,
+        help="Analiz edilecek ilçe. Örnek: Pendik",
+    )
+
+    parser.add_argument(
+        "--aday-kaynagi",
+        choices=[
+            "on_siralama",
+            "worldcover",
+        ],
+        default="on_siralama",
         help=(
-            "Analiz edilecek ilçe adı. "
-            "Örnek: Esenyurt"
+            "Aday kaynağı: on_siralama veya worldcover. "
+            "Varsayılan: on_siralama"
         ),
+    )
+
+    parser.add_argument(
+        "--worldcover-yili",
+        type=int,
+        choices=[
+            2020,
+            2021,
+        ],
+        default=2021,
+        help="WorldCover ön eleme yılı. Varsayılan: 2021",
     )
 
     parser.add_argument(
         "--aday-sayisi",
         type=int,
         default=5,
-        help=(
-            "İlçeden seçilecek aday hücre sayısı. "
-            "Varsayılan: 5"
-        ),
+        help="Seçilecek aday sayısı. Varsayılan: 5",
     )
 
     parser.add_argument(
@@ -118,100 +162,43 @@ def argumanlari_oku() -> argparse.Namespace:
         type=int,
         default=1500,
         help=(
-            "Her uydu yamasının metre cinsinden "
-            "kenar uzunluğu. Varsayılan: 1500"
+            "Uydu yaması kenar uzunluğu, metre. "
+            "Varsayılan: 1500"
         ),
     )
 
-    argumanlar = parser.parse_args()
+    args = parser.parse_args()
 
-    argumanlar.ilce = argumanlar.ilce.strip()
+    args.ilce = args.ilce.strip()
 
-    if not argumanlar.ilce:
+    if not args.ilce:
         parser.error(
             "--ilce değeri boş bırakılamaz."
         )
 
-    if argumanlar.aday_sayisi <= 0:
+    if args.aday_sayisi <= 0:
         parser.error(
             "--aday-sayisi sıfırdan büyük olmalıdır."
         )
 
-    if argumanlar.yama_boyutu <= 0:
+    if args.yama_boyutu <= 0:
         parser.error(
             "--yama-boyutu sıfırdan büyük olmalıdır."
         )
 
-    return argumanlar
+    return args
 
 
 # ==========================================================
-# GÜVENLİ DOSYA VE KLASÖR ADI
+# DOSYA YOLLARI
 # ==========================================================
 
-def slug_olustur(
-    metin: str,
-) -> str:
-    """
-    İlçe adını dosya ve klasörlerde kullanılabilecek
-    güvenli bir metne dönüştürür.
-
-    Örnekler:
-    Küçükçekmece -> kucukcekmece
-    Bağcılar     -> bagcilar
-    Ümraniye     -> umraniye
-    """
-
-    temiz_metin = (
-        metin
-        .translate(
-            TURKCE_KARAKTER_TABLOSU
-        )
-        .lower()
-        .strip()
-    )
-
-    temiz_metin = unicodedata.normalize(
-        "NFKD",
-        temiz_metin,
-    )
-
-    temiz_metin = "".join(
-        karakter
-        for karakter in temiz_metin
-        if not unicodedata.combining(
-            karakter
-        )
-    )
-
-    temiz_metin = re.sub(
-        r"[^a-z0-9]+",
-        "_",
-        temiz_metin,
-    )
-
-    temiz_metin = temiz_metin.strip(
-        "_"
-    )
-
-    if not temiz_metin:
-        raise ValueError(
-            "İlçe adından güvenli klasör adı oluşturulamadı."
-        )
-
-    return temiz_metin
-
-
-# ==========================================================
-# ÇIKTI YOLLARI
-# ==========================================================
-
-def cikti_yollarini_olustur(
+def dosya_yollarini_olustur(
     ilce_slug: str,
+    worldcover_yili: int,
 ) -> dict[str, Path]:
     """
-    İlçeye özel işlenmiş veri ve frontend
-    çıktı yollarını oluşturur.
+    İlçeye ait girdi ve çıktı dosyalarının yollarını oluşturur.
     """
 
     islenmis_klasor = (
@@ -223,181 +210,280 @@ def cikti_yollarini_olustur(
     )
 
     return {
-        "islenmis_klasor": islenmis_klasor,
+        "islenmis": (
+            islenmis_klasor
+        ),
 
-        "pilot_aday_geojson": (
+        "worldcover_aday": (
+            islenmis_klasor
+            / f"worldcover_{worldcover_yili}"
+            / "candidate_screening"
+            / "worldcover_yeni_ilk_adaylar.geojson"
+        ),
+
+        "pilot_aday": (
             islenmis_klasor
             / "pilot_aday_hucreleri.geojson"
         ),
 
-        "uydu_yamalari_geojson": (
+        "uydu_yamalari": (
             islenmis_klasor
             / "pilot_uydu_yamalari.geojson"
         ),
 
-        "uydu_bbox_csv": (
+        "uydu_bbox": (
             islenmis_klasor
             / "pilot_uydu_bbox.csv"
         ),
 
-        "birlesik_alan_geojson": (
+        "birlesik_alan": (
             islenmis_klasor
             / "pilot_birlesik_alan.geojson"
         ),
 
-        "ayarlar_json": (
+        "ayarlar": (
             islenmis_klasor
             / "pilot_ayarlar.json"
-        ),
-
-        "harita_html": (
-            PROJE_KOKU
-            / "frontend"
-            / f"{ilce_slug}_pilot_uydu_alanlari.html"
         ),
     }
 
 
 # ==========================================================
-# GİRDİ DOSYALARINI KONTROL ETME
+# YARDIMCI FONKSİYONLAR
 # ==========================================================
 
-def girdi_dosyalarini_kontrol_et() -> None:
+def sayisal_sutun_hazirla(
+    dataframe: pd.DataFrame,
+    sutun: str,
+    varsayilan: float,
+) -> None:
     """
-    Analiz için gereken temel dosyaların
-    var olup olmadığını kontrol eder.
-    """
-
-    eksik_dosyalar = []
-
-    if not HUCRE_GEOJSON_YOLU.exists():
-        eksik_dosyalar.append(
-            HUCRE_GEOJSON_YOLU
-        )
-
-    if not ADAY_SIRALAMA_CSV_YOLU.exists():
-        eksik_dosyalar.append(
-            ADAY_SIRALAMA_CSV_YOLU
-        )
-
-    if eksik_dosyalar:
-        hata_metni = "\n".join(
-            str(dosya)
-            for dosya in eksik_dosyalar
-        )
-
-        raise FileNotFoundError(
-            "Gerekli analiz dosyaları bulunamadı:\n"
-            f"{hata_metni}\n\n"
-            "Önce hizmet boşluğu ve aday hücre "
-            "sıralama analizlerini çalıştır."
-        )
-
-
-# ==========================================================
-# HÜCRE VE ADAY VERİLERİNİ OKUMA
-# ==========================================================
-
-def verileri_oku(
-    ilce_adi: str,
-    aday_sayisi: int,
-) -> tuple[
-    gpd.GeoDataFrame,
-    gpd.GeoDataFrame,
-]:
-    """
-    Seçilen ilçenin ilk N aday hücresini ve
-    ilçedeki bütün analiz hücrelerini okur.
+    Sütunu sayısal biçime dönüştürür.
     """
 
-    girdi_dosyalarini_kontrol_et()
+    if sutun not in dataframe.columns:
+        dataframe[
+            sutun
+        ] = varsayilan
 
-    hedef_slug = slug_olustur(
-        ilce_adi
+    dataframe[
+        sutun
+    ] = pd.to_numeric(
+        dataframe[
+            sutun
+        ],
+        errors="coerce",
+    ).fillna(
+        varsayilan
     )
 
-    tum_hucreler = gpd.read_file(
+
+def metin_sutunu_hazirla(
+    dataframe: pd.DataFrame,
+    sutun: str,
+    varsayilan: str,
+) -> None:
+    """
+    Sütunu metin biçimine dönüştürür.
+    """
+
+    if sutun not in dataframe.columns:
+        dataframe[
+            sutun
+        ] = varsayilan
+
+    dataframe[
+        sutun
+    ] = (
+        dataframe[
+            sutun
+        ]
+        .fillna(
+            varsayilan
+        )
+        .astype(str)
+    )
+
+
+def geojson_kaydet(
+    dataframe: gpd.GeoDataFrame,
+    dosya_yolu: Path,
+) -> None:
+    """
+    GeoDataFrame verisini UTF-8 GeoJSON olarak kaydeder.
+    """
+
+    dosya_yolu.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    dosya_yolu.write_text(
+        dataframe.to_json(
+            ensure_ascii=False,
+            drop_id=True,
+        ),
+        encoding="utf-8",
+    )
+
+
+def goreli_yol(
+    dosya_yolu: Path,
+) -> str:
+    """
+    Dosya yolunu proje köküne göre göreli hale getirir.
+    """
+
+    try:
+        return (
+            dosya_yolu
+            .resolve()
+            .relative_to(
+                PROJE_KOKU.resolve()
+            )
+            .as_posix()
+        )
+
+    except ValueError:
+        return dosya_yolu.as_posix()
+
+
+# ==========================================================
+# ANA HİZMET HÜCRELERİNİ OKUMA
+# ==========================================================
+
+def ana_hucreleri_oku() -> gpd.GeoDataFrame:
+    """
+    Bütün hizmet boşluğu hücrelerini okur.
+    """
+
+    if not HUCRE_GEOJSON_YOLU.exists():
+        raise FileNotFoundError(
+            "Hizmet hücre dosyası bulunamadı:\n"
+            f"{HUCRE_GEOJSON_YOLU}"
+        )
+
+    hucreler = gpd.read_file(
         HUCRE_GEOJSON_YOLU
     )
 
-    aday_siralamasi = pd.read_csv(
-        ADAY_SIRALAMA_CSV_YOLU
-    )
-
-    gerekli_hucre_sutunlari = [
+    gerekli_sutunlar = [
         "cell_id",
         "district_name",
-        "center_latitude",
-        "center_longitude",
         "nearest_library_name",
         "nearest_library_distance_km",
         "geometry",
     ]
 
-    gerekli_aday_sutunlari = [
+    eksik_sutunlar = [
+        sutun
+        for sutun in gerekli_sutunlar
+        if sutun not in hucreler.columns
+    ]
+
+    if eksik_sutunlar:
+        raise ValueError(
+            "Hizmet hücre dosyasında eksik sütunlar var:\n"
+            + "\n".join(
+                eksik_sutunlar
+            )
+        )
+
+    if hucreler.crs is None:
+        hucreler = hucreler.set_crs(
+            COGRAFI_CRS
+        )
+
+    hucreler[
+        "cell_id"
+    ] = hucreler[
+        "cell_id"
+    ].astype(str)
+
+    hucreler[
+        "_district_slug"
+    ] = (
+        hucreler[
+            "district_name"
+        ]
+        .astype(str)
+        .map(
+            slug_olustur
+        )
+    )
+
+    return gpd.GeoDataFrame(
+        hucreler,
+        geometry="geometry",
+        crs=hucreler.crs,
+    )
+
+
+# ==========================================================
+# ESKİ ÖN SIRALAMA KAYNAĞI
+# ==========================================================
+
+def on_siralamadan_aday_sec(
+    ilce_adi: str,
+    aday_sayisi: int,
+) -> tuple[
+    gpd.GeoDataFrame,
+    Path,
+]:
+    """
+    Mevcut ön ihtiyaç sıralamasından aday seçer.
+    """
+
+    if not ADAY_SIRALAMA_CSV_YOLU.exists():
+        raise FileNotFoundError(
+            "Aday sıralama dosyası bulunamadı:\n"
+            f"{ADAY_SIRALAMA_CSV_YOLU}"
+        )
+
+    hedef_slug = slug_olustur(
+        ilce_adi
+    )
+
+    hucreler = ana_hucreleri_oku()
+
+    siralama = pd.read_csv(
+        ADAY_SIRALAMA_CSV_YOLU,
+        encoding="utf-8-sig",
+    )
+
+    gerekli_sutunlar = [
         "cell_id",
         "district_name",
-        "global_candidate_rank",
         "district_candidate_rank",
+        "global_candidate_rank",
         "global_preliminary_score",
         "preliminary_need_score",
     ]
 
-    eksik_hucre_sutunlari = [
+    eksik_sutunlar = [
         sutun
-        for sutun in gerekli_hucre_sutunlari
-        if sutun not in tum_hucreler.columns
+        for sutun in gerekli_sutunlar
+        if sutun not in siralama.columns
     ]
 
-    eksik_aday_sutunlari = [
-        sutun
-        for sutun in gerekli_aday_sutunlari
-        if sutun not in aday_siralamasi.columns
-    ]
-
-    if eksik_hucre_sutunlari:
+    if eksik_sutunlar:
         raise ValueError(
-            "Hücre GeoJSON dosyasında eksik sütunlar var:\n"
+            "Aday sıralama dosyasında eksik sütunlar var:\n"
             + "\n".join(
-                eksik_hucre_sutunlari
+                eksik_sutunlar
             )
         )
 
-    if eksik_aday_sutunlari:
-        raise ValueError(
-            "Aday sıralama CSV dosyasında eksik sütunlar var:\n"
-            + "\n".join(
-                eksik_aday_sutunlari
-            )
-        )
-
-    if tum_hucreler.crs is None:
-        tum_hucreler = tum_hucreler.set_crs(
-            COGRAFI_CRS
-        )
-
-    tum_hucreler[
+    siralama[
         "cell_id"
-    ] = (
-        tum_hucreler[
-            "cell_id"
-        ]
-        .astype(str)
-    )
-
-    aday_siralamasi[
+    ] = siralama[
         "cell_id"
-    ] = (
-        aday_siralamasi[
-            "cell_id"
-        ]
-        .astype(str)
-    )
+    ].astype(str)
 
-    tum_hucreler[
+    siralama[
         "_district_slug"
     ] = (
-        tum_hucreler[
+        siralama[
             "district_name"
         ]
         .astype(str)
@@ -406,58 +492,21 @@ def verileri_oku(
         )
     )
 
-    aday_siralamasi[
-        "_district_slug"
-    ] = (
-        aday_siralamasi[
-            "district_name"
-        ]
-        .astype(str)
-        .map(
-            slug_olustur
-        )
+    sayisal_sutun_hazirla(
+        siralama,
+        "district_candidate_rank",
+        999999,
     )
 
-    aday_siralamasi[
-        "district_candidate_rank"
-    ] = pd.to_numeric(
-        aday_siralamasi[
-            "district_candidate_rank"
-        ],
-        errors="coerce",
-    )
-
-    ilce_adaylari = aday_siralamasi[
-        aday_siralamasi[
-            "_district_slug"
-        ]
-        == hedef_slug
-    ].copy()
-
-    if ilce_adaylari.empty:
-        mevcut_ilceler = sorted(
-            aday_siralamasi[
-                "district_name"
+    ilce_siralamasi = (
+        siralama[
+            siralama[
+                "_district_slug"
             ]
-            .dropna()
-            .astype(str)
-            .unique()
-            .tolist()
-        )
-
-        raise ValueError(
-            f"{ilce_adi} için aday hücre bulunamadı.\n\n"
-            "Aday verisi bulunan ilçeler:\n"
-            + ", ".join(
-                mevcut_ilceler
-            )
-        )
-
-    ilce_adaylari = (
-        ilce_adaylari
+            == hedef_slug
+        ]
         .sort_values(
-            by="district_candidate_rank",
-            ascending=True,
+            "district_candidate_rank"
         )
         .head(
             aday_sayisi
@@ -465,109 +514,316 @@ def verileri_oku(
         .copy()
     )
 
-    gercek_aday_sayisi = len(
-        ilce_adaylari
-    )
-
-    if gercek_aday_sayisi < aday_sayisi:
-        print(
-            f"Uyarı: {ilce_adi} için "
-            f"{aday_sayisi} yerine "
-            f"{gercek_aday_sayisi} aday bulundu."
+    if ilce_siralamasi.empty:
+        raise ValueError(
+            f"{ilce_adi} için aday bulunamadı."
         )
 
-    siralama_sutunlari = [
+    aktarilacak_sutunlar = [
         "cell_id",
         "global_candidate_rank",
         "district_candidate_rank",
-        "global_distance_score",
-        "district_distance_score",
         "global_preliminary_score",
         "preliminary_need_score",
     ]
 
-    mevcut_siralama_sutunlari = [
-        sutun
-        for sutun in siralama_sutunlari
-        if sutun in ilce_adaylari.columns
+    for istege_bagli_sutun in [
+        "global_distance_score",
+        "district_distance_score",
+    ]:
+        if istege_bagli_sutun in ilce_siralamasi.columns:
+            aktarilacak_sutunlar.append(
+                istege_bagli_sutun
+            )
+
+    secilen = hucreler.merge(
+        ilce_siralamasi[
+            aktarilacak_sutunlar
+        ],
+        on="cell_id",
+        how="inner",
+        validate="one_to_one",
+    )
+
+    secilen = secilen.drop(
+        columns=[
+            "_district_slug",
+        ],
+        errors="ignore",
+    )
+
+    secilen[
+        "source_candidate_rank"
+    ] = secilen[
+        "district_candidate_rank"
     ]
 
-    pilot_aday_hucreleri = (
-        tum_hucreler
-        .merge(
-            ilce_adaylari[
-                mevcut_siralama_sutunlari
-            ],
-            on="cell_id",
-            how="inner",
+    secilen[
+        "original_district_candidate_rank"
+    ] = secilen[
+        "district_candidate_rank"
+    ]
+
+    secilen[
+        "candidate_source"
+    ] = "preliminary_ranking"
+
+    return (
+        gpd.GeoDataFrame(
+            secilen,
+            geometry="geometry",
+            crs=hucreler.crs,
+        ),
+        ADAY_SIRALAMA_CSV_YOLU,
+    )
+
+
+# ==========================================================
+# WORLDCOVER ÖN ELEME KAYNAĞI
+# ==========================================================
+
+def worldcover_adaylarini_sec(
+    ilce_adi: str,
+    aday_sayisi: int,
+    worldcover_yili: int,
+    kaynak_yolu: Path,
+) -> tuple[
+    gpd.GeoDataFrame,
+    Path,
+]:
+    """
+    WorldCover ön elemesinden seçilen adayları okur.
+    """
+
+    if not kaynak_yolu.exists():
+        raise FileNotFoundError(
+            "WorldCover aday dosyası bulunamadı:\n"
+            f"{kaynak_yolu}\n\n"
+            "Önce worldcover_aday_on_elemesi.py "
+            "dosyasını çalıştır."
+        )
+
+    hedef_slug = slug_olustur(
+        ilce_adi
+    )
+
+    adaylar = gpd.read_file(
+        kaynak_yolu
+    )
+
+    if adaylar.crs is None:
+        adaylar = adaylar.set_crs(
+            COGRAFI_CRS
+        )
+
+    gerekli_sutunlar = [
+        "cell_id",
+        "district_name",
+        "screened_candidate_rank",
+        "nearest_library_name",
+        "nearest_library_distance_km",
+        "preliminary_need_score",
+        "geometry",
+    ]
+
+    eksik_sutunlar = [
+        sutun
+        for sutun in gerekli_sutunlar
+        if sutun not in adaylar.columns
+    ]
+
+    if eksik_sutunlar:
+        raise ValueError(
+            "WorldCover aday dosyasında eksik sütunlar var:\n"
+            + "\n".join(
+                eksik_sutunlar
+            )
+        )
+
+    adaylar[
+        "cell_id"
+    ] = adaylar[
+        "cell_id"
+    ].astype(str)
+
+    adaylar[
+        "_district_slug"
+    ] = (
+        adaylar[
+            "district_name"
+        ]
+        .astype(str)
+        .map(
+            slug_olustur
         )
     )
 
-    pilot_aday_hucreleri = gpd.GeoDataFrame(
-        pilot_aday_hucreleri,
-        geometry="geometry",
-        crs=tum_hucreler.crs,
+    sayisal_sutun_hazirla(
+        adaylar,
+        "screened_candidate_rank",
+        999999,
     )
 
-    pilot_aday_hucreleri[
-        "district_candidate_rank"
-    ] = pd.to_numeric(
-        pilot_aday_hucreleri[
-            "district_candidate_rank"
-        ],
-        errors="raise",
-    ).astype(int)
-
-    pilot_aday_hucreleri = (
-        pilot_aday_hucreleri
+    adaylar = (
+        adaylar[
+            adaylar[
+                "_district_slug"
+            ]
+            == hedef_slug
+        ]
         .sort_values(
-            by="district_candidate_rank",
-            ascending=True,
+            "screened_candidate_rank"
+        )
+        .head(
+            aday_sayisi
+        )
+        .copy()
+    )
+
+    if adaylar.empty:
+        raise ValueError(
+            f"{ilce_adi} için WorldCover "
+            "ön eleme adayı bulunamadı."
+        )
+
+    if "district_candidate_rank" in adaylar.columns:
+        adaylar[
+            "original_district_candidate_rank"
+        ] = pd.to_numeric(
+            adaylar[
+                "district_candidate_rank"
+            ],
+            errors="coerce",
+        ).fillna(
+            -1
+        )
+
+    else:
+        adaylar[
+            "original_district_candidate_rank"
+        ] = -1
+
+    adaylar[
+        "source_candidate_rank"
+    ] = adaylar[
+        "screened_candidate_rank"
+    ].astype(int)
+
+    # Sonraki bütün işlemler yeni 1–N sırasını kullanır.
+    adaylar[
+        "district_candidate_rank"
+    ] = np.arange(
+        1,
+        len(
+            adaylar
+        )
+        + 1,
+    )
+
+    adaylar[
+        "candidate_source"
+    ] = "worldcover_screening"
+
+    adaylar[
+        "worldcover_year"
+    ] = worldcover_yili
+
+    adaylar = adaylar.drop(
+        columns=[
+            "_district_slug",
+        ],
+        errors="ignore",
+    )
+
+    return (
+        gpd.GeoDataFrame(
+            adaylar,
+            geometry="geometry",
+            crs=adaylar.crs,
+        ),
+        kaynak_yolu,
+    )
+
+
+# ==========================================================
+# ADAY ŞEMASINI NORMALLEŞTİRME
+# ==========================================================
+
+def adaylari_normalize_et(
+    adaylar: gpd.GeoDataFrame,
+    ilce_adi: str,
+) -> gpd.GeoDataFrame:
+    """
+    Farklı aday kaynaklarını ortak sütun yapısına getirir.
+    """
+
+    sonuc = adaylar.copy()
+
+    metin_sutunu_hazirla(
+        sonuc,
+        "district_name",
+        ilce_adi,
+    )
+
+    metin_sutunu_hazirla(
+        sonuc,
+        "nearest_library_name",
+        "Bilinmiyor",
+    )
+
+    metin_sutunu_hazirla(
+        sonuc,
+        "candidate_source",
+        "unknown",
+    )
+
+    varsayilanlar = {
+        "district_candidate_rank": 999999,
+        "source_candidate_rank": 999999,
+        "original_district_candidate_rank": -1,
+        "global_candidate_rank": -1,
+        "nearest_library_distance_km": 0.0,
+        "global_preliminary_score": 0.0,
+        "preliminary_need_score": 0.0,
+    }
+
+    for sutun, varsayilan in varsayilanlar.items():
+        sayisal_sutun_hazirla(
+            sonuc,
+            sutun,
+            varsayilan,
+        )
+
+    for sutun in [
+        "district_candidate_rank",
+        "source_candidate_rank",
+        "global_candidate_rank",
+    ]:
+        sonuc[
+            sutun
+        ] = sonuc[
+            sutun
+        ].astype(int)
+
+    sonuc = (
+        sonuc
+        .sort_values(
+            "district_candidate_rank"
         )
         .reset_index(
             drop=True
         )
     )
 
-    ilce_tum_hucreleri = (
-        tum_hucreler[
-            tum_hucreler[
-                "_district_slug"
-            ]
-            == hedef_slug
-        ]
-        .copy()
-    )
+    if sonuc.empty:
+        raise ValueError(
+            "Pilot aday hücre bulunamadı."
+        )
 
-    ilce_tum_hucreleri = gpd.GeoDataFrame(
-        ilce_tum_hucreleri,
+    return gpd.GeoDataFrame(
+        sonuc,
         geometry="geometry",
-        crs=tum_hucreler.crs,
-    )
-
-    pilot_aday_hucreleri = (
-        pilot_aday_hucreleri
-        .drop(
-            columns=[
-                "_district_slug",
-            ],
-            errors="ignore",
-        )
-    )
-
-    ilce_tum_hucreleri = (
-        ilce_tum_hucreleri
-        .drop(
-            columns=[
-                "_district_slug",
-            ],
-            errors="ignore",
-        )
-    )
-
-    return (
-        pilot_aday_hucreleri,
-        ilce_tum_hucreleri,
+        crs=adaylar.crs,
     )
 
 
@@ -576,107 +832,202 @@ def verileri_oku(
 # ==========================================================
 
 def uydu_yamalarini_olustur(
-    pilot_aday_hucreleri: gpd.GeoDataFrame,
+    adaylar: gpd.GeoDataFrame,
     ilce_adi: str,
     ilce_slug: str,
-    yama_boyutu_metre: int,
+    yama_boyutu: int,
 ) -> gpd.GeoDataFrame:
     """
-    Her aday hücrenin merkezinde kare biçimli
-    uydu görüntüsü sorgu alanı oluşturur.
+    Her adayın çevresinde kare uydu sorgu alanı oluşturur.
     """
 
-    adaylar_metrik = (
-        pilot_aday_hucreleri
-        .to_crs(
-            METRIK_CRS
-        )
+    adaylar_metrik = adaylar.to_crs(
+        METRIK_CRS
     )
 
     yarim_yama = (
-        yama_boyutu_metre
+        yama_boyutu
         / 2
     )
 
-    yama_kayitlari = []
+    istege_bagli_sutunlar = [
+        "original_district_candidate_rank",
+        "screened_candidate_rank",
+        "worldcover_year",
+        "built_up_pct",
+        "vegetation_pct",
+        "open_bare_pct",
+        "water_wetland_pct",
+        "worldcover_coverage_pct",
+        "landcover_screening_status",
+        "urban_context_screening_pass",
+        "landcover_screening_explanation",
+    ]
 
-    for aday in adaylar_metrik.itertuples():
+    kayitlar: list[
+        dict[str, Any]
+    ] = []
 
-        merkez_noktasi = (
+    for _, aday in adaylar_metrik.iterrows():
+        merkez = (
             aday.geometry
             .representative_point()
         )
 
-        uydu_yamasi = box(
-            merkez_noktasi.x - yarim_yama,
-            merkez_noktasi.y - yarim_yama,
-            merkez_noktasi.x + yarim_yama,
-            merkez_noktasi.y + yarim_yama,
+        kayit: dict[str, Any] = {
+            "patch_id": (
+                f"{ilce_slug.upper()}_"
+                f"{int(aday['district_candidate_rank']):02d}"
+            ),
+
+            "cell_id": str(
+                aday[
+                    "cell_id"
+                ]
+            ),
+
+            "district_name": (
+                ilce_adi
+            ),
+
+            "district_slug": (
+                ilce_slug
+            ),
+
+            "district_candidate_rank": int(
+                aday[
+                    "district_candidate_rank"
+                ]
+            ),
+
+            "source_candidate_rank": int(
+                aday[
+                    "source_candidate_rank"
+                ]
+            ),
+
+            "candidate_source": str(
+                aday[
+                    "candidate_source"
+                ]
+            ),
+
+            "global_candidate_rank": int(
+                aday[
+                    "global_candidate_rank"
+                ]
+            ),
+
+            "nearest_library_name": str(
+                aday[
+                    "nearest_library_name"
+                ]
+            ),
+
+            "nearest_library_distance_km": float(
+                aday[
+                    "nearest_library_distance_km"
+                ]
+            ),
+
+            "global_preliminary_score": float(
+                aday[
+                    "global_preliminary_score"
+                ]
+            ),
+
+            "preliminary_need_score": float(
+                aday[
+                    "preliminary_need_score"
+                ]
+            ),
+
+            "patch_width_m": (
+                yama_boyutu
+            ),
+
+            "patch_height_m": (
+                yama_boyutu
+            ),
+
+            "geometry": box(
+                merkez.x - yarim_yama,
+                merkez.y - yarim_yama,
+                merkez.x + yarim_yama,
+                merkez.y + yarim_yama,
+            ),
+        }
+
+        for sutun in istege_bagli_sutunlar:
+            if sutun not in aday.index:
+                continue
+
+            if pd.isna(
+                aday[
+                    sutun
+                ]
+            ):
+                continue
+
+            deger = aday[
+                sutun
+            ]
+
+            if isinstance(
+                deger,
+                np.integer,
+            ):
+                deger = int(
+                    deger
+                )
+
+            elif isinstance(
+                deger,
+                np.floating,
+            ):
+                deger = float(
+                    deger
+                )
+
+            elif isinstance(
+                deger,
+                np.bool_,
+            ):
+                deger = bool(
+                    deger
+                )
+
+            kayit[
+                sutun
+            ] = deger
+
+        kayitlar.append(
+            kayit
         )
 
-        yama_kayitlari.append(
-            {
-                "patch_id": (
-                    f"{ilce_slug.upper()}_"
-                    f"{int(aday.district_candidate_rank):02d}"
-                ),
-                "cell_id": str(
-                    aday.cell_id
-                ),
-                "district_name": ilce_adi,
-                "district_slug": ilce_slug,
-                "district_candidate_rank": int(
-                    aday.district_candidate_rank
-                ),
-                "global_candidate_rank": int(
-                    aday.global_candidate_rank
-                ),
-                "nearest_library_name": (
-                    aday.nearest_library_name
-                ),
-                "nearest_library_distance_km": float(
-                    aday.nearest_library_distance_km
-                ),
-                "global_preliminary_score": float(
-                    aday.global_preliminary_score
-                ),
-                "preliminary_need_score": float(
-                    aday.preliminary_need_score
-                ),
-                "patch_width_m": (
-                    yama_boyutu_metre
-                ),
-                "patch_height_m": (
-                    yama_boyutu_metre
-                ),
-                "geometry": uydu_yamasi,
-            }
-        )
-
-    uydu_yamalari = gpd.GeoDataFrame(
-        yama_kayitlari,
+    yamalar = gpd.GeoDataFrame(
+        kayitlar,
         geometry="geometry",
         crs=METRIK_CRS,
     )
 
-    return uydu_yamalari.to_crs(
+    return yamalar.to_crs(
         COGRAFI_CRS
     )
 
 
 # ==========================================================
-# BBOX BİLGİLERİNİ EKLEME
+# BBOX BİLGİLERİ
 # ==========================================================
 
 def bbox_bilgilerini_ekle(
-    uydu_yamalari: gpd.GeoDataFrame,
+    yamalar: gpd.GeoDataFrame,
 ) -> gpd.GeoDataFrame:
     """
-    Uydu veri servisinde kullanılacak sınır
-    koordinatlarını hesaplar.
+    Uydu sorgu alanlarının sınır koordinatlarını hesaplar.
     """
 
-    sonuc = uydu_yamalari.copy()
+    sonuc = yamalar.copy()
 
     sinirlar = sonuc.geometry.bounds
 
@@ -707,168 +1058,7 @@ def bbox_bilgilerini_ekle(
     return gpd.GeoDataFrame(
         sonuc,
         geometry="geometry",
-        crs=uydu_yamalari.crs,
-    )
-
-
-# ==========================================================
-# İLÇE SINIRINI VERİTABANINDAN OKUMA
-# ==========================================================
-
-def ilce_sinirini_veritabanindan_oku(
-    ilce_adi: str,
-) -> gpd.GeoDataFrame | None:
-    """
-    İlçenin gerçek sınır geometrisini SQLite
-    veritabanından okumayı dener.
-    """
-
-    if not VERITABANI_YOLU.exists():
-        return None
-
-    hedef_slug = slug_olustur(
-        ilce_adi
-    )
-
-    try:
-        with sqlite3.connect(
-            VERITABANI_YOLU
-        ) as baglanti:
-
-            kayitlar = baglanti.execute(
-                """
-                SELECT
-                    name,
-                    geometry_geojson
-                FROM districts
-                WHERE geometry_geojson IS NOT NULL
-                """
-            ).fetchall()
-
-    except sqlite3.Error:
-        return None
-
-    for ilce_ismi, geometri_metni in kayitlar:
-
-        if slug_olustur(
-            str(
-                ilce_ismi
-            )
-        ) != hedef_slug:
-            continue
-
-        try:
-            geometri = shape(
-                json.loads(
-                    geometri_metni
-                )
-            )
-
-        except (
-            json.JSONDecodeError,
-            TypeError,
-            ValueError,
-        ):
-            return None
-
-        return gpd.GeoDataFrame(
-            [
-                {
-                    "district_name": (
-                        ilce_ismi
-                    ),
-                    "geometry": geometri,
-                }
-            ],
-            geometry="geometry",
-            crs=COGRAFI_CRS,
-        )
-
-    return None
-
-
-# ==========================================================
-# İLÇE SINIRINI OLUŞTURMA
-# ==========================================================
-
-def ilce_sinirini_olustur(
-    ilce_adi: str,
-    ilce_tum_hucreleri: gpd.GeoDataFrame,
-) -> gpd.GeoDataFrame:
-    """
-    Öncelikle veritabanındaki gerçek ilçe sınırını kullanır.
-
-    Veritabanında geometri bulunamazsa analiz hücrelerini
-    birleştirerek yaklaşık sınır oluşturur.
-    """
-
-    veritabani_siniri = (
-        ilce_sinirini_veritabanindan_oku(
-            ilce_adi
-        )
-    )
-
-    if veritabani_siniri is not None:
-        return veritabani_siniri
-
-    birlesik_geometri = union_all(
-        list(
-            ilce_tum_hucreleri.geometry
-        )
-    )
-
-    return gpd.GeoDataFrame(
-        [
-            {
-                "district_name": ilce_adi,
-                "geometry_source": (
-                    "Analiz hücrelerinin birleşimi"
-                ),
-                "geometry": birlesik_geometri,
-            }
-        ],
-        geometry="geometry",
-        crs=ilce_tum_hucreleri.crs,
-    )
-
-
-# ==========================================================
-# BİRLEŞİK PİLOT ALANI
-# ==========================================================
-
-def birlesik_pilot_alani_olustur(
-    uydu_yamalari: gpd.GeoDataFrame,
-    ilce_adi: str,
-    ilce_slug: str,
-    yama_boyutu_metre: int,
-) -> gpd.GeoDataFrame:
-    """
-    Bütün uydu yamalarını tek bir coğrafi
-    geometri altında birleştirir.
-    """
-
-    birlesik_geometri = union_all(
-        list(
-            uydu_yamalari.geometry
-        )
-    )
-
-    return gpd.GeoDataFrame(
-        [
-            {
-                "district_name": ilce_adi,
-                "district_slug": ilce_slug,
-                "patch_count": len(
-                    uydu_yamalari
-                ),
-                "patch_size_m": (
-                    yama_boyutu_metre
-                ),
-                "geometry": birlesik_geometri,
-            }
-        ],
-        geometry="geometry",
-        crs=uydu_yamalari.crs,
+        crs=yamalar.crs,
     )
 
 
@@ -877,59 +1067,90 @@ def birlesik_pilot_alani_olustur(
 # ==========================================================
 
 def ciktilari_kaydet(
-    pilot_aday_hucreleri: gpd.GeoDataFrame,
-    uydu_yamalari: gpd.GeoDataFrame,
-    birlesik_pilot_alani: gpd.GeoDataFrame,
+    adaylar: gpd.GeoDataFrame,
+    yamalar: gpd.GeoDataFrame,
     ilce_adi: str,
     ilce_slug: str,
-    aday_sayisi: int,
-    yama_boyutu_metre: int,
+    args: argparse.Namespace,
+    kaynak_dosyasi: Path,
     yollar: dict[str, Path],
 ) -> None:
     """
-    İlçeye ait analiz sonuçlarını kendi klasörüne kaydeder.
+    Pilot aday, uydu yaması, BBOX ve ayar dosyalarını kaydeder.
     """
 
     yollar[
-        "islenmis_klasor"
+        "islenmis"
     ].mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    yollar[
-        "pilot_aday_geojson"
-    ].write_text(
-        pilot_aday_hucreleri.to_json(
-            ensure_ascii=False
+    geojson_kaydet(
+        adaylar.to_crs(
+            COGRAFI_CRS
         ),
-        encoding="utf-8",
+        yollar[
+            "pilot_aday"
+        ],
     )
 
-    yollar[
-        "uydu_yamalari_geojson"
-    ].write_text(
-        uydu_yamalari.to_json(
-            ensure_ascii=False
-        ),
-        encoding="utf-8",
+    geojson_kaydet(
+        yamalar,
+        yollar[
+            "uydu_yamalari"
+        ],
     )
 
-    yollar[
-        "birlesik_alan_geojson"
-    ].write_text(
-        birlesik_pilot_alani.to_json(
-            ensure_ascii=False
-        ),
-        encoding="utf-8",
+    birlesik_alan = gpd.GeoDataFrame(
+        [
+            {
+                "district_name": (
+                    ilce_adi
+                ),
+
+                "district_slug": (
+                    ilce_slug
+                ),
+
+                "candidate_source": (
+                    args.aday_kaynagi
+                ),
+
+                "patch_count": len(
+                    yamalar
+                ),
+
+                "patch_size_m": (
+                    args.yama_boyutu
+                ),
+
+                "geometry": union_all(
+                    list(
+                        yamalar.geometry
+                    )
+                ),
+            }
+        ],
+        geometry="geometry",
+        crs=yamalar.crs,
     )
 
-    bbox_sutunlari = [
+    geojson_kaydet(
+        birlesik_alan,
+        yollar[
+            "birlesik_alan"
+        ],
+    )
+
+    temel_sutunlar = [
         "patch_id",
         "cell_id",
         "district_name",
         "district_slug",
         "district_candidate_rank",
+        "source_candidate_rank",
+        "candidate_source",
         "global_candidate_rank",
         "nearest_library_name",
         "nearest_library_distance_km",
@@ -943,11 +1164,34 @@ def ciktilari_kaydet(
         "max_latitude",
     ]
 
-    uydu_yamalari[
+    istege_bagli_sutunlar = [
+        "original_district_candidate_rank",
+        "screened_candidate_rank",
+        "worldcover_year",
+        "built_up_pct",
+        "vegetation_pct",
+        "open_bare_pct",
+        "water_wetland_pct",
+        "worldcover_coverage_pct",
+        "landcover_screening_status",
+        "urban_context_screening_pass",
+        "landcover_screening_explanation",
+    ]
+
+    bbox_sutunlari = (
+        temel_sutunlar
+        + [
+            sutun
+            for sutun in istege_bagli_sutunlar
+            if sutun in yamalar.columns
+        ]
+    )
+
+    yamalar[
         bbox_sutunlari
     ].to_csv(
         yollar[
-            "uydu_bbox_csv"
+            "uydu_bbox"
         ],
         index=False,
         encoding="utf-8-sig",
@@ -957,32 +1201,52 @@ def ciktilari_kaydet(
         "project": (
             "UrbanAI 3D İstanbul"
         ),
-        "district_name": ilce_adi,
-        "district_slug": ilce_slug,
+
+        "district_name": (
+            ilce_adi
+        ),
+
+        "district_slug": (
+            ilce_slug
+        ),
+
+        "candidate_source": (
+            args.aday_kaynagi
+        ),
+
+        "worldcover_year": (
+            args.worldcover_yili
+            if args.aday_kaynagi == "worldcover"
+            else None
+        ),
+
         "requested_candidate_count": (
-            aday_sayisi
+            args.aday_sayisi
         ),
+
         "created_candidate_count": len(
-            pilot_aday_hucreleri
+            adaylar
         ),
+
         "patch_size_m": (
-            yama_boyutu_metre
+            args.yama_boyutu
         ),
-        "created_at_utc": (
-            datetime.now(
-                timezone.utc
-            ).isoformat()
+
+        "source_candidate_file": goreli_yol(
+            kaynak_dosyasi
         ),
-        "source_candidate_file": str(
-            ADAY_SIRALAMA_CSV_YOLU
-        ),
-        "source_cell_file": str(
+
+        "source_cell_file": goreli_yol(
             HUCRE_GEOJSON_YOLU
         ),
+
+        "created_at_utc": datetime.now(
+            timezone.utc
+        ).isoformat(),
     }
 
     yollar[
-        "ayarlar_json"
+        "ayarlar"
     ].write_text(
         json.dumps(
             ayarlar,
@@ -994,355 +1258,18 @@ def ciktilari_kaydet(
 
 
 # ==========================================================
-# HARİTA BİLGİ PANELİ
-# ==========================================================
-
-def bilgi_paneli_ekle(
-    harita: folium.Map,
-    ilce_adi: str,
-    aday_sayisi: int,
-    yama_boyutu_metre: int,
-) -> None:
-    """
-    Haritaya dinamik analiz açıklaması ekler.
-    """
-
-    panel_html = f"""
-    <div style="
-        position: fixed;
-        top: 18px;
-        left: 55px;
-        z-index: 9999;
-        width: 385px;
-        padding: 17px 19px;
-        border-radius: 13px;
-        background: rgba(255, 255, 255, 0.96);
-        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.17);
-        font-family: Arial, sans-serif;
-        color: #172033;
-    ">
-        <div style="
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        ">
-            {ilce_adi} Pilot Uydu Analiz Alanları
-        </div>
-
-        <div style="
-            font-size: 11px;
-            line-height: 1.6;
-            color: #5e6878;
-        ">
-            İlçedeki ilk {aday_sayisi} aday hücrenin
-            çevresinde {yama_boyutu_metre} ×
-            {yama_boyutu_metre} metrelik uydu
-            görüntüsü sorgu alanları hazırlanmıştır.
-            İlçe adı ve analiz ayarları komut satırından
-            alınmaktadır.
-        </div>
-    </div>
-    """
-
-    harita.get_root().html.add_child(
-        folium.Element(
-            panel_html
-        )
-    )
-
-
-# ==========================================================
-# HARİTA OLUŞTURMA
-# ==========================================================
-
-def harita_olustur(
-    pilot_aday_hucreleri: gpd.GeoDataFrame,
-    uydu_yamalari: gpd.GeoDataFrame,
-    ilce_siniri: gpd.GeoDataFrame,
-    ilce_adi: str,
-    yama_boyutu_metre: int,
-    harita_yolu: Path,
-) -> None:
-    """
-    Pilot adayları, uydu yamalarını ve ilçe sınırını
-    etkileşimli haritada gösterir.
-    """
-
-    harita_yolu.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    pilot_aday_hucreleri = (
-        pilot_aday_hucreleri
-        .to_crs(
-            COGRAFI_CRS
-        )
-    )
-
-    uydu_yamalari = (
-        uydu_yamalari
-        .to_crs(
-            COGRAFI_CRS
-        )
-    )
-
-    ilce_siniri = (
-        ilce_siniri
-        .to_crs(
-            COGRAFI_CRS
-        )
-    )
-
-    merkez_noktasi = (
-        uydu_yamalari
-        .to_crs(
-            METRIK_CRS
-        )
-        .geometry
-        .union_all()
-        .centroid
-    )
-
-    merkez_cografi = (
-        gpd.GeoSeries(
-            [
-                merkez_noktasi
-            ],
-            crs=METRIK_CRS,
-        )
-        .to_crs(
-            COGRAFI_CRS
-        )
-        .iloc[0]
-    )
-
-    harita = folium.Map(
-        location=[
-            merkez_cografi.y,
-            merkez_cografi.x,
-        ],
-        zoom_start=12,
-        tiles="CartoDB positron",
-        control_scale=True,
-    )
-
-    folium.GeoJson(
-        data=ilce_siniri.to_json(
-            ensure_ascii=False
-        ),
-        name=f"{ilce_adi} ilçe sınırı",
-        style_function=lambda feature: {
-            "fillColor": "transparent",
-            "color": "#111827",
-            "weight": 3,
-            "fillOpacity": 0,
-        },
-        tooltip=GeoJsonTooltip(
-            fields=[
-                "district_name",
-            ],
-            aliases=[
-                "İlçe:",
-            ],
-            sticky=True,
-        ),
-    ).add_to(
-        harita
-    )
-
-    folium.GeoJson(
-        data=pilot_aday_hucreleri.to_json(
-            ensure_ascii=False
-        ),
-        name="Seçilen aday hücreler",
-        style_function=lambda feature: {
-            "fillColor": "#dc2626",
-            "color": "#7f1d1d",
-            "weight": 2,
-            "fillOpacity": 0.62,
-        },
-        highlight_function=lambda feature: {
-            "color": "#000000",
-            "weight": 3,
-            "fillOpacity": 0.85,
-        },
-        tooltip=GeoJsonTooltip(
-            fields=[
-                "district_name",
-                "district_candidate_rank",
-                "nearest_library_distance_km",
-            ],
-            aliases=[
-                "İlçe:",
-                "Aday sırası:",
-                "Kütüphaneye uzaklık (km):",
-            ],
-            localize=True,
-            sticky=True,
-        ),
-        popup=GeoJsonPopup(
-            fields=[
-                "cell_id",
-                "district_candidate_rank",
-                "global_candidate_rank",
-                "nearest_library_name",
-                "nearest_library_distance_km",
-                "global_preliminary_score",
-                "preliminary_need_score",
-            ],
-            aliases=[
-                "Hücre:",
-                "İlçe içi sıra:",
-                "Genel sıra:",
-                "En yakın kütüphane:",
-                "Uzaklık (km):",
-                "Genel ön eleme puanı:",
-                "İlçe içi ön eleme puanı:",
-            ],
-            labels=True,
-            localize=True,
-        ),
-    ).add_to(
-        harita
-    )
-
-    folium.GeoJson(
-        data=uydu_yamalari.to_json(
-            ensure_ascii=False
-        ),
-        name=f"{yama_boyutu_metre} metrelik uydu yamaları",
-        style_function=lambda feature: {
-            "fillColor": "#2563eb",
-            "color": "#1d4ed8",
-            "weight": 2,
-            "dashArray": "7, 5",
-            "fillOpacity": 0.16,
-        },
-        highlight_function=lambda feature: {
-            "weight": 4,
-            "fillOpacity": 0.28,
-        },
-        tooltip=GeoJsonTooltip(
-            fields=[
-                "patch_id",
-                "district_candidate_rank",
-            ],
-            aliases=[
-                "Uydu yaması:",
-                "Aday sırası:",
-            ],
-            sticky=True,
-        ),
-        popup=GeoJsonPopup(
-            fields=[
-                "patch_id",
-                "cell_id",
-                "district_candidate_rank",
-                "nearest_library_distance_km",
-                "patch_width_m",
-                "patch_height_m",
-                "min_longitude",
-                "min_latitude",
-                "max_longitude",
-                "max_latitude",
-            ],
-            aliases=[
-                "Yama kimliği:",
-                "Hücre kimliği:",
-                "Aday sırası:",
-                "Kütüphaneye uzaklık (km):",
-                "Yama genişliği (m):",
-                "Yama yüksekliği (m):",
-                "Minimum boylam:",
-                "Minimum enlem:",
-                "Maksimum boylam:",
-                "Maksimum enlem:",
-            ],
-            labels=True,
-            localize=True,
-        ),
-    ).add_to(
-        harita
-    )
-
-    for yama in uydu_yamalari.itertuples():
-
-        merkez = (
-            yama.geometry
-            .representative_point()
-        )
-
-        folium.CircleMarker(
-            location=[
-                merkez.y,
-                merkez.x,
-            ],
-            radius=6,
-            color="#ffffff",
-            weight=2,
-            fill=True,
-            fill_color="#1d4ed8",
-            fill_opacity=1,
-            tooltip=(
-                f"{yama.patch_id} – "
-                f"{yama.district_candidate_rank}. aday"
-            ),
-        ).add_to(
-            harita
-        )
-
-    toplam_sinir = (
-        uydu_yamalari.total_bounds
-    )
-
-    harita.fit_bounds(
-        [
-            [
-                toplam_sinir[1],
-                toplam_sinir[0],
-            ],
-            [
-                toplam_sinir[3],
-                toplam_sinir[2],
-            ],
-        ]
-    )
-
-    bilgi_paneli_ekle(
-        harita,
-        ilce_adi,
-        len(
-            pilot_aday_hucreleri
-        ),
-        yama_boyutu_metre,
-    )
-
-    folium.LayerControl(
-        collapsed=False
-    ).add_to(
-        harita
-    )
-
-    harita.save(
-        harita_yolu
-    )
-
-
-# ==========================================================
 # TERMİNAL ÖZETİ
 # ==========================================================
 
-def terminal_ozetini_yazdir(
+def terminal_ozeti(
     ilce_adi: str,
     ilce_slug: str,
-    pilot_aday_hucreleri: gpd.GeoDataFrame,
-    uydu_yamalari: gpd.GeoDataFrame,
-    yama_boyutu_metre: int,
+    args: argparse.Namespace,
+    yamalar: gpd.GeoDataFrame,
     yollar: dict[str, Path],
 ) -> None:
     """
-    Oluşturulan genel pilot analizi terminalde özetler.
+    Oluşturulan adayları terminalde gösterir.
     """
 
     print()
@@ -1352,7 +1279,7 @@ def terminal_ozetini_yazdir(
 
     print()
     print(
-        "Pilot ilçe:",
+        "İlçe:",
         ilce_adi,
     )
 
@@ -1362,78 +1289,73 @@ def terminal_ozetini_yazdir(
     )
 
     print(
-        "Seçilen aday hücre sayısı:",
+        "Aday kaynağı:",
+        args.aday_kaynagi,
+    )
+
+    print(
+        "Seçilen aday:",
         len(
-            pilot_aday_hucreleri
+            yamalar
         ),
     )
 
     print(
-        "Oluşturulan uydu yaması sayısı:",
-        len(
-            uydu_yamalari
-        ),
-    )
-
-    print(
-        "Her uydu yamasının büyüklüğü:",
-        f"{yama_boyutu_metre} x "
-        f"{yama_boyutu_metre} metre",
+        "Yama boyutu:",
+        f"{args.yama_boyutu} x "
+        f"{args.yama_boyutu} metre",
     )
 
     print()
     print(
-        "Uydu görüntüsü sorgu alanları:"
+        "Seçilen pilot adaylar:"
     )
 
-    sirali_yamalar = (
-        uydu_yamalari
-        .sort_values(
-            by="district_candidate_rank",
-            ascending=True,
-        )
+    sirali_yamalar = yamalar.sort_values(
+        "district_candidate_rank"
     )
 
     for yama in sirali_yamalar.itertuples():
-
         print()
         print(
-            f"  {yama.patch_id}"
+            f"  {int(yama.district_candidate_rank)}. "
+            f"{yama.patch_id} — {yama.cell_id}"
         )
 
         print(
-            f"    Hücre: "
-            f"{yama.cell_id}"
+            "    Kütüphaneye uzaklık:",
+            f"{float(yama.nearest_library_distance_km):.2f} km",
         )
 
         print(
-            f"    Aday sırası: "
-            f"{int(yama.district_candidate_rank)}"
+            "    Ön ihtiyaç puanı:",
+            f"{float(yama.preliminary_need_score):.2f}",
         )
 
-        print(
-            f"    Kütüphaneye uzaklık: "
-            f"{yama.nearest_library_distance_km:.2f} km"
-        )
+        if hasattr(
+            yama,
+            "built_up_pct",
+        ):
+            print(
+                "    Yapılaşmış alan:",
+                f"%{float(yama.built_up_pct):.2f}",
+            )
 
         print(
-            "    BBOX:"
-        )
-
-        print(
-            f"      {yama.min_longitude}, "
+            "    BBOX:",
+            f"{yama.min_longitude}, "
             f"{yama.min_latitude}, "
             f"{yama.max_longitude}, "
-            f"{yama.max_latitude}"
+            f"{yama.max_latitude}",
         )
 
     print()
     print(
-        "İlçeye özel işlenmiş veri klasörü:"
+        "Pilot aday GeoJSON:"
     )
 
     print(
-        f"  {yollar['islenmis_klasor']}"
+        f"  {yollar['pilot_aday']}"
     )
 
     print()
@@ -1442,7 +1364,7 @@ def terminal_ozetini_yazdir(
     )
 
     print(
-        f"  {yollar['uydu_bbox_csv']}"
+        f"  {yollar['uydu_bbox']}"
     )
 
     print()
@@ -1451,16 +1373,12 @@ def terminal_ozetini_yazdir(
     )
 
     print(
-        f"  {yollar['ayarlar_json']}"
+        f"  {yollar['ayarlar']}"
     )
 
     print()
     print(
-        "Etkileşimli pilot haritası:"
-    )
-
-    print(
-        f"  {yollar['harita_html']}"
+        "Not: Bu sürüm ilçe adına özel HTML üretmez."
     )
 
     print()
@@ -1472,21 +1390,17 @@ def terminal_ozetini_yazdir(
 # ==========================================================
 
 def main() -> None:
-    """
-    Seçilen herhangi bir ilçe için pilot uydu
-    analiz alanlarını hazırlar.
-    """
+    args = argumanlari_oku()
 
-    argumanlar = argumanlari_oku()
-
-    ilce_adi = argumanlar.ilce
+    ilce_adi = args.ilce
 
     ilce_slug = slug_olustur(
         ilce_adi
     )
 
-    yollar = cikti_yollarini_olustur(
-        ilce_slug
+    yollar = dosya_yollarini_olustur(
+        ilce_slug,
+        args.worldcover_yili,
     )
 
     print()
@@ -1499,107 +1413,90 @@ def main() -> None:
     )
 
     print(
-        f"  Aday sayısı: "
-        f"{argumanlar.aday_sayisi}"
+        f"  Aday kaynağı: {args.aday_kaynagi}"
     )
 
     print(
-        f"  Yama boyutu: "
-        f"{argumanlar.yama_boyutu} metre"
+        f"  Aday sayısı: {args.aday_sayisi}"
+    )
+
+    print(
+        f"  Yama boyutu: {args.yama_boyutu} metre"
     )
 
     print()
     print(
-        "Hizmet boşluğu hücreleri ve aday "
-        "sıralaması okunuyor..."
+        "Pilot aday hücreler okunuyor..."
     )
 
-    (
-        pilot_aday_hucreleri,
-        ilce_tum_hucreleri,
-    ) = verileri_oku(
-        ilce_adi,
-        argumanlar.aday_sayisi,
-    )
-
-    print(
-        "Uydu görüntüsü sorgu yamaları oluşturuluyor..."
-    )
-
-    uydu_yamalari = uydu_yamalarini_olustur(
-        pilot_aday_hucreleri,
-        ilce_adi,
-        ilce_slug,
-        argumanlar.yama_boyutu,
-    )
-
-    print(
-        "Uydu yaması BBOX koordinatları hesaplanıyor..."
-    )
-
-    uydu_yamalari = bbox_bilgilerini_ekle(
-        uydu_yamalari
-    )
-
-    print(
-        "İlçe sınırı hazırlanıyor..."
-    )
-
-    ilce_siniri = ilce_sinirini_olustur(
-        ilce_adi,
-        ilce_tum_hucreleri,
-    )
-
-    print(
-        "Birleşik pilot analiz alanı oluşturuluyor..."
-    )
-
-    birlesik_pilot_alani = (
-        birlesik_pilot_alani_olustur(
-            uydu_yamalari,
-            ilce_adi,
-            ilce_slug,
-            argumanlar.yama_boyutu,
+    if args.aday_kaynagi == "worldcover":
+        adaylar, kaynak_dosyasi = (
+            worldcover_adaylarini_sec(
+                ilce_adi=ilce_adi,
+                aday_sayisi=args.aday_sayisi,
+                worldcover_yili=args.worldcover_yili,
+                kaynak_yolu=yollar[
+                    "worldcover_aday"
+                ],
+            )
         )
+
+    else:
+        adaylar, kaynak_dosyasi = (
+            on_siralamadan_aday_sec(
+                ilce_adi=ilce_adi,
+                aday_sayisi=args.aday_sayisi,
+            )
+        )
+
+    adaylar = adaylari_normalize_et(
+        adaylar,
+        ilce_adi,
+    )
+
+    if len(
+        adaylar
+    ) < args.aday_sayisi:
+        print(
+            f"Uyarı: {args.aday_sayisi} yerine "
+            f"{len(adaylar)} aday bulundu."
+        )
+
+    print(
+        "Uydu sorgu yamaları oluşturuluyor..."
+    )
+
+    yamalar = uydu_yamalarini_olustur(
+        adaylar=adaylar,
+        ilce_adi=ilce_adi,
+        ilce_slug=ilce_slug,
+        yama_boyutu=args.yama_boyutu,
+    )
+
+    yamalar = bbox_bilgilerini_ekle(
+        yamalar
     )
 
     print(
-        "İlçeye özel analiz dosyaları kaydediliyor..."
+        "Çıktılar kaydediliyor..."
     )
 
     ciktilari_kaydet(
-        pilot_aday_hucreleri,
-        uydu_yamalari,
-        birlesik_pilot_alani,
-        ilce_adi,
-        ilce_slug,
-        argumanlar.aday_sayisi,
-        argumanlar.yama_boyutu,
-        yollar,
+        adaylar=adaylar,
+        yamalar=yamalar,
+        ilce_adi=ilce_adi,
+        ilce_slug=ilce_slug,
+        args=args,
+        kaynak_dosyasi=kaynak_dosyasi,
+        yollar=yollar,
     )
 
-    print(
-        "Etkileşimli pilot haritası oluşturuluyor..."
-    )
-
-    harita_olustur(
-        pilot_aday_hucreleri,
-        uydu_yamalari,
-        ilce_siniri,
-        ilce_adi,
-        argumanlar.yama_boyutu,
-        yollar[
-            "harita_html"
-        ],
-    )
-
-    terminal_ozetini_yazdir(
-        ilce_adi,
-        ilce_slug,
-        pilot_aday_hucreleri,
-        uydu_yamalari,
-        argumanlar.yama_boyutu,
-        yollar,
+    terminal_ozeti(
+        ilce_adi=ilce_adi,
+        ilce_slug=ilce_slug,
+        args=args,
+        yamalar=yamalar,
+        yollar=yollar,
     )
 
 

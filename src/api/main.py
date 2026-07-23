@@ -701,3 +701,7 @@ def ilce_detayini_getir(
         "kutuphaneler":
             kutuphaneler,
     }
+
+from src.api.aday_bolgeler import router as aday_bolgeler_router
+
+app.include_router(aday_bolgeler_router)

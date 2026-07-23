@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Aday Bölge Haritası | UrbanAI 3D İstanbul
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #172033;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background: #f3f6fb;
+        }
+
+        header {
+            z-index: 1000;
+            padding: 14px 20px;
+            border-bottom: 1px solid #dce3eb;
+            background: #ffffff;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .title-area h1 {
+            margin: 0 0 5px;
+            font-size: 22px;
+        }
+
+        .title-area p {
+            margin: 0;
+            color: #667085;
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .controls {
+            display: flex;
+            align-items: end;
+            gap: 11px;
+        }
+
+        .select-group {
+            min-width: 230px;
+        }
+
+        .select-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #475467;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #172033;
+            font-size: 14px;
+        }
+
+        select:focus {
+            border-color: #2563eb;
+            outline: 3px solid rgba(37, 99, 235, 0.12);
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 14px;
+            border: 0;
+            border-radius: 8px;
+            background: #172033;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .map-wrapper {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+        }
+
+        #harita {
+            width: 100%;
+            height: 100%;
+        }
+
+        .status-panel {
+            position: absolute;
+            top: 16px;
+            left: 58px;
+            z-index: 900;
+            width: 390px;
+            max-width: calc(100vw - 85px);
+            padding: 16px 18px;
+            border: 1px solid #dce3eb;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.15);
+        }
+
+        .status-panel h2 {
+            margin: 0 0 7px;
+            font-size: 18px;
+        }
+
+        .status-panel p {
+            margin: 0;
+            color: #667085;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .status-message {
+            margin-top: 10px;
+            padding: 9px 10px;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 12px;
+        }
+
+        .status-message.success {
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .status-message.error {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .legend {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            z-index: 900;
+            width: 320px;
+            max-width: calc(100vw - 48px);
+            padding: 15px;
+            border: 1px solid #dce3eb;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.15);
+            font-size: 11px;
+        }
+
+        .legend h3 {
+            margin: 0 0 10px;
+            font-size: 14px;
+        }
+
+        .legend-title {
+            margin: 10px 0 6px;
+            font-weight: 700;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px 0;
+        }
+
+        .fill-box {
+            width: 18px;
+            height: 12px;
+            flex: 0 0 auto;
+        }
+
+        .line-box {
+            width: 21px;
+            flex: 0 0 auto;
+            border-top: 4px solid;
+        }
+
+        .popup-title {
+            margin-bottom: 8px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .popup-score {
+            display: inline-block;
+            margin-bottom: 9px;
+            padding: 5px 8px;
+            border-radius: 7px;
+            background: #172033;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .popup-row {
+            margin: 6px 0;
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .popup-label {
+            color: #667085;
+        }
+
+        .popup-warning {
+            margin-top: 9px;
+            padding: 9px;
+            border-radius: 8px;
+            background: #f8fafc;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .candidate-label {
+            padding: 5px 7px;
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.9);
+            color: #ffffff;
+            box-shadow: 0 3px 9px rgba(0, 0, 0, 0.25);
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 800px) {
+            header {
+                padding: 12px;
+            }
+
+            .header-content {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .controls {
+                align-items: stretch;
+            }
+
+            .select-group {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .status-panel {
+                top: 10px;
+                left: 50px;
+                width: calc(100vw - 65px);
+            }
+
+            .legend {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 540px) {
+            .controls {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            .status-panel p {
+                display: none;
+            }
+
+            .legend {
+                max-height: 225px;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+
+            <div class="title-area">
+                <h1>
+                    UrbanAI 3D İstanbul Aday Bölge Haritası
+                </h1>
+
+                <p>
+                    İlçe ve aday geometrileri UrbanAI
+                    FastAPI servisinden dinamik olarak alınır.
+                </p>
+            </div>
+
+            <div class="controls">
+
+                <div class="select-group">
+                    <label for="ilce-secimi">
+                        Analiz edilmiş ilçeyi seç
+                    </label>
+
+                    <select
+                        id="ilce-secimi"
+                        disabled
+                    >
+                        <option>
+                            İlçeler yükleniyor...
+                        </option>
+                    </select>
+                </div>
+
+                <a
+                    class="button"
+                    href="aday_bolgeler.html"
+                >
+                    Aday kartlarına dön
+                </a>
+
+            </div>
+
+        </div>
+    </header>
+
+    <main class="map-wrapper">
+
+        <div id="harita"></div>
+
+        <section class="status-panel">
+            <h2 id="harita-basligi">
+                Aday Bölge Karar Destek Haritası
+            </h2>
+
+            <p>
+                Dolgu rengi hizmet ihtiyacını, sınır rengi
+                ise yer inceleme durumunu göstermektedir.
+                Alanlara tıklayarak ayrıntıları görebilirsin.
+            </p>
+
+            <div
+                id="durum"
+                class="status-message"
+            >
+                API bağlantısı kuruluyor...
+            </div>
+        </section>
+
+        <section class="legend">
+            <h3>Harita açıklaması</h3>
+
+            <div class="legend-title">
+                Dolgu — hizmet ihtiyacı
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="fill-box"
+                    style="background:#1e3a8a;"
+                ></span>
+
+                97–100: En yüksek
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="fill-box"
+                    style="background:#1d4ed8;"
+                ></span>
+
+                92–96,99: Çok yüksek
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="fill-box"
+                    style="background:#3b82f6;"
+                ></span>
+
+                87–91,99: Yüksek
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="fill-box"
+                    style="background:#60a5fa;"
+                ></span>
+
+                82–86,99: Orta-yüksek
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="fill-box"
+                    style="background:#bfdbfe;"
+                ></span>
+
+                82 altı
+            </div>
+
+            <div class="legend-title">
+                Sınır — yer inceleme durumu
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="line-box"
+                    style="border-color:#15803d;"
+                ></span>
+
+                Ön saha/parsel incelemesine öncelikli
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="line-box"
+                    style="border-color:#d97706;"
+                ></span>
+
+                İkinci düzey saha incelemesi
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="line-box"
+                    style="border-color:#7e22ce;"
+                ></span>
+
+                Yeşil alan niteliği araştırılmalı
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="line-box"
+                    style="border-color:#dc2626;"
+                ></span>
+
+                Yer bulunabilirliği sınırlı
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="line-box"
+                    style="border-color:#0891b2;"
+                ></span>
+
+                Çevresel kısıt kontrolü gerekli
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="line-box"
+                    style="border-color:#475569;"
+                ></span>
+
+                Ek verilerle değerlendirilmelidir
+            </div>
+        </section>
+
+    </main>
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+
+    <script>
+        const API_TEMEL_ADRESI =
+            "http://localhost:8001/api/aday-bolgeler";
+
+        const ilceSecimi =
+            document.getElementById("ilce-secimi");
+
+        const durumKutusu =
+            document.getElementById("durum");
+
+        const haritaBasligi =
+            document.getElementById("harita-basligi");
+
+
+        const harita = L.map(
+            "harita",
+            {
+                zoomControl: true
+            }
+        ).setView(
+            [41.015, 28.95],
+            10
+        );
+
+
+        L.tileLayer(
+            "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+            {
+                attribution:
+                    "&copy; OpenStreetMap contributors " +
+                    "&copy; CARTO",
+                maxZoom: 20
+            }
+        ).addTo(harita);
+
+
+        let adayKatmani = null;
+        let etiketKatmani = null;
+
+
+        function htmlGuvenli(metin) {
+            return String(metin ?? "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+
+        function sayiGoster(
+            deger,
+            basamak = 2
+        ) {
+            if (
+                deger === null ||
+                deger === undefined
+            ) {
+                return "-";
+            }
+
+            return Number(deger).toFixed(
+                basamak
+            );
+        }
+
+
+        function yuzdeGoster(deger) {
+            if (
+                deger === null ||
+                deger === undefined
+            ) {
+                return "-";
+            }
+
+            return `%${Number(deger).toFixed(2)}`;
+        }
+
+
+        function durumGuncelle(
+            mesaj,
+            tur = "normal"
+        ) {
+            durumKutusu.className =
+                "status-message";
+
+            if (tur === "success") {
+                durumKutusu.classList.add(
+                    "success"
+                );
+            }
+
+            if (tur === "error") {
+                durumKutusu.classList.add(
+                    "error"
+                );
+            }
+
+            durumKutusu.textContent = mesaj;
+        }
+
+
+        function hizmetRengi(puan) {
+            const sayisalPuan =
+                Number(puan ?? 0);
+
+            if (sayisalPuan >= 97) {
+                return "#1e3a8a";
+            }
+
+            if (sayisalPuan >= 92) {
+                return "#1d4ed8";
+            }
+
+            if (sayisalPuan >= 87) {
+                return "#3b82f6";
+            }
+
+            if (sayisalPuan >= 82) {
+                return "#60a5fa";
+            }
+
+            return "#bfdbfe";
+        }
+
+
+        function yerSinirRengi(durum) {
+            if (
+                durum ===
+                "Ön saha ve parsel incelemesine öncelikli"
+            ) {
+                return "#15803d";
+            }
+
+            if (
+                durum ===
+                "İkinci düzey saha incelemesi"
+            ) {
+                return "#d97706";
+            }
+
+            if (
+                durum ===
+                "Yeşil alan niteliği araştırılmalı"
+            ) {
+                return "#7e22ce";
+            }
+
+            if (
+                durum ===
+                "Yer bulunabilirliği sınırlı olabilir"
+            ) {
+                return "#dc2626";
+            }
+
+            if (
+                durum ===
+                "Çevresel kısıt kontrolü gerekli"
+            ) {
+                return "#0891b2";
+            }
+
+            return "#475569";
+        }
+
+
+        async function apiVerisiGetir(adres) {
+            const cevap = await fetch(adres);
+
+            if (!cevap.ok) {
+                throw new Error(
+                    `API hatası: ${cevap.status}`
+                );
+            }
+
+            return cevap.json();
+        }
+
+
+        function popupOlustur(aday) {
+            const hizmet =
+                aday.hizmet_ihtiyaci ?? {};
+
+            const kutuphane =
+                aday.en_yakin_kutuphane ?? {};
+
+            const arazi =
+                aday.arazi_ortusu ?? {};
+
+            const yer =
+                aday.yer_inceleme ?? {};
+
+            return `
+                <div style="min-width:280px; max-width:390px;">
+
+                    <div class="popup-title">
+                        ${htmlGuvenli(aday.hucre_id)}
+                    </div>
+
+                    <div class="popup-score">
+                        ${htmlGuvenli(hizmet.seviye)}
+                        —
+                        ${sayiGoster(hizmet.puan)}
+                    </div>
+
+                    <div class="popup-row">
+                        <span class="popup-label">
+                            Hizmet ihtiyacı sırası:
+                        </span>
+
+                        <strong>
+                            ${htmlGuvenli(hizmet.sira)}
+                        </strong>
+                    </div>
+
+                    <div class="popup-row">
+                        <span class="popup-label">
+                            En yakın kütüphane:
+                        </span>
+
+                        <strong>
+                            ${htmlGuvenli(kutuphane.ad ?? "-")}
+                        </strong>
+                    </div>
+
+                    <div class="popup-row">
+                        <span class="popup-label">
+                            Uzaklık:
+                        </span>
+
+                        <strong>
+                            ${sayiGoster(kutuphane.uzaklik_km)}
+                            km
+                        </strong>
+                    </div>
+
+                    <div class="popup-row">
+                        <span class="popup-label">
+                            Yer inceleme durumu:
+                        </span>
+
+                        <strong>
+                            ${htmlGuvenli(yer.durum)}
+                        </strong>
+                    </div>
+
+                    <div class="popup-row">
+                        <span class="popup-label">
+                            Yapılaşmış alan:
+                        </span>
+
+                        <strong>
+                            ${yuzdeGoster(
+                                arazi.yapilasmis_alan_yuzde
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="popup-row">
+                        <span class="popup-label">
+                            Açık / çıplak alan:
+                        </span>
+
+                        <strong>
+                            ${yuzdeGoster(
+                                arazi.acik_ciplak_alan_yuzde
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="popup-row">
+                        <span class="popup-label">
+                            Bitkisel / yeşil alan:
+                        </span>
+
+                        <strong>
+                            ${yuzdeGoster(
+                                arazi.bitkisel_yesil_alan_yuzde
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="popup-warning">
+                        ${htmlGuvenli(
+                            aday.genel_degerlendirme
+                        )}
+                    </div>
+
+                </div>
+            `;
+        }
+
+
+        function mevcutKatmanlariTemizle() {
+            if (adayKatmani) {
+                harita.removeLayer(
+                    adayKatmani
+                );
+
+                adayKatmani = null;
+            }
+
+            if (etiketKatmani) {
+                harita.removeLayer(
+                    etiketKatmani
+                );
+
+                etiketKatmani = null;
+            }
+        }
+
+
+        function adaylariHaritayaEkle(adaylar) {
+            mevcutKatmanlariTemizle();
+
+            const geojsonFeatures = adaylar
+                .filter(aday => aday.geometri)
+                .map(aday => ({
+                    type: "Feature",
+
+                    properties: {
+                        aday
+                    },
+
+                    geometry: aday.geometri
+                }));
+
+            if (geojsonFeatures.length === 0) {
+                throw new Error(
+                    "Haritada gösterilecek geometri bulunamadı."
+                );
+            }
+
+            adayKatmani = L.geoJSON(
+                {
+                    type: "FeatureCollection",
+                    features: geojsonFeatures
+                },
+                {
+                    style: feature => {
+                        const aday =
+                            feature.properties.aday;
+
+                        return {
+                            fillColor: hizmetRengi(
+                                aday
+                                .hizmet_ihtiyaci
+                                ?.puan
+                            ),
+
+                            color: yerSinirRengi(
+                                aday
+                                .yer_inceleme
+                                ?.durum
+                            ),
+
+                            weight: 5,
+                            opacity: 1,
+                            fillOpacity: 0.68
+                        };
+                    },
+
+                    onEachFeature: (
+                        feature,
+                        katman
+                    ) => {
+                        const aday =
+                            feature.properties.aday;
+
+                        katman.bindPopup(
+                            popupOlustur(aday)
+                        );
+
+                        katman.bindTooltip(
+                            `${htmlGuvenli(
+                                aday.hucre_id
+                            )} — ` +
+                            `${sayiGoster(
+                                aday
+                                .hizmet_ihtiyaci
+                                ?.puan
+                            )}`,
+                            {
+                                sticky: true
+                            }
+                        );
+
+                        katman.on({
+                            mouseover: olay => {
+                                olay.target.setStyle({
+                                    weight: 7,
+                                    color: "#111827",
+                                    fillOpacity: 0.84
+                                });
+                            },
+
+                            mouseout: olay => {
+                                adayKatmani
+                                    .resetStyle(
+                                        olay.target
+                                    );
+                            }
+                        });
+                    }
+                }
+            ).addTo(harita);
+
+
+            etiketKatmani =
+                L.layerGroup()
+                .addTo(harita);
+
+
+            for (const aday of adaylar) {
+                const merkez =
+                    aday.merkez ?? {};
+
+                if (
+                    merkez.enlem === null ||
+                    merkez.enlem === undefined ||
+                    merkez.boylam === null ||
+                    merkez.boylam === undefined
+                ) {
+                    continue;
+                }
+
+                const etiket = L.divIcon({
+                    className: "",
+
+                    html: `
+                        <div class="candidate-label">
+                            ${htmlGuvenli(
+                                aday
+                                .hizmet_ihtiyaci
+                                ?.sira
+                            )}. sıra
+
+                            <br>
+
+                            ${htmlGuvenli(
+                                aday.hucre_id
+                            )}
+                        </div>
+                    `,
+
+                    iconSize: [0, 0],
+                    iconAnchor: [0, 0]
+                });
+
+                L.marker(
+                    [
+                        merkez.enlem,
+                        merkez.boylam
+                    ],
+                    {
+                        icon: etiket,
+                        interactive: false
+                    }
+                ).addTo(
+                    etiketKatmani
+                );
+            }
+
+
+            const sinirlar =
+                adayKatmani.getBounds();
+
+            if (sinirlar.isValid()) {
+                harita.fitBounds(
+                    sinirlar,
+                    {
+                        padding: [35, 35]
+                    }
+                );
+            }
+        }
+
+
+        async function analizEdilenIlceleriYukle() {
+            durumGuncelle(
+                "Analiz edilmiş ilçeler yükleniyor..."
+            );
+
+            const veri = await apiVerisiGetir(
+                `${API_TEMEL_ADRESI}?limit=500`
+            );
+
+            const ilceler = [
+                ...new Set(
+                    (veri.aday_bolgeler ?? [])
+                        .map(aday => aday.ilce)
+                        .filter(Boolean)
+                )
+            ].sort(
+                (birinci, ikinci) =>
+                    birinci.localeCompare(
+                        ikinci,
+                        "tr"
+                    )
+            );
+
+            if (ilceler.length === 0) {
+                throw new Error(
+                    "Veritabanında analiz edilmiş ilçe bulunamadı."
+                );
+            }
+
+            ilceSecimi.innerHTML = "";
+
+            for (const ilce of ilceler) {
+                const secenek =
+                    document.createElement(
+                        "option"
+                    );
+
+                secenek.value = ilce;
+                secenek.textContent = ilce;
+
+                ilceSecimi.appendChild(
+                    secenek
+                );
+            }
+
+            ilceSecimi.disabled = false;
+
+            const adresParametreleri =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            const adresIlcesi =
+                adresParametreleri.get(
+                    "ilce"
+                );
+
+            if (
+                adresIlcesi &&
+                ilceler.includes(adresIlcesi)
+            ) {
+                ilceSecimi.value =
+                    adresIlcesi;
+            } else {
+                ilceSecimi.value =
+                    ilceler[0];
+            }
+
+            await seciliIlceyiYukle();
+        }
+
+
+        async function seciliIlceyiYukle() {
+            const seciliIlce =
+                ilceSecimi.value;
+
+            if (!seciliIlce) {
+                return;
+            }
+
+            durumGuncelle(
+                `${seciliIlce} geometrileri yükleniyor...`
+            );
+
+            const adres =
+                `${API_TEMEL_ADRESI}` +
+                `?ilce=${encodeURIComponent(
+                    seciliIlce
+                )}` +
+                "&limit=500&geometri=true";
+
+            const veri =
+                await apiVerisiGetir(adres);
+
+            const adaylar =
+                veri.aday_bolgeler ?? [];
+
+            if (adaylar.length === 0) {
+                mevcutKatmanlariTemizle();
+
+                throw new Error(
+                    `${seciliIlce} için aday bölge bulunamadı.`
+                );
+            }
+
+            adaylariHaritayaEkle(
+                adaylar
+            );
+
+            haritaBasligi.textContent =
+                `${seciliIlce} Aday Bölge Karar Destek Haritası`;
+
+            const yeniAdres =
+                new URL(
+                    window.location.href
+                );
+
+            yeniAdres.searchParams.set(
+                "ilce",
+                seciliIlce
+            );
+
+            window.history.replaceState(
+                {},
+                "",
+                yeniAdres
+            );
+
+            durumGuncelle(
+                `${seciliIlce} için ` +
+                `${adaylar.length} aday bölge ` +
+                "API üzerinden haritaya aktarıldı.",
+                "success"
+            );
+        }
+
+
+        ilceSecimi.addEventListener(
+            "change",
+            async () => {
+                try {
+                    await seciliIlceyiYukle();
+                } catch (hata) {
+                    console.error(hata);
+
+                    durumGuncelle(
+                        `Harita yüklenemedi: ${hata.message}`,
+                        "error"
+                    );
+                }
+            }
+        );
+
+
+        analizEdilenIlceleriYukle()
+            .catch(hata => {
+                console.error(hata);
+
+                durumGuncelle(
+                    `API bağlantısı kurulamadı: ${hata.message}`,
+                    "error"
+                );
+            });
+    </script>
+</body>
+</html>

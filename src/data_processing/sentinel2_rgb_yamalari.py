@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import argparse
-import html
 import json
 import re
 import unicodedata
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -17,22 +16,16 @@ import pystac_client
 import rasterio
 
 from PIL import Image
-from rasterio.enums import ColorInterp
-from rasterio.errors import WindowError
-from rasterio.warp import transform_bounds
-from rasterio.windows import Window, from_bounds
+from rasterio.enums import ColorInterp, Resampling
+from rasterio.transform import from_bounds
+from rasterio.warp import reproject, transform_bounds
 
 
 # ==========================================================
-# PROJE YOLU
+# PROJE VE STAC AYARLARI
 # ==========================================================
 
 PROJE_KOKU = Path(__file__).resolve().parents[2]
-
-
-# ==========================================================
-# STAC VE RASTER AYARLARI
-# ==========================================================
 
 STAC_API_ADRESI = (
     "https://planetarycomputer.microsoft.com/api/stac/v1"
@@ -42,6 +35,16 @@ KOLEKSIYON_ADI = "sentinel-2-l2a"
 
 COGRAFI_CRS = "EPSG:4326"
 
+# İstanbul analizlerinde ortak hedef koordinat sistemi.
+CIKTI_CRS = "EPSG:32635"
+
+HEDEF_COZUNURLUK_METRE = 10.0
+
+SAHNE_ZAMAN_TOLERANSI_DAKIKA = 3
+
+ANALIZE_HAZIR_ESIGI = 95.0
+
+
 RGB_BANTLARI = {
     "red": "B04",
     "green": "B03",
@@ -49,7 +52,6 @@ RGB_BANTLARI = {
 }
 
 ALT_YUZDELIK = 2
-
 UST_YUZDELIK = 98
 
 
@@ -76,19 +78,18 @@ TURKCE_KARAKTER_TABLOSU = str.maketrans(
 
 
 # ==========================================================
-# KOMUT SATIRI ARGÜMANLARI
+# ARGÜMANLAR
 # ==========================================================
 
 def argumanlari_oku() -> argparse.Namespace:
     """
-    RGB uydu görüntüsü üretilecek ilçeyi
-    komut satırından alır.
+    İşlenecek ilçeyi komut satırından alır.
     """
 
     parser = argparse.ArgumentParser(
         description=(
-            "Seçilen ilçe için Sentinel-2 RGB "
-            "uydu görüntüsü yamaları oluşturur."
+            "Aynı Sentinel-2 geçişine ait birden fazla "
+            "karoyu birleştirerek tam RGB yamaları üretir."
         )
     )
 
@@ -97,7 +98,7 @@ def argumanlari_oku() -> argparse.Namespace:
         required=True,
         help=(
             "RGB yamaları oluşturulacak ilçe. "
-            "Örnek: Esenyurt"
+            "Örnek: Pendik"
         ),
     )
 
@@ -114,19 +115,14 @@ def argumanlari_oku() -> argparse.Namespace:
 
 
 # ==========================================================
-# GÜVENLİ KLASÖR ADI
+# SLUG
 # ==========================================================
 
 def slug_olustur(
     metin: str,
 ) -> str:
     """
-    İlçe adını dosya ve klasörlerde kullanılabilecek
-    güvenli bir ada dönüştürür.
-
-    Küçükçekmece -> kucukcekmece
-    Bağcılar     -> bagcilar
-    Ümraniye     -> umraniye
+    İlçe adını güvenli klasör adına dönüştürür.
     """
 
     temiz_metin = (
@@ -155,11 +151,7 @@ def slug_olustur(
         r"[^a-z0-9]+",
         "_",
         temiz_metin,
-    )
-
-    temiz_metin = temiz_metin.strip(
-        "_"
-    )
+    ).strip("_")
 
     if not temiz_metin:
         raise ValueError(
@@ -170,14 +162,14 @@ def slug_olustur(
 
 
 # ==========================================================
-# İLÇEYE ÖZEL DOSYA YOLLARI
+# DOSYA YOLLARI
 # ==========================================================
 
 def dosya_yollarini_olustur(
     ilce_slug: str,
 ) -> dict[str, Path]:
     """
-    Seçilen ilçenin girdi ve çıktı yollarını oluşturur.
+    İlçeye ait girdi ve çıktı yollarını oluşturur.
     """
 
     islenmis_klasor = (
@@ -205,8 +197,6 @@ def dosya_yollarini_olustur(
     )
 
     return {
-        "islenmis_klasor": islenmis_klasor,
-
         "bbox_csv": (
             islenmis_klasor
             / "pilot_uydu_bbox.csv"
@@ -230,17 +220,11 @@ def dosya_yollarini_olustur(
         "rgb_png_klasoru": (
             png_klasoru
         ),
-
-        "galeri_html": (
-            PROJE_KOKU
-            / "frontend"
-            / f"{ilce_slug}_sentinel2_rgb.html"
-        ),
     }
 
 
 # ==========================================================
-# JSON DOSYASI OKUMA
+# JSON OKUMA
 # ==========================================================
 
 def json_dosyasi_oku(
@@ -271,7 +255,7 @@ def json_dosyasi_oku(
 
 
 # ==========================================================
-# SEÇİLEN SAHNE METADATA DOSYASINI OKUMA
+# SEÇİLEN ANA SAHNEYİ OKUMA
 # ==========================================================
 
 def secilen_sahneyi_oku(
@@ -279,8 +263,8 @@ def secilen_sahneyi_oku(
     beklenen_ilce_slug: str,
 ) -> dict[str, Any]:
     """
-    Sahne seçim aşamasında kaydedilen
-    kesin Sentinel-2 sahnesini okur.
+    Sahne seçim aşamasındaki ana Sentinel-2
+    sahnesinin metadata bilgilerini okur.
     """
 
     metadata = json_dosyasi_oku(
@@ -302,8 +286,7 @@ def secilen_sahneyi_oku(
 
     if eksik_alanlar:
         raise ValueError(
-            "Seçilen sahne metadata dosyasında "
-            "eksik alanlar var:\n"
+            "Sahne metadata dosyasında eksik alanlar var:\n"
             + "\n".join(
                 eksik_alanlar
             )
@@ -326,14 +309,9 @@ def secilen_sahneyi_oku(
             f"Metadata: {metadata_slug}"
         )
 
-    if (
-        str(
-            metadata[
-                "collection"
-            ]
-        )
-        != KOLEKSIYON_ADI
-    ):
+    if str(
+        metadata["collection"]
+    ) != KOLEKSIYON_ADI:
         raise ValueError(
             "Seçilen sahne beklenen Sentinel-2 "
             "koleksiyonuna ait değil."
@@ -343,7 +321,7 @@ def secilen_sahneyi_oku(
 
 
 # ==========================================================
-# PİLOT BBOX VERİLERİNİ OKUMA
+# BBOX VERİLERİNİ OKUMA
 # ==========================================================
 
 def bbox_verilerini_oku(
@@ -351,7 +329,7 @@ def bbox_verilerini_oku(
     beklenen_ilce_slug: str,
 ) -> pd.DataFrame:
     """
-    Seçilen ilçenin pilot uydu yaması
+    İlçeye ait pilot uydu yamalarının BBOX
     koordinatlarını okur.
     """
 
@@ -360,7 +338,7 @@ def bbox_verilerini_oku(
             "Pilot uydu BBOX dosyası bulunamadı:\n"
             f"{bbox_csv_yolu}\n\n"
             "Önce pilot_uydu_alanlari_hazirlama.py "
-            "dosyasını bu ilçe için çalıştır."
+            "dosyasını çalıştır."
         )
 
     dataframe = pd.read_csv(
@@ -394,8 +372,7 @@ def bbox_verilerini_oku(
         )
 
     if "district_slug" in dataframe.columns:
-
-        farkli_ilce_kayitlari = dataframe[
+        farkli_ilce = dataframe[
             dataframe[
                 "district_slug"
             ]
@@ -406,10 +383,10 @@ def bbox_verilerini_oku(
             )
         ]
 
-        if not farkli_ilce_kayitlari.empty:
+        if not farkli_ilce.empty:
             raise ValueError(
-                "BBOX dosyasında farklı ilçeye ait "
-                "kayıtlar bulundu."
+                "BBOX dosyasında farklı ilçeye "
+                "ait kayıt bulundu."
             )
 
     sayisal_sutunlar = [
@@ -422,7 +399,6 @@ def bbox_verilerini_oku(
     ]
 
     for sutun in sayisal_sutunlar:
-
         dataframe[
             sutun
         ] = pd.to_numeric(
@@ -455,27 +431,95 @@ def bbox_verilerini_oku(
         "district_candidate_rank"
     ].astype(int)
 
-    dataframe = dataframe.sort_values(
+    return dataframe.sort_values(
         by="district_candidate_rank",
         ascending=True,
     ).reset_index(
         drop=True
     )
 
-    return dataframe
+
+# ==========================================================
+# BİRLEŞİK SORGU BBOX
+# ==========================================================
+
+def birlesik_bbox_hesapla(
+    bbox_dataframe: pd.DataFrame,
+) -> list[float]:
+    """
+    Bütün pilot alanları kapsayan birleşik BBOX'u
+    hesaplar.
+    """
+
+    return [
+        float(
+            bbox_dataframe[
+                "min_longitude"
+            ].min()
+        ),
+
+        float(
+            bbox_dataframe[
+                "min_latitude"
+            ].min()
+        ),
+
+        float(
+            bbox_dataframe[
+                "max_longitude"
+            ].max()
+        ),
+
+        float(
+            bbox_dataframe[
+                "max_latitude"
+            ].max()
+        ),
+    ]
 
 
 # ==========================================================
-# STAC SAHNESİNİ GETİRME
+# AYNI UYDU GEÇİŞİNDEKİ KAROLARI GETİRME
 # ==========================================================
 
-def stac_sahnesini_getir(
-    item_id: str,
+def ayni_gecis_sahnelerini_getir(
+    metadata: dict[str, Any],
+    bbox_dataframe: pd.DataFrame,
 ):
     """
-    JSON dosyasında kesinleştirilen Sentinel-2
-    sahnesini STAC servisinden getirir.
+    Ana sahneyle aynı zaman aralığında çekilmiş,
+    pilot alanla kesişen bütün Sentinel-2
+    karolarını STAC servisinden getirir.
     """
+
+    secilen_tarih = pd.to_datetime(
+        metadata[
+            "datetime"
+        ],
+        utc=True,
+    ).to_pydatetime()
+
+    baslangic = (
+        secilen_tarih
+        - timedelta(
+            minutes=(
+                SAHNE_ZAMAN_TOLERANSI_DAKIKA
+            )
+        )
+    )
+
+    bitis = (
+        secilen_tarih
+        + timedelta(
+            minutes=(
+                SAHNE_ZAMAN_TOLERANSI_DAKIKA
+            )
+        )
+    )
+
+    sorgu_bbox = birlesik_bbox_hesapla(
+        bbox_dataframe
+    )
 
     katalog = pystac_client.Client.open(
         STAC_API_ADRESI
@@ -485,28 +529,104 @@ def stac_sahnesini_getir(
         collections=[
             KOLEKSIYON_ADI,
         ],
-        ids=[
-            item_id,
-        ],
-        max_items=1,
+
+        bbox=sorgu_bbox,
+
+        datetime=(
+            f"{baslangic.isoformat()}/"
+            f"{bitis.isoformat()}"
+        ),
+
+        max_items=100,
     )
 
-    sahneler = list(
-        arama.items()
-    )
+    beklenen_platform = str(
+        metadata.get(
+            "platform",
+            "",
+        )
+    ).strip().lower()
+
+    sahneler = []
+
+    for sahne in arama.items():
+
+        sahne_tarihi = sahne.datetime
+
+        if sahne_tarihi is None:
+            continue
+
+        if sahne_tarihi.tzinfo is None:
+            sahne_tarihi = (
+                sahne_tarihi.replace(
+                    tzinfo=timezone.utc
+                )
+            )
+
+        zaman_farki_saniye = abs(
+            (
+                sahne_tarihi
+                - secilen_tarih
+            ).total_seconds()
+        )
+
+        if zaman_farki_saniye > (
+            SAHNE_ZAMAN_TOLERANSI_DAKIKA
+            * 60
+        ):
+            continue
+
+        sahne_platformu = str(
+            sahne.properties.get(
+                "platform",
+                "",
+            )
+        ).strip().lower()
+
+        if (
+            beklenen_platform
+            and sahne_platformu
+            and sahne_platformu
+            != beklenen_platform
+        ):
+            continue
+
+        sahneler.append(
+            planetary_computer.sign(
+                sahne
+            )
+        )
 
     if not sahneler:
         raise RuntimeError(
-            "Seçilen Sentinel-2 sahnesi "
-            "STAC servisinde bulunamadı:\n"
-            f"{item_id}"
+            "Seçilen Sentinel-2 geçişine ait "
+            "uygun karo bulunamadı."
         )
 
-    sahne = planetary_computer.sign(
-        sahneler[0]
+    ana_item_id = str(
+        metadata[
+            "item_id"
+        ]
     )
 
-    return sahne
+    sahneler.sort(
+        key=lambda sahne: (
+            0
+            if sahne.id == ana_item_id
+            else 1,
+
+            float(
+                sahne.properties.get(
+                    "eo:cloud_cover",
+                    999,
+                )
+            ),
+
+            sahne.id,
+        )
+    )
+
+    return sahneler
 
 
 # ==========================================================
@@ -526,45 +646,112 @@ def asset_bul(
             asset_adi
         ]
 
-    hedef_anahtar = asset_adi.lower()
+    hedef_anahtar = (
+        asset_adi.lower()
+    )
 
-    for anahtar, asset in sahne.assets.items():
-
-        if anahtar.lower() == hedef_anahtar:
+    for anahtar, asset in (
+        sahne.assets.items()
+    ):
+        if (
+            anahtar.lower()
+            == hedef_anahtar
+        ):
             return asset
 
-    mevcut_assetler = ", ".join(
-        sorted(
-            sahne.assets.keys()
-        )
-    )
-
     raise KeyError(
-        f"{asset_adi} bandı sahnede bulunamadı.\n"
-        f"Mevcut asset anahtarları:\n"
-        f"{mevcut_assetler}"
+        f"{asset_adi} bandı "
+        f"{sahne.id} sahnesinde bulunamadı."
     )
 
 
 # ==========================================================
-# RASTER PENCERESİNİ OKUMA
+# HEDEF RASTER GRİDİ
 # ==========================================================
 
-def band_yamasini_oku(
-    asset_href: str,
+def hedef_grid_olustur(
     bbox: list[float],
-) -> tuple[
-    np.ndarray,
-    Any,
-    Any,
-]:
+) -> tuple[Any, int, int]:
     """
-    Sentinel-2 rasterının tamamını indirmeden
-    sadece istenen coğrafi pencereyi okur.
+    Coğrafi BBOX'u ortak hedef koordinat sistemine
+    dönüştürüp yaklaşık 10 metre çözünürlüklü
+    sabit bir raster gridi oluşturur.
+    """
 
-    BBOX sırası:
-    min_boylam, min_enlem, max_boylam, max_enlem
+    sol, alt, sag, ust = transform_bounds(
+        COGRAFI_CRS,
+        CIKTI_CRS,
+        bbox[0],
+        bbox[1],
+        bbox[2],
+        bbox[3],
+        densify_pts=21,
+    )
+
+    genislik = max(
+        1,
+        int(
+            np.ceil(
+                (
+                    sag
+                    - sol
+                )
+                / HEDEF_COZUNURLUK_METRE
+            )
+        ),
+    )
+
+    yukseklik = max(
+        1,
+        int(
+            np.ceil(
+                (
+                    ust
+                    - alt
+                )
+                / HEDEF_COZUNURLUK_METRE
+            )
+        ),
+    )
+
+    hedef_transform = from_bounds(
+        sol,
+        alt,
+        sag,
+        ust,
+        genislik,
+        yukseklik,
+    )
+
+    return (
+        hedef_transform,
+        genislik,
+        yukseklik,
+    )
+
+
+# ==========================================================
+# TEK ASSETİ HEDEF GRİDE DÖNÜŞTÜRME
+# ==========================================================
+
+def asseti_hedef_gride_yansit(
+    asset_href: str,
+    hedef_transform,
+    genislik: int,
+    yukseklik: int,
+) -> np.ndarray:
     """
+    Farklı Sentinel karolarındaki raster bandını
+    ortak hedef koordinat sistemine dönüştürür.
+    """
+
+    hedef = np.zeros(
+        (
+            yukseklik,
+            genislik,
+        ),
+        dtype=np.uint16,
+    )
 
     with rasterio.Env(
         GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR",
@@ -581,74 +768,116 @@ def band_yamasini_oku(
                     "Uydu bandında koordinat sistemi bulunamadı."
                 )
 
-            sol, alt, sag, ust = transform_bounds(
-                COGRAFI_CRS,
-                kaynak.crs,
-                bbox[0],
-                bbox[1],
-                bbox[2],
-                bbox[3],
-                densify_pts=21,
+            reproject(
+                source=rasterio.band(
+                    kaynak,
+                    1,
+                ),
+
+                destination=hedef,
+
+                src_transform=(
+                    kaynak.transform
+                ),
+
+                src_crs=(
+                    kaynak.crs
+                ),
+
+                src_nodata=(
+                    kaynak.nodata
+                    if kaynak.nodata is not None
+                    else 0
+                ),
+
+                dst_transform=(
+                    hedef_transform
+                ),
+
+                dst_crs=(
+                    CIKTI_CRS
+                ),
+
+                dst_nodata=0,
+
+                resampling=(
+                    Resampling.bilinear
+                ),
             )
 
-            pencere = from_bounds(
-                sol,
-                alt,
-                sag,
-                ust,
-                transform=kaynak.transform,
+    return hedef
+
+
+# ==========================================================
+# TEK BANDIN ÇOKLU KARO MOZAIĞI
+# ==========================================================
+
+def band_mozaigi_olustur(
+    sahneler,
+    asset_adi: str,
+    hedef_transform,
+    genislik: int,
+    yukseklik: int,
+) -> tuple[np.ndarray, list[str]]:
+    """
+    Aynı Sentinel geçişine ait karolardaki tek
+    bandı ortak hedef gridde birleştirir.
+    """
+
+    mozaik = np.zeros(
+        (
+            yukseklik,
+            genislik,
+        ),
+        dtype=np.uint16,
+    )
+
+    katkida_bulunan_sahneler: list[str] = []
+
+    for sahne in sahneler:
+
+        try:
+            asset = asset_bul(
+                sahne,
+                asset_adi,
             )
 
-            pencere = (
-                pencere
-                .round_offsets()
-                .round_lengths()
+            parca = asseti_hedef_gride_yansit(
+                asset.href,
+                hedef_transform,
+                genislik,
+                yukseklik,
             )
 
-            raster_siniri = Window(
-                col_off=0,
-                row_off=0,
-                width=kaynak.width,
-                height=kaynak.height,
+        except (
+            KeyError,
+            rasterio.errors.RasterioError,
+            OSError,
+            ValueError,
+        ):
+            continue
+
+        yeni_piksel_maskesi = (
+            (mozaik == 0)
+            & (parca > 0)
+        )
+
+        if np.any(
+            yeni_piksel_maskesi
+        ):
+            mozaik[
+                yeni_piksel_maskesi
+            ] = parca[
+                yeni_piksel_maskesi
+            ]
+
+            katkida_bulunan_sahneler.append(
+                sahne.id
             )
-
-            try:
-                pencere = pencere.intersection(
-                    raster_siniri
-                )
-
-            except WindowError as hata:
-                raise ValueError(
-                    "Pilot alan seçilen uydu sahnesinin "
-                    "raster sınırları dışında kaldı."
-                ) from hata
-
-            if (
-                pencere.width <= 0
-                or pencere.height <= 0
-            ):
-                raise ValueError(
-                    "Uydu görüntüsü için geçerli "
-                    "raster penceresi oluşturulamadı."
-                )
-
-            bant = kaynak.read(
-                1,
-                window=pencere,
-            )
-
-            yama_transformu = (
-                kaynak.window_transform(
-                    pencere
-                )
-            )
-
-            koordinat_sistemi = kaynak.crs
 
     return (
-        bant,
-        yama_transformu,
-        koordinat_sistemi,
+        mozaik,
+        katkida_bulunan_sahneler,
     )
 
 
@@ -660,11 +889,9 @@ def rgb_geotiff_kaydet(
     cikti_yolu: Path,
     rgb_verisi: np.ndarray,
     transform,
-    crs,
 ) -> None:
     """
-    B04, B03 ve B02 bantlarını üç bantlı
-    coğrafi GeoTIFF olarak kaydeder.
+    Üç bantlı coğrafi GeoTIFF dosyası oluşturur.
     """
 
     cikti_yolu.parent.mkdir(
@@ -682,7 +909,7 @@ def rgb_geotiff_kaydet(
         "width": genislik,
         "count": bant_sayisi,
         "dtype": rgb_verisi.dtype,
-        "crs": crs,
+        "crs": CIKTI_CRS,
         "transform": transform,
         "compress": "deflate",
         "nodata": 0,
@@ -706,7 +933,7 @@ def rgb_geotiff_kaydet(
 
 
 # ==========================================================
-# BANTLARI 8 BİT GÖRSEL DEĞERLERE ÇEVİRME
+# PNG KONTRAST DÖNÜŞÜMÜ
 # ==========================================================
 
 def bandi_8_bit_yap(
@@ -714,8 +941,8 @@ def bandi_8_bit_yap(
     gecerli_maske: np.ndarray,
 ) -> np.ndarray:
     """
-    Ham Sentinel-2 piksel değerlerini PNG
-    önizlemesi için 0-255 arasına dönüştürür.
+    Ham Sentinel değerlerini PNG önizlemesi için
+    0-255 aralığına dönüştürür.
     """
 
     gecerli_pikseller = bant[
@@ -745,7 +972,10 @@ def bandi_8_bit_yap(
     )
 
     if ust_deger <= alt_deger:
-        ust_deger = alt_deger + 1
+        ust_deger = (
+            alt_deger
+            + 1
+        )
 
     normalize_bant = (
         (
@@ -777,7 +1007,7 @@ def bandi_8_bit_yap(
 
 
 # ==========================================================
-# PNG ÖNİZLEME KAYDETME
+# PNG ÖNİZLEME
 # ==========================================================
 
 def png_onizleme_kaydet(
@@ -785,10 +1015,8 @@ def png_onizleme_kaydet(
     rgb_verisi: np.ndarray,
 ) -> float:
     """
-    RGB GeoTIFF verisinden tarayıcıda görüntülenebilen
-    PNG önizlemesi oluşturur.
-
-    Geçerli piksel oranını döndürür.
+    PNG önizlemesini kaydeder ve gerçek geçerli
+    piksel oranını döndürür.
     """
 
     cikti_yolu.parent.mkdir(
@@ -796,7 +1024,9 @@ def png_onizleme_kaydet(
         exist_ok=True,
     )
 
-    gecerli_maske = np.any(
+    # Bir pikselin geçerli sayılması için üç RGB
+    # bandının da veri içermesi gerekir.
+    gecerli_maske = np.all(
         rgb_verisi > 0,
         axis=0,
     )
@@ -806,26 +1036,22 @@ def png_onizleme_kaydet(
         * 100
     )
 
-    kirmizi = bandi_8_bit_yap(
-        rgb_verisi[0],
-        gecerli_maske,
-    )
-
-    yesil = bandi_8_bit_yap(
-        rgb_verisi[1],
-        gecerli_maske,
-    )
-
-    mavi = bandi_8_bit_yap(
-        rgb_verisi[2],
-        gecerli_maske,
-    )
-
     rgb_8_bit = np.stack(
         [
-            kirmizi,
-            yesil,
-            mavi,
+            bandi_8_bit_yap(
+                rgb_verisi[0],
+                gecerli_maske,
+            ),
+
+            bandi_8_bit_yap(
+                rgb_verisi[1],
+                gecerli_maske,
+            ),
+
+            bandi_8_bit_yap(
+                rgb_verisi[2],
+                gecerli_maske,
+            ),
         ],
         axis=-1,
     )
@@ -849,18 +1075,18 @@ def png_onizleme_kaydet(
 
 
 # ==========================================================
-# TEK PİLOT YAMAYI OLUŞTURMA
+# TEK YAMA ÜRETİMİ
 # ==========================================================
 
 def tek_yamayi_olustur(
-    sahne,
+    sahneler,
     bbox_kaydi: pd.Series,
     yollar: dict[str, Path],
     ilce_slug: str,
 ) -> dict[str, Any]:
     """
-    Tek pilot alanın B04, B03 ve B02 bantlarını
-    okuyarak GeoTIFF ve PNG üretir.
+    Tek pilot alan için aynı geçişteki karoları
+    kullanarak tam RGB yaması üretir.
     """
 
     patch_id = str(
@@ -875,16 +1101,19 @@ def tek_yamayi_olustur(
                 "min_longitude"
             ]
         ),
+
         float(
             bbox_kaydi[
                 "min_latitude"
             ]
         ),
+
         float(
             bbox_kaydi[
                 "max_longitude"
             ]
         ),
+
         float(
             bbox_kaydi[
                 "max_latitude"
@@ -892,15 +1121,17 @@ def tek_yamayi_olustur(
         ),
     ]
 
-    bant_verileri: list[
-        np.ndarray
-    ] = []
+    (
+        hedef_transform,
+        genislik,
+        yukseklik,
+    ) = hedef_grid_olustur(
+        bbox
+    )
 
-    referans_transform = None
+    bant_verileri: list[np.ndarray] = []
 
-    referans_crs = None
-
-    referans_boyut = None
+    kaynak_sahne_kimlikleri: set[str] = set()
 
     for bant_etiketi in [
         "red",
@@ -912,42 +1143,23 @@ def tek_yamayi_olustur(
             bant_etiketi
         ]
 
-        asset = asset_bul(
-            sahne,
-            asset_adi,
-        )
-
         (
-            bant,
-            bant_transformu,
-            bant_crs,
-        ) = band_yamasini_oku(
-            asset.href,
-            bbox,
+            bant_mozaigi,
+            katkida_bulunan_sahneler,
+        ) = band_mozaigi_olustur(
+            sahneler,
+            asset_adi,
+            hedef_transform,
+            genislik,
+            yukseklik,
         )
-
-        if referans_boyut is None:
-
-            referans_boyut = bant.shape
-
-            referans_transform = (
-                bant_transformu
-            )
-
-            referans_crs = bant_crs
-
-        elif bant.shape != referans_boyut:
-
-            raise ValueError(
-                f"{patch_id} için RGB bant boyutları "
-                "birbirinden farklı çıktı.\n"
-                f"Beklenen: {referans_boyut}\n"
-                f"Bulunan: {bant.shape}\n"
-                f"Bant: {asset_adi}"
-            )
 
         bant_verileri.append(
-            bant
+            bant_mozaigi
+        )
+
+        kaynak_sahne_kimlikleri.update(
+            katkida_bulunan_sahneler
         )
 
     rgb_verisi = np.stack(
@@ -972,8 +1184,7 @@ def tek_yamayi_olustur(
     rgb_geotiff_kaydet(
         geotiff_yolu,
         rgb_verisi,
-        referans_transform,
-        referans_crs,
+        hedef_transform,
     )
 
     gecerli_piksel_orani = (
@@ -981,6 +1192,17 @@ def tek_yamayi_olustur(
             png_yolu,
             rgb_verisi,
         )
+    )
+
+    analiz_hazir = (
+        gecerli_piksel_orani
+        >= ANALIZE_HAZIR_ESIGI
+    )
+
+    kapsama_durumu = (
+        "tam"
+        if analiz_hazir
+        else "kismi"
     )
 
     png_relative_path = (
@@ -1034,12 +1256,33 @@ def tek_yamayi_olustur(
             rgb_verisi.dtype
         ),
 
-        "crs": str(
-            referans_crs
-        ),
+        "crs": CIKTI_CRS,
 
         "valid_pixel_pct": (
             gecerli_piksel_orani
+        ),
+
+        "requested_area_coverage_pct": (
+            gecerli_piksel_orani
+        ),
+
+        "coverage_status": (
+            kapsama_durumu
+        ),
+
+        "analysis_ready": int(
+            analiz_hazir
+        ),
+
+        "source_scene_count": len(
+            kaynak_sahne_kimlikleri
+        ),
+
+        "source_item_ids_json": json.dumps(
+            sorted(
+                kaynak_sahne_kimlikleri
+            ),
+            ensure_ascii=False,
         ),
 
         "min_longitude": bbox[0],
@@ -1065,18 +1308,16 @@ def tek_yamayi_olustur(
 
 
 # ==========================================================
-# RGB MANİFEST DOSYASINI KAYDETME
+# MANİFEST KAYDETME
 # ==========================================================
 
 def manifest_kaydet(
-    yama_sonuclari: list[
-        dict[str, Any]
-    ],
+    yama_sonuclari: list[dict[str, Any]],
     manifest_yolu: Path,
 ) -> None:
     """
-    Oluşturulan bütün RGB yamalarının teknik
-    bilgilerini CSV dosyasına kaydeder.
+    Bütün uydu yamalarının teknik bilgilerini
+    CSV dosyasına kaydeder.
     """
 
     manifest_yolu.parent.mkdir(
@@ -1101,20 +1342,18 @@ def manifest_kaydet(
 
 
 # ==========================================================
-# SAHNE METADATA DOSYASINI GÜNCELLEME
+# METADATA GÜNCELLEME
 # ==========================================================
 
 def sahne_metadata_guncelle(
     metadata: dict[str, Any],
-    sahne,
-    yama_sonuclari: list[
-        dict[str, Any]
-    ],
+    sahneler,
+    yama_sonuclari: list[dict[str, Any]],
     yollar: dict[str, Path],
 ) -> None:
     """
-    Seçilen sahne metadata dosyasına
-    RGB üretim bilgilerini ekler.
+    Metadata dosyasına çoklu karo işleme
+    bilgilerini ekler.
     """
 
     guncel_metadata = dict(
@@ -1122,9 +1361,22 @@ def sahne_metadata_guncelle(
     )
 
     guncel_metadata[
-        "available_assets"
-    ] = sorted(
-        sahne.assets.keys()
+        "rgb_processing_mode"
+    ] = (
+        "same_acquisition_multi_tile_mosaic"
+    )
+
+    guncel_metadata[
+        "mosaic_item_ids"
+    ] = [
+        sahne.id
+        for sahne in sahneler
+    ]
+
+    guncel_metadata[
+        "mosaic_item_count"
+    ] = len(
+        sahneler
     )
 
     guncel_metadata[
@@ -1146,20 +1398,10 @@ def sahne_metadata_guncelle(
     )
 
     guncel_metadata[
-        "rgb_gallery_html"
-    ] = str(
-        yollar[
-            "galeri_html"
-        ]
-    )
-
-    guncel_metadata[
         "rgb_generated_at_utc"
-    ] = (
-        datetime.now(
-            timezone.utc
-        ).isoformat()
-    )
+    ] = datetime.now(
+        timezone.utc
+    ).isoformat()
 
     guncel_metadata[
         "rgb_patches"
@@ -1168,10 +1410,11 @@ def sahne_metadata_guncelle(
     guncel_metadata[
         "rgb_processing_note"
     ] = (
-        "GeoTIFF dosyaları ham Sentinel-2 bant "
-        "değerlerini ve coğrafi bilgiyi korur. "
-        "PNG dosyaları yalnızca görsel kontrol için "
-        "yüzdelik kontrast germe işleminden geçirilmiştir."
+        "Aynı Sentinel-2 geçişine ait karolar "
+        "EPSG:32635 hedef gridine dönüştürülerek "
+        "birleştirilmiştir. GeoTIFF dosyaları "
+        "coğrafi bilgiyi ve ham yansıma değerlerini "
+        "korur. PNG dosyaları yalnızca önizlemedir."
     )
 
     yollar[
@@ -1187,395 +1430,26 @@ def sahne_metadata_guncelle(
 
 
 # ==========================================================
-# HTML GALERİSİ
-# ==========================================================
-
-def galeri_html_olustur(
-    ilce_adi: str,
-    ilce_slug: str,
-    metadata: dict[str, Any],
-    yama_sonuclari: list[
-        dict[str, Any]
-    ],
-    galeri_yolu: Path,
-) -> None:
-    """
-    İlçeye ait RGB yamalarını karşılaştırmalı
-    bir HTML sayfasında gösterir.
-    """
-
-    galeri_yolu.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    kartlar: list[str] = []
-
-    sirali_sonuclar = sorted(
-        yama_sonuclari,
-        key=lambda kayit: (
-            kayit[
-                "district_candidate_rank"
-            ]
-        ),
-    )
-
-    for yama in sirali_sonuclar:
-
-        patch_id = html.escape(
-            yama[
-                "patch_id"
-            ]
-        )
-
-        cell_id = html.escape(
-            yama[
-                "cell_id"
-            ]
-        )
-
-        png_relative_path = html.escape(
-            yama[
-                "png_relative_path"
-            ]
-        )
-
-        kartlar.append(
-            f"""
-            <article class="patch-card">
-                <img
-                    src="{png_relative_path}"
-                    alt="{patch_id} Sentinel-2 RGB uydu görüntüsü"
-                >
-
-                <div class="patch-body">
-                    <span class="rank-badge">
-                        {yama["district_candidate_rank"]}. aday
-                    </span>
-
-                    <h2>{patch_id}</h2>
-
-                    <dl>
-                        <div>
-                            <dt>Hücre</dt>
-                            <dd>{cell_id}</dd>
-                        </div>
-
-                        <div>
-                            <dt>Kütüphaneye uzaklık</dt>
-                            <dd>
-                                {yama["nearest_library_distance_km"]:.2f} km
-                            </dd>
-                        </div>
-
-                        <div>
-                            <dt>Görüntü boyutu</dt>
-                            <dd>
-                                {yama["width_pixels"]}
-                                ×
-                                {yama["height_pixels"]}
-                                piksel
-                            </dd>
-                        </div>
-
-                        <div>
-                            <dt>Geçerli piksel</dt>
-                            <dd>
-                                %{yama["valid_pixel_pct"]:.2f}
-                            </dd>
-                        </div>
-                    </dl>
-                </div>
-            </article>
-            """
-        )
-
-    item_id = html.escape(
-        str(
-            metadata[
-                "item_id"
-            ]
-        )
-    )
-
-    platform = html.escape(
-        str(
-            metadata.get(
-                "platform"
-            )
-            or "Bilinmiyor"
-        )
-    )
-
-    tarih_metni = str(
-        metadata[
-            "datetime"
-        ]
-    )
-
-    try:
-        tarih = pd.to_datetime(
-            tarih_metni,
-            utc=True,
-        ).strftime(
-            "%d.%m.%Y"
-        )
-
-    except (
-        ValueError,
-        TypeError,
-    ):
-        tarih = html.escape(
-            tarih_metni
-        )
-
-    bulut_orani = float(
-        metadata[
-            "cloud_cover_pct"
-        ]
-    )
-
-    secim_yontemi = html.escape(
-        str(
-            metadata.get(
-                "selection_method"
-            )
-            or "Belirtilmedi"
-        )
-    )
-
-    sayfa = f"""
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        {html.escape(ilce_adi)} Sentinel-2 RGB Alanları
-    </title>
-
-    <style>
-        * {{
-            box-sizing: border-box;
-        }}
-
-        body {{
-            margin: 0;
-            background: #f3f6fb;
-            color: #172033;
-            font-family: Arial, sans-serif;
-        }}
-
-        header {{
-            padding: 38px 24px 28px;
-            background: #ffffff;
-            border-bottom: 1px solid #dbe2ea;
-        }}
-
-        .header-inner,
-        main {{
-            max-width: 1250px;
-            margin: 0 auto;
-        }}
-
-        h1 {{
-            margin: 0 0 12px;
-            font-size: 30px;
-        }}
-
-        .subtitle {{
-            max-width: 880px;
-            margin: 0;
-            color: #657083;
-            line-height: 1.6;
-        }}
-
-        .metadata {{
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 22px;
-        }}
-
-        .metadata span {{
-            padding: 8px 11px;
-            border: 1px solid #d9e0e8;
-            border-radius: 999px;
-            background: #f8fafc;
-            font-size: 13px;
-        }}
-
-        main {{
-            padding: 30px 24px 50px;
-        }}
-
-        .notice {{
-            margin-bottom: 24px;
-            padding: 16px 18px;
-            border-left: 4px solid #2563eb;
-            border-radius: 8px;
-            background: #eff6ff;
-            color: #334155;
-            line-height: 1.6;
-        }}
-
-        .grid {{
-            display: grid;
-            grid-template-columns:
-                repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }}
-
-        .patch-card {{
-            overflow: hidden;
-            border: 1px solid #dce3eb;
-            border-radius: 14px;
-            background: #ffffff;
-            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
-        }}
-
-        .patch-card img {{
-            display: block;
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-            background: #dbe3ec;
-        }}
-
-        .patch-body {{
-            padding: 17px;
-        }}
-
-        .rank-badge {{
-            display: inline-block;
-            margin-bottom: 9px;
-            padding: 5px 9px;
-            border-radius: 999px;
-            background: #dbeafe;
-            color: #1d4ed8;
-            font-size: 12px;
-            font-weight: 700;
-        }}
-
-        h2 {{
-            margin: 0 0 15px;
-            font-size: 19px;
-        }}
-
-        dl {{
-            display: grid;
-            gap: 10px;
-            margin: 0;
-        }}
-
-        dl div {{
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            padding-top: 9px;
-            border-top: 1px solid #edf1f5;
-        }}
-
-        dt {{
-            color: #6b7280;
-            font-size: 13px;
-        }}
-
-        dd {{
-            margin: 0;
-            text-align: right;
-            font-size: 13px;
-            font-weight: 700;
-        }}
-
-        code {{
-            word-break: break-all;
-        }}
-    </style>
-</head>
-
-<body>
-    <header>
-        <div class="header-inner">
-            <h1>
-                {html.escape(ilce_adi)} Sentinel-2 RGB Alanları
-            </h1>
-
-            <p class="subtitle">
-                Hizmet boşluğu analizinden seçilen pilot
-                hücrelerin gerçek renkli Sentinel-2
-                görüntüleri. Sistem ilçe parametresiyle
-                çalıştığı için aynı işlem başka ilçelere
-                de uygulanabilir.
-            </p>
-
-            <div class="metadata">
-                <span>İlçe kodu: {html.escape(ilce_slug)}</span>
-                <span>Tarih: {tarih}</span>
-                <span>Platform: {platform}</span>
-                <span>Bulut oranı: %{bulut_orani:.4f}</span>
-                <span>Yama sayısı: {len(yama_sonuclari)}</span>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <section class="notice">
-            <strong>Seçim yöntemi:</strong>
-            {secim_yontemi}
-
-            <br><br>
-
-            <strong>Sentinel-2 sahne kimliği:</strong>
-            <code>{item_id}</code>
-
-            <br><br>
-
-            PNG dosyaları yalnızca görsel inceleme
-            içindir. Semantik segmentasyon aşamasında
-            coğrafi bilgiyi ve ham piksel değerlerini
-            koruyan GeoTIFF dosyaları kullanılacaktır.
-        </section>
-
-        <section class="grid">
-            {"".join(kartlar)}
-        </section>
-    </main>
-</body>
-</html>
-    """
-
-    galeri_yolu.write_text(
-        sayfa,
-        encoding="utf-8",
-    )
-
-
-# ==========================================================
 # TERMİNAL ÖZETİ
 # ==========================================================
 
 def terminal_ozetini_yazdir(
     ilce_adi: str,
-    ilce_slug: str,
     metadata: dict[str, Any],
-    yama_sonuclari: list[
-        dict[str, Any]
-    ],
+    sahneler,
+    yama_sonuclari: list[dict[str, Any]],
     yollar: dict[str, Path],
 ) -> None:
     """
-    RGB yama üretim sonuçlarını terminalde gösterir.
+    Çoklu karo üretim sonucunu terminalde gösterir.
     """
 
     print()
     print("=" * 95)
-    print("SENTINEL-2 RGB YAMALARI HAZIRLANDI")
+    print(
+        "ÇOKLU KARO DESTEKLİ SENTINEL-2 "
+        "RGB YAMALARI HAZIRLANDI"
+    )
     print("=" * 95)
 
     print()
@@ -1585,29 +1459,25 @@ def terminal_ozetini_yazdir(
     )
 
     print(
-        "Güvenli ilçe adı:",
-        ilce_slug,
-    )
-
-    print(
-        "Sentinel-2 sahnesi:",
+        "Ana Sentinel-2 sahnesi:",
         metadata[
             "item_id"
         ],
     )
 
     print(
-        "Sahne tarihi:",
-        metadata[
-            "datetime"
-        ],
+        "Aynı geçişte kullanılan karo:",
+        len(
+            sahneler
+        ),
     )
 
-    print(
-        "Bulut oranı:",
-        f"%{float(metadata['cloud_cover_pct']):.6f}",
-    )
+    for sahne in sahneler:
+        print(
+            f"  - {sahne.id}"
+        )
 
+    print()
     print(
         "Oluşturulan RGB yaması:",
         len(
@@ -1615,28 +1485,39 @@ def terminal_ozetini_yazdir(
         ),
     )
 
+    hazir_sayisi = sum(
+        int(
+            yama[
+                "analysis_ready"
+            ]
+        )
+        for yama in yama_sonuclari
+    )
+
+    print(
+        "Analize hazır yama:",
+        hazir_sayisi,
+    )
+
+    print(
+        "Kısmi yama:",
+        len(
+            yama_sonuclari
+        )
+        - hazir_sayisi,
+    )
+
     print()
     print(
         "RGB yama sonuçları:"
     )
 
-    for yama in sorted(
-        yama_sonuclari,
-        key=lambda kayit: (
-            kayit[
-                "district_candidate_rank"
-            ]
-        ),
-    ):
+    for yama in yama_sonuclari:
 
         print()
         print(
-            f"  {yama['patch_id']}"
-        )
-
-        print(
-            f"    Hücre: "
-            f"{yama['cell_id']}"
+            f"  {yama['patch_id']} "
+            f"— {yama['cell_id']}"
         )
 
         print(
@@ -1646,18 +1527,18 @@ def terminal_ozetini_yazdir(
         )
 
         print(
-            f"    Geçerli piksel: "
-            f"%{yama['valid_pixel_pct']:.2f}"
+            f"    Gerçek alan kapsaması: "
+            f"%{yama['requested_area_coverage_pct']:.2f}"
         )
 
         print(
-            f"    GeoTIFF: "
-            f"{yama['geotiff_path']}"
+            f"    Kullanılan kaynak karo: "
+            f"{yama['source_scene_count']}"
         )
 
         print(
-            f"    PNG: "
-            f"{yama['png_path']}"
+            f"    Analize hazır: "
+            f"{'EVET' if yama['analysis_ready'] else 'HAYIR'}"
         )
 
     print()
@@ -1670,15 +1551,6 @@ def terminal_ozetini_yazdir(
     )
 
     print()
-    print(
-        "RGB karşılaştırma sayfası:"
-    )
-
-    print(
-        f"  {yollar['galeri_html']}"
-    )
-
-    print()
     print("=" * 95)
 
 
@@ -1688,8 +1560,8 @@ def terminal_ozetini_yazdir(
 
 def main() -> None:
     """
-    Seçilen ilçe için daha önce kesinleştirilmiş
-    Sentinel-2 sahnesinden RGB yamalarını üretir.
+    Aynı uydu geçişindeki birden fazla karoyu
+    birleştirerek seçilen ilçenin RGB yamalarını üretir.
     """
 
     argumanlar = argumanlari_oku()
@@ -1741,27 +1613,19 @@ def main() -> None:
     )
 
     print(
-        "Seçilen sahne STAC servisinden getiriliyor..."
+        "Aynı uydu geçişine ait Sentinel-2 "
+        "karoları aranıyor..."
     )
 
-    sahne = stac_sahnesini_getir(
-        str(
-            metadata[
-                "item_id"
-            ]
-        )
+    sahneler = ayni_gecis_sahnelerini_getir(
+        metadata,
+        bbox_dataframe,
     )
 
     print(
-        "RGB bantları kontrol ediliyor..."
+        f"Bulunan uygun karo sayısı: "
+        f"{len(sahneler)}"
     )
-
-    for asset_adi in RGB_BANTLARI.values():
-
-        asset_bul(
-            sahne,
-            asset_adi,
-        )
 
     yollar[
         "rgb_geotiff_klasoru"
@@ -1778,12 +1642,10 @@ def main() -> None:
     )
 
     print(
-        "Pilot RGB görüntüleri hazırlanıyor..."
+        "Çoklu karo destekli RGB yamaları hazırlanıyor..."
     )
 
-    yama_sonuclari: list[
-        dict[str, Any]
-    ] = []
+    yama_sonuclari: list[dict[str, Any]] = []
 
     for _, bbox_kaydi in (
         bbox_dataframe.iterrows()
@@ -1800,7 +1662,7 @@ def main() -> None:
         )
 
         yama_sonucu = tek_yamayi_olustur(
-            sahne,
+            sahneler,
             bbox_kaydi,
             yollar,
             ilce_slug,
@@ -1827,29 +1689,15 @@ def main() -> None:
 
     sahne_metadata_guncelle(
         metadata,
-        sahne,
+        sahneler,
         yama_sonuclari,
         yollar,
     )
 
-    print(
-        "RGB karşılaştırma sayfası oluşturuluyor..."
-    )
-
-    galeri_html_olustur(
-        ilce_adi,
-        ilce_slug,
-        metadata,
-        yama_sonuclari,
-        yollar[
-            "galeri_html"
-        ],
-    )
-
     terminal_ozetini_yazdir(
         ilce_adi,
-        ilce_slug,
         metadata,
+        sahneler,
         yama_sonuclari,
         yollar,
     )

@@ -34,3 +34,15 @@ data/database/*.db-journal
 
 # Klasör yapısının Git'te korunması
 !data/database/.gitkeep
+@'
+
+# İlçe bazlı otomatik üretilen kontrol raporları
+frontend/*_aday_bolge_degerlendirmesi.html
+frontend/*_aday_bolge_degerlendirme_haritasi.html
+frontend/*_pilot_uydu_alanlari.html
+frontend/*_sentinel2_rgb.html
+frontend/*_worldcover_*_aday_alanlari.html
+
+# Otomatik üretilen Sentinel-2 önizleme görselleri
+frontend/assets/sentinel2/**/*.png
+'@ | Add-Content .gitignore
