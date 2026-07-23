@@ -705,3 +705,10 @@ def ilce_detayini_getir(
 from src.api.aday_bolgeler import router as aday_bolgeler_router
 
 app.include_router(aday_bolgeler_router)
+
+from src.api.aday_bolgeler import router as aday_bolgeler_router
+from src.api.uydu_goruntuleri import router as uydu_goruntuleri_router
+
+
+app.include_router(aday_bolgeler_router)
+app.include_router(uydu_goruntuleri_router)
