@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metodoloji | UrbanAI 3D İstanbul</title>
+  <meta name="description" content="UrbanAI 3D İstanbul — Analiz Süreci, Veri Kaynakları ve Teknik Dokümantasyon">
+
+  <!-- Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+
+  <!-- Shared CSS -->
+  <link rel="stylesheet" href="./assets/css/main.css?v=6">
+
+  <style>
+    .timeline-item {
+      position: relative;
+      padding-left: 36px;
+      margin-bottom: 24px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 24px;
+      bottom: -20px;
+      width: 2px;
+      background: var(--border-gray);
+    }
+    .timeline-item:last-child::before {
+      display: none;
+    }
+    .timeline-badge {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+
+<div id="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" aria-label="Ana navigasyon">
+    <div class="sidebar-brand">
+      <span class="sidebar-brand-name">UrbanAI 3D</span>
+      <span class="sidebar-brand-sub">Kentsel Karar Destek Platformu</span>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Sayfa navigasyonu">
+      <a href="./index.html" class="nav-item" id="nav-genel">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="nav-label">Genel Bakış</span>
+      </a>
+      <a href="./ilce_analizi.html" class="nav-item" id="nav-ilce">
+        <span class="material-symbols-outlined">location_city</span>
+        <span class="nav-label">İlçe Analizi</span>
+      </a>
+      <a href="./kutuphaneler.html" class="nav-item" id="nav-kutuphane">
+        <span class="material-symbols-outlined">menu_book</span>
+        <span class="nav-label">Kütüphaneler</span>
+      </a>
+      <a href="./aday_bolgeler.html" class="nav-item" id="nav-aday">
+        <span class="material-symbols-outlined">location_on</span>
+        <span class="nav-label">Aday Bölgeler</span>
+      </a>
+      <a href="./uydu_goruntuleri.html" class="nav-item" id="nav-uydu">
+        <span class="material-symbols-outlined">satellite_alt</span>
+        <span class="nav-label">Uydu Görüntüleri</span>
+      </a>
+      <a href="./metodoloji.html" class="nav-item active" id="nav-metod" aria-current="page">
+        <span class="material-symbols-outlined">science</span>
+        <span class="nav-label">Metodoloji</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span class="material-symbols-outlined" style="font-size:14px;">explore</span>
+      <span>41.0082° N, 28.9784° E</span>
+    </div>
+  </aside>
+
+  <!-- RIGHT SIDE -->
+  <div id="right-side">
+
+    <!-- TOP BAR -->
+    <header id="topbar" role="banner">
+      <div class="topbar-left">
+        <h1 class="topbar-title">UrbanAI 3D İstanbul</h1>
+        <div class="topbar-meta">
+          <span id="topbar-analiz-yili" class="topbar-badge">Analiz Yılı: 2025</span>
+          <span id="topbar-son-guncelleme">Teknik Dokümantasyon</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-icon-btn" title="Ayarlar"><span class="material-symbols-outlined">settings</span></button>
+        <button class="topbar-icon-btn" title="Yardım"><span class="material-symbols-outlined">help</span></button>
+      </div>
+    </header>
+
+    <!-- WORKSPACE CANVAS -->
+    <div id="workspace">
+      <div class="page-container" style="max-width: 1000px;">
+
+        <!-- Header -->
+        <section style="margin-bottom: 32px;">
+          <div style="font-size: 11px; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">TEKNİK DOKÜMANTASYON</div>
+          <h2 style="font-size: 26px; font-weight: 700; color: var(--primary); margin-bottom: 8px;">Analiz Süreci ve Veri Kaynakları</h2>
+          <p style="color: var(--on-surface-variant); font-size: 15px; line-height: 1.6;">
+            UrbanAI 3D İstanbul, kentsel hizmetlerin erişilebilirliğini optimize etmek amacıyla çok katmanlı jeo-uzamsal verileri işler. Bu doküman, ham verinin karar destek katmanına dönüşüm sürecini ve bilimsel çerçevesini açıklar.
+          </p>
+        </section>
+
+        <!-- Processing Steps Timeline -->
+        <section class="card" style="margin-bottom: 32px;">
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border-gray); display: flex; align-items: center; gap: 8px;">
+            <span class="material-symbols-outlined" style="color: var(--secondary);">account_tree</span>
+            Veri İşleme Aşamaları (10 Adım)
+          </h3>
+
+          <div style="padding-top: 8px;">
+
+            <div class="timeline-item">
+              <div class="timeline-badge">1</div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--primary);">İBB Kütüphane Verisi</h4>
+              <p style="font-size: 13px; color: var(--on-surface-variant); margin-top: 2px;">İBB açık veri portalındaki kütüphane adı, ilçe, adres, çalışma günü ve saat kayıtları içe aktarılır.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-badge">2</div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--primary);">Veri Temizleme & Standardizasyon</h4>
+              <p style="font-size: 13px; color: var(--on-surface-variant); margin-top: 2px;">Sütun isimleri, ilçe adları, adres biçimleri ve eksik değerler analiz için hazırlanır.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-badge">3</div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--primary);">Koordinatlandırma & Kalite Kontrolü</h4>
+              <p style="font-size: 13px; color: var(--on-surface-variant); margin-top: 2px;">Adresler coğrafi koordinatlara dönüştürülür. Doğrulanan koordinatlar (verified) mekânsal analizde kullanılır.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-badge">4</div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--primary);">İBB 2025 İlçe Nüfusu</h4>
+              <p style="font-size: 13px; color: var(--on-surface-variant); margin-top: 2px;">İstanbul’un 39 ilçesine ait resmi nüfus projeksiyon verileri sisteme yüklenir.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-badge">5</div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--primary);">İlçe Hizmet Önceliği</h4>
+              <p style="font-size: 13px; color: var(--on-surface-variant); margin-top: 2px;">İlçe öncelik puanı açıklanabilir kural tabanlıdır: %60 Hizmet Açığı + %40 Nüfus Puanı.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-badge">6</div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--primary);">Hizmet Boşluğu Hücreleri</h4>
+              <p style="font-size: 13px; color: var(--on-surface-variant); margin-top: 2px;">İlçe alanı yaklaşık 750 metre boyutlu grid hücrelerine ayrılır. En yakın kütüphaneye olan mesafe hesaplanır.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-badge">7</div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--primary);">ESA WorldCover 2021 Arazi Örtüsü</h4>
+              <p style="font-size: 13px; color: var(--on-surface-variant); margin-top: 2px;">Yapılaşmış alan, yeşil/bitki alanı, çıplak alan ve su oranları her hücre için incelenir.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-badge">8</div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--primary);">Sentinel-2 RGB Görüntüleri</h4>
+              <p style="font-size: 13px; color: var(--on-surface-variant); margin-top: 2px;">Aday hücreler için güncel Sentinel-2 L2A RGB optik uydu görüntü yamaları hazırlanır.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-badge">9</div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--primary);">İki Eksenli Aday Bölge Değerlendirmesi</h4>
+              <p style="font-size: 13px; color: var(--error); font-weight: 600; margin-top: 2px;">Adaylar iki bağımsız eksende değerlendirilir: (1) Hizmet İhtiyacı Puanı, (2) Yer İnceleme Durumu. Bu iki eksen birleştirilmez.</p>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-badge">10</div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--primary);">Veri Sunumu & API</h4>
+              <p style="font-size: 13px; color: var(--on-surface-variant); margin-top: 2px;">Analiz sonuçları SQLite veritabanında saklanır ve FastAPI REST servisleri üzerinden sunulur.</p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Limitations Section -->
+        <section class="card" style="border-left: 4px solid var(--error); margin-bottom: 32px;">
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--error); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <span class="material-symbols-outlined">warning</span>
+            Karar Desteğinin Sınırları ve Kısıtlar
+          </h3>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; font-size: 13px; color: var(--on-surface-variant); line-height: 1.6;">
+            <div>
+              <strong>1. Karar Verici Değil, Destekleyici Sistem</strong><br>
+              Üretilen veriler istatistiksel ve mekânsal önceliklendirme önerisidir; kesin uygulama kararı yerine geçmez.
+            </div>
+            <div>
+              <strong>2. Açık Veri Portalı Kapsamı</strong><br>
+              Analizler yalnızca İBB Açık Veri Portalı'nda kayıtlı kamu kütüphanelerini temel alır; özel kuruluşlar ve vakıflar kapsam dışıdır.
+            </div>
+            <div>
+              <strong>3. Yapılaşmış Alan Göstergesi</strong><br>
+              Uydu verilerindeki yapılaşmış alan yoğunluğu, nüfusun mekânsal dağılımı için dolaylı bir göstergedir.
+            </div>
+            <div>
+              <strong>4. Mülkiyet Bilgisi Eksikliği</strong><br>
+              Mevcut veri seti parsel mülkiyetini ve tapu durumunu içermemektedir; yasal uygunluk ayrı kontrol edilmelidir.
+            </div>
+            <div>
+              <strong>5. İmar Planı Kısıtları</strong><br>
+              Aday gösterilen bölgelerin meri imar planlarındaki fonksiyonu ayrıca kontrol edilmelidir.
+            </div>
+            <div>
+              <strong>6. Saha İncelemesi Zorunluluğu</strong><br>
+              Kesin yerleşke seçimi için mülkiyet, güncel imar ve afet riski verileriyle yerinde kontrol şarttır.
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div><!-- /workspace -->
+
+  </div><!-- /right-side -->
+
+</div><!-- /app-shell -->
+
+<!-- Application Scripts -->
+<script src="./assets/js/config.js?v=6"></script>
+<script src="./assets/js/api.js?v=6"></script>
+<script src="./assets/js/common.js?v=6"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    API.getOzet().then(ozet => {
+      updateTopBarInfo(ozet.analiz_yili || 2025, 'Güncel');
+    }).catch(() => {});
+  });
+</script>
+
+</body>
+</html>

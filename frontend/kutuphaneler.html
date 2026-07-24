@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kütüphaneler | UrbanAI 3D İstanbul</title>
+  <meta name="description" content="UrbanAI 3D İstanbul — Aktif Kütüphane Envanteri ve Mekânsal Harita Ekranı">
+
+  <!-- Leaflet 1.9.4 CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+
+  <!-- Shared CSS -->
+  <link rel="stylesheet" href="./assets/css/main.css?v=6">
+</head>
+<body>
+
+<div id="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" aria-label="Ana navigasyon">
+    <div class="sidebar-brand">
+      <span class="sidebar-brand-name">UrbanAI 3D</span>
+      <span class="sidebar-brand-sub">Kentsel Karar Destek Platformu</span>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Sayfa navigasyonu">
+      <a href="./index.html" class="nav-item" id="nav-genel">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="nav-label">Genel Bakış</span>
+      </a>
+      <a href="./ilce_analizi.html" class="nav-item" id="nav-ilce">
+        <span class="material-symbols-outlined">location_city</span>
+        <span class="nav-label">İlçe Analizi</span>
+      </a>
+      <a href="./kutuphaneler.html" class="nav-item active" id="nav-kutuphane" aria-current="page">
+        <span class="material-symbols-outlined">menu_book</span>
+        <span class="nav-label">Kütüphaneler</span>
+      </a>
+      <a href="./aday_bolgeler.html" class="nav-item" id="nav-aday">
+        <span class="material-symbols-outlined">location_on</span>
+        <span class="nav-label">Aday Bölgeler</span>
+      </a>
+      <a href="./uydu_goruntuleri.html" class="nav-item" id="nav-uydu">
+        <span class="material-symbols-outlined">satellite_alt</span>
+        <span class="nav-label">Uydu Görüntüleri</span>
+      </a>
+      <a href="./metodoloji.html" class="nav-item" id="nav-metod">
+        <span class="material-symbols-outlined">science</span>
+        <span class="nav-label">Metodoloji</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span class="material-symbols-outlined" style="font-size:14px;">explore</span>
+      <span>41.0082° N, 28.9784° E</span>
+    </div>
+  </aside>
+
+  <!-- RIGHT SIDE -->
+  <div id="right-side">
+
+    <!-- TOP BAR -->
+    <header id="topbar" role="banner">
+      <div class="topbar-left">
+        <h1 class="topbar-title">UrbanAI 3D İstanbul</h1>
+        <div class="topbar-meta">
+          <span id="topbar-analiz-yili" class="topbar-badge">Analiz Yılı: 2025</span>
+          <span id="topbar-son-guncelleme">Veriler Yükleniyor…</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-icon-btn" title="Ayarlar"><span class="material-symbols-outlined">settings</span></button>
+        <button class="topbar-icon-btn" title="Yardım"><span class="material-symbols-outlined">help</span></button>
+      </div>
+    </header>
+
+    <!-- WORKSPACE CANVAS -->
+    <div id="workspace">
+
+      <!-- Map Area (Fluid Left) -->
+      <section style="flex: 1; position: relative; overflow: hidden; background: var(--surface-container-low);">
+
+        <!-- Floating Controls Over Map -->
+        <div style="position: absolute; top: 16px; left: 16px; z-index: 10; display: flex; gap: 10px; flex-wrap: wrap;">
+          <div style="position: relative; background: #ffffff; border: 1px solid var(--border-gray); border-radius: 6px; display: flex; align-items: center; padding: 0 10px; height: 38px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); width: 280px;">
+            <span class="material-symbols-outlined" style="font-size: 18px; color: var(--on-surface-variant); margin-right: 8px;">search</span>
+            <input type="search" id="lib-search-input" placeholder="Kütüphane ara…" style="border: none; outline: none; font-size: 13px; width: 100%; background: transparent;">
+          </div>
+
+          <div style="background: #ffffff; border: 1px solid var(--border-gray); border-radius: 6px; display: flex; align-items: center; padding: 0 10px; height: 38px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <span class="material-symbols-outlined" style="font-size: 18px; color: var(--on-surface-variant); margin-right: 6px;">filter_alt</span>
+            <select id="lib-district-select" style="border: none; outline: none; font-size: 13px; background: transparent; cursor: pointer;">
+              <option value="">Tüm İlçeler</option>
+            </select>
+          </div>
+
+          <a href="./kutuphane_haritasi.html" target="_blank" id="btn-open-fullscreen-2d" style="background: #ffffff; border: 1px solid var(--border-gray); border-radius: 6px; display: flex; align-items: center; padding: 0 12px; height: 38px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); color: var(--primary); font-size: 13px; font-weight: 600; text-decoration: none; gap: 6px; transition: background 150ms;">
+            <span class="material-symbols-outlined" style="font-size: 18px; color: var(--secondary);">open_in_new</span>
+            <span>Tam Ekran Kütüphane Haritasını Aç</span>
+          </a>
+        </div>
+
+        <!-- Leaflet Map Canvas -->
+        <div id="kutuphane-map" style="position: absolute; inset: 0; z-index: 1;"></div>
+
+      </section>
+
+      <!-- Right Results Panel (380px) -->
+      <aside style="width: 380px; flex-shrink: 0; background: #ffffff; border-left: 1px solid var(--border-gray); display: flex; flex-direction: column; height: 100%; z-index: 20;">
+
+        <!-- Panel Header -->
+        <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-gray); background: var(--surface-container-low); display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 15px; font-weight: 700; color: var(--primary); margin: 0;">Kütüphane Listesi</h3>
+            <div style="font-size: 11px; color: var(--on-surface-variant); margin-top: 2px;">İstanbul genelinde kayıtlı birimler</div>
+          </div>
+          <span id="lib-count-badge" class="badge badge-high" style="font-family: var(--font-mono);">0 Kayıt</span>
+        </div>
+
+        <!-- Scrollable List Body -->
+        <div id="lib-list-body" style="flex: 1; overflow-y: auto;">
+          <div class="state-msg">Kütüphane listesi yükleniyor…</div>
+        </div>
+
+        <!-- Panel Footer -->
+        <div style="padding: 12px 20px; border-top: 1px solid var(--border-gray); background: var(--surface-container-low); font-size: 10px; color: var(--on-surface-variant); display: flex; justify-content: space-between;">
+          <span>VERİ KAYNAĞI: İBB AÇIK VERİ</span>
+          <span id="lib-footer-status">GÜNCEL</span>
+        </div>
+
+      </aside>
+
+    </div><!-- /workspace -->
+
+  </div><!-- /right-side -->
+
+</div><!-- /app-shell -->
+
+<!-- Application Scripts -->
+<script src="./assets/js/config.js?v=6"></script>
+<script src="./assets/js/api.js?v=6"></script>
+<script src="./assets/js/common.js?v=6"></script>
+<script src="./assets/js/kutuphaneler.js?v=6"></script>
+
+</body>
+</html>

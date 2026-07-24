@@ -1,1043 +1,153 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aday Bölgeler | UrbanAI 3D İstanbul</title>
+  <meta name="description" content="UrbanAI 3D İstanbul — Hizmet ihtiyacı yüksek aday bölgelerin mekânsal karar destek ekranı.">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+  <!-- Leaflet 1.9.4 — CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <title>
-        Aday Bölgeler | UrbanAI 3D İstanbul
-    </title>
+  <!-- Material Symbols & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+  <!-- Page stylesheet — v=6 cache-busts old version -->
+  <link rel="stylesheet" href="./assets/css/aday-bolgeler.css?v=6">
 
-        body {
-            margin: 0;
-            background: #f3f6fb;
-            color: #172033;
-            font-family: Arial, sans-serif;
-        }
-
-        header {
-            padding: 36px 24px;
-            background: #ffffff;
-            border-bottom: 1px solid #dce3eb;
-        }
-
-        .container {
-            width: min(1180px, calc(100% - 40px));
-            margin: 0 auto;
-        }
-
-        h1 {
-            margin: 0 0 12px;
-            font-size: 34px;
-        }
-
-        .subtitle {
-            max-width: 850px;
-            margin: 0;
-            color: #667085;
-            line-height: 1.65;
-        }
-
-        main {
-            padding: 28px 0 60px;
-        }
-
-        .control-panel {
-            display: flex;
-            align-items: end;
-            justify-content: space-between;
-            gap: 18px;
-            margin-bottom: 22px;
-            padding: 20px;
-            border: 1px solid #dce3eb;
-            border-radius: 14px;
-            background: #ffffff;
-        }
-
-        .select-group {
-            flex: 1;
-            max-width: 430px;
-        }
-
-        .select-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #475467;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #cbd5e1;
-            border-radius: 9px;
-            background: #ffffff;
-            color: #172033;
-            font-size: 15px;
-            cursor: pointer;
-        }
-
-        select:focus {
-            border-color: #2563eb;
-            outline: 3px solid rgba(37, 99, 235, 0.12);
-        }
-
-        .control-note {
-            max-width: 470px;
-            color: #667085;
-            font-size: 12px;
-            line-height: 1.55;
-        }
-
-        .status-box {
-            margin-bottom: 22px;
-            padding: 15px 17px;
-            border: 1px solid #dce3eb;
-            border-radius: 12px;
-            background: #ffffff;
-            color: #475467;
-        }
-
-        .status-box.success {
-            border-color: #86efac;
-            background: #f0fdf4;
-            color: #166534;
-        }
-
-        .status-box.error {
-            border-color: #fca5a5;
-            background: #fef2f2;
-            color: #991b1b;
-        }
-
-        .district-heading {
-            margin: 0 0 20px;
-            font-size: 27px;
-        }
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns:
-                repeat(4, minmax(0, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .summary-card {
-            padding: 19px;
-            border: 1px solid #dce3eb;
-            border-radius: 14px;
-            background: #ffffff;
-        }
-
-        .summary-card span {
-            display: block;
-            margin-bottom: 8px;
-            color: #667085;
-            font-size: 13px;
-        }
-
-        .summary-card strong {
-            font-size: 25px;
-        }
-
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 11px;
-            margin-bottom: 25px;
-        }
-
-        .button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 11px 16px;
-            border: 0;
-            border-radius: 9px;
-            background: #1d4ed8;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 700;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .button.secondary {
-            background: #172033;
-        }
-
-        .candidate-grid {
-            display: grid;
-            gap: 20px;
-        }
-
-        .candidate-card {
-            padding: 22px;
-            border: 1px solid #dce3eb;
-            border-radius: 16px;
-            background: #ffffff;
-        }
-
-        .card-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 18px;
-        }
-
-        .rank-badge {
-            display: inline-block;
-            margin-bottom: 11px;
-            padding: 6px 10px;
-            border-radius: 999px;
-            background: #dbeafe;
-            color: #1d4ed8;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .candidate-card h2 {
-            margin: 0;
-            font-size: 25px;
-        }
-
-        .score-box {
-            min-width: 76px;
-            padding: 13px 11px;
-            border-radius: 12px;
-            background: #172033;
-            color: #ffffff;
-            text-align: center;
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .axis-grid {
-            display: grid;
-            grid-template-columns:
-                repeat(2, minmax(0, 1fr));
-            gap: 15px;
-        }
-
-        .axis-panel {
-            padding: 17px;
-            border: 1px solid #dce5ef;
-            border-radius: 12px;
-            background: #eff6ff;
-        }
-
-        .axis-panel.site {
-            background: #f8fafc;
-        }
-
-        .axis-label {
-            margin-bottom: 8px;
-            color: #667085;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .axis-title {
-            margin-bottom: 8px;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .axis-panel p {
-            margin: 5px 0;
-            color: #475467;
-            font-size: 14px;
-            line-height: 1.55;
-        }
-
-        .metrics {
-            display: grid;
-            grid-template-columns:
-                repeat(3, minmax(0, 1fr));
-            gap: 10px;
-            margin-top: 17px;
-        }
-
-        .metric {
-            padding: 13px;
-            border-radius: 10px;
-            background: #f8fafc;
-        }
-
-        .metric span {
-            display: block;
-            margin-bottom: 5px;
-            color: #667085;
-            font-size: 12px;
-        }
-
-        .metric strong {
-            font-size: 16px;
-        }
-
-        .evaluation {
-            margin-top: 17px;
-            padding: 16px;
-            border-left: 4px solid #1d4ed8;
-            border-radius: 9px;
-            background: #f8fafc;
-            color: #475467;
-            font-size: 14px;
-            line-height: 1.65;
-        }
-
-        .coordinates {
-            margin-top: 13px;
-            color: #667085;
-            font-size: 12px;
-        }
-
-        .detail-link {
-            display: inline-block;
-            margin-top: 15px;
-            color: #1d4ed8;
-            font-size: 13px;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .detail-link:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 900px) {
-            .summary-grid {
-                grid-template-columns:
-                    repeat(2, minmax(0, 1fr));
-            }
-
-            .control-panel {
-                align-items: stretch;
-                flex-direction: column;
-            }
-
-            .select-group {
-                max-width: none;
-            }
-        }
-
-        @media (max-width: 700px) {
-            .axis-grid,
-            .metrics {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 520px) {
-            h1 {
-                font-size: 27px;
-            }
-
-            .summary-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .card-header {
-                flex-direction: column;
-            }
-        }
-    </style>
+  <style>
+    /* Critical inline fallback so layout never breaks even before CSS loads */
+    html,body{margin:0;padding:0;height:100%;overflow:hidden;font-family:sans-serif;}
+    #app-shell{display:flex;height:100vh;overflow:hidden;}
+    #sidebar{width:216px;flex-shrink:0;background:#000b1c;display:flex;flex-direction:column;height:100vh;}
+    #right-side{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+    #topbar{height:60px;flex-shrink:0;background:#fbf9fb;border-bottom:1px solid #CBD2D8;display:flex;align-items:center;padding:0 16px;gap:12px;}
+    #workspace{flex:1;display:flex;overflow:hidden;min-width:0;}
+    #candidate-panel{width:250px;flex-shrink:0;background:#fbf9fb;border-right:1px solid #CBD2D8;display:flex;flex-direction:column;overflow:hidden;}
+    #map-section{flex:1;position:relative;min-width:0;}
+    #map{position:absolute;inset:0;}
+    #detail-panel{width:340px;flex-shrink:0;background:#fbf9fb;border-left:1px solid #CBD2D8;overflow-y:auto;}
+  </style>
 </head>
-
 <body>
-    <header>
-        <div class="container">
-            <h1>
-                UrbanAI 3D İstanbul Aday Bölgeler
-            </h1>
 
-            <p class="subtitle">
-                İlçelere ait hizmet ihtiyacı ve arazi
-                inceleme sonuçları UrbanAI veritabanından
-                dinamik olarak getirilmektedir. Kullanıcı
-                analiz edilmiş ilçeler arasından seçim
-                yapabilir.
-            </p>
-        </div>
+<div id="app-shell">
+
+  <!-- SIDEBAR — 216 px fixed dark column -->
+  <aside id="sidebar" aria-label="Ana navigasyon">
+
+    <div class="sidebar-brand">
+      <span class="sidebar-brand-name">UrbanAI 3D</span>
+      <span class="sidebar-brand-sub">Kentsel Karar Destek Platformu</span>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Sayfa navigasyonu">
+      <a href="./index.html" class="nav-item" id="nav-genel">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="nav-label">Genel Bakış</span>
+      </a>
+      <a href="./ilce_analizi.html" class="nav-item" id="nav-ilce">
+        <span class="material-symbols-outlined">location_city</span>
+        <span class="nav-label">İlçe Analizi</span>
+      </a>
+      <a href="./kutuphaneler.html" class="nav-item" id="nav-kutuphane">
+        <span class="material-symbols-outlined">menu_book</span>
+        <span class="nav-label">Kütüphaneler</span>
+      </a>
+      <a href="./aday_bolgeler.html" class="nav-item active" id="nav-aday" aria-current="page">
+        <span class="material-symbols-outlined">location_on</span>
+        <span class="nav-label">Aday Bölgeler</span>
+      </a>
+      <a href="./uydu_goruntuleri.html" class="nav-item" id="nav-uydu">
+        <span class="material-symbols-outlined">satellite_alt</span>
+        <span class="nav-label">Uydu Görüntüleri</span>
+      </a>
+      <a href="./metodoloji.html" class="nav-item" id="nav-metod">
+        <span class="material-symbols-outlined">science</span>
+        <span class="nav-label">Metodoloji</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span class="material-symbols-outlined" style="font-size:14px;">explore</span>
+      <span>41.0082° N, 28.9784° E</span>
+    </div>
+
+  </aside>
+
+  <!-- RIGHT SIDE — topbar + workspace -->
+  <div id="right-side">
+
+    <!-- TOP BAR -->
+    <header id="topbar" role="banner">
+      <h1 id="topbar-title">UrbanAI 3D İstanbul</h1>
+
+      <label for="district-selector" class="visually-hidden">İlçe seç</label>
+      <select id="district-selector" aria-label="İlçe seçici">
+        <option value="">İlçe yükleniyor…</option>
+      </select>
+
+      <span id="year-badge" class="topbar-year-badge" hidden></span>
+
+      <div class="topbar-search-wrap">
+        <span class="material-symbols-outlined search-icon">search</span>
+        <input
+          type="search"
+          id="cell-search"
+          placeholder="Hücre ID ara…"
+          aria-label="Hücre kimliğine göre ara"
+          autocomplete="off"
+        >
+      </div>
+
+      <a href="./metodoloji.html" class="topbar-help-link" title="Metodoloji">
+        <span class="material-symbols-outlined">help</span>
+      </a>
     </header>
 
-    <main>
-        <div class="container">
+    <!-- WORKSPACE -->
+    <div id="workspace">
 
-            <section class="control-panel">
-                <div class="select-group">
-                    <label for="ilce-secimi">
-                        İncelenecek ilçeyi seç
-                    </label>
-
-                    <select
-                        id="ilce-secimi"
-                        disabled
-                    >
-                        <option>
-                            İlçeler yükleniyor...
-                        </option>
-                    </select>
-                </div>
-
-                <div class="control-note">
-                    Bu listede yalnızca analizi tamamlanmış
-                    ve sonuçları veritabanına aktarılmış
-                    ilçeler görünür. Yeni bir ilçe
-                    eklendiğinde bu sayfada otomatik
-                    görüntülenir.
-                </div>
-            </section>
-
-            <div
-                id="durum"
-                class="status-box"
-            >
-                API bağlantısı kuruluyor...
-            </div>
-
-            <h2
-                id="ilce-basligi"
-                class="district-heading"
-                hidden
-            ></h2>
-
-            <section
-                id="ozet"
-                class="summary-grid"
-                hidden
-            >
-                <div class="summary-card">
-                    <span>Seçili ilçe</span>
-                    <strong id="analiz-ilcesi">-</strong>
-                </div>
-
-                <div class="summary-card">
-                    <span>Toplam aday bölge</span>
-                    <strong id="toplam-aday">-</strong>
-                </div>
-
-                <div class="summary-card">
-                    <span>En yüksek ihtiyaç puanı</span>
-                    <strong id="en-yuksek-puan">-</strong>
-                </div>
-
-                <div class="summary-card">
-                    <span>Analiz yılı</span>
-                    <strong id="analiz-yili">-</strong>
-                </div>
-            </section>
-
-            <div
-                id="aksiyonlar"
-                class="actions"
-                hidden
-            >
-                <a
-                    id="harita-baglantisi"
-                    class="button"
-                    href="#"
-                    target="_blank"
-                >
-                    Karar destek haritasını aç
-                </a>
-
-                <a
-                    class="button secondary"
-                    href="http://localhost:8001/docs"
-                    target="_blank"
-                >
-                    API dokümantasyonunu aç
-                </a>
-            </div>
-
-            <section
-                id="adaylar"
-                class="candidate-grid"
-            ></section>
-
+      <!-- Candidate list (250 px) -->
+      <aside id="candidate-panel" aria-label="Aday bölgeler listesi">
+        <div class="panel-header">
+          <span class="panel-label">Aday Bölgeler</span>
+          <span id="candidate-count" class="count-badge" aria-live="polite">N=0</span>
         </div>
-    </main>
+        <div id="candidate-list" class="candidate-list-body" role="listbox" aria-label="Aday bölge listesi">
+          <div class="state-msg">Adaylar yükleniyor…</div>
+        </div>
+      </aside>
+
+      <!-- Map (fluid) -->
+      <section id="map-section" aria-label="Harita">
+        <div id="map" role="img" aria-label="Aday bölgeler haritası"></div>
+        <div id="district-label" class="district-label" aria-hidden="true">—</div>
+        <div id="map-loading" class="map-loading" aria-live="polite" hidden>Geometriler yükleniyor…</div>
+      </section>
+
+      <!-- Detail panel (340 px) -->
+      <aside id="detail-panel" aria-label="Aday bölge detayı">
+        <div id="detail-content" class="detail-placeholder">
+          <span class="material-symbols-outlined">map</span>
+          <p>Listeden bir aday bölge seçin.</p>
+        </div>
+      </aside>
+
+    </div><!-- /workspace -->
+
+  </div><!-- /right-side -->
+
+</div><!-- /app-shell -->
+
+<!-- Application Scripts -->
+<script src="./assets/js/config.js?v=6"></script>
+<script src="./assets/js/api.js?v=6"></script>
+<script src="./assets/js/common.js?v=6"></script>
+<script defer src="./assets/js/aday-bolgeler.js?v=6"></script>
 
-    <script>
-        const API_TEMEL_ADRESI =
-            "http://localhost:8001/api/aday-bolgeler";
-
-        const ilceSecimi =
-            document.getElementById("ilce-secimi");
-
-        const durumKutusu =
-            document.getElementById("durum");
-
-        const ozetBolumu =
-            document.getElementById("ozet");
-
-        const aksiyonlarBolumu =
-            document.getElementById("aksiyonlar");
-
-        const adaylarBolumu =
-            document.getElementById("adaylar");
-
-        const ilceBasligi =
-            document.getElementById("ilce-basligi");
-
-        const haritaBaglantisi =
-            document.getElementById("harita-baglantisi");
-
-
-        function htmlGuvenli(metin) {
-            return String(
-                metin ?? ""
-            )
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
-        }
-
-
-        function slugOlustur(metin) {
-            const turkceDonusum = {
-                "ç": "c",
-                "Ç": "c",
-                "ğ": "g",
-                "Ğ": "g",
-                "ı": "i",
-                "İ": "i",
-                "ö": "o",
-                "Ö": "o",
-                "ş": "s",
-                "Ş": "s",
-                "ü": "u",
-                "Ü": "u"
-            };
-
-            return String(metin)
-                .split("")
-                .map(
-                    karakter =>
-                        turkceDonusum[karakter]
-                        ?? karakter
-                )
-                .join("")
-                .normalize("NFD")
-                .replace(
-                    /[\u0300-\u036f]/g,
-                    ""
-                )
-                .toLowerCase()
-                .trim()
-                .replace(
-                    /[^a-z0-9]+/g,
-                    "_"
-                )
-                .replace(
-                    /^_+|_+$/g,
-                    ""
-                );
-        }
-
-
-        function yuzdeGoster(deger) {
-            if (
-                deger === null ||
-                deger === undefined
-            ) {
-                return "-";
-            }
-
-            return `%${Number(deger).toFixed(2)}`;
-        }
-
-
-        function sayiGoster(
-            deger,
-            basamak = 2
-        ) {
-            if (
-                deger === null ||
-                deger === undefined
-            ) {
-                return "-";
-            }
-
-            return Number(deger).toFixed(
-                basamak
-            );
-        }
-
-
-        function durumGuncelle(
-            mesaj,
-            tur = "normal"
-        ) {
-            durumKutusu.className =
-                "status-box";
-
-            if (tur === "success") {
-                durumKutusu.classList.add(
-                    "success"
-                );
-            }
-
-            if (tur === "error") {
-                durumKutusu.classList.add(
-                    "error"
-                );
-            }
-
-            durumKutusu.textContent =
-                mesaj;
-        }
-
-
-        function adayKartiOlustur(aday) {
-            const hizmet =
-                aday.hizmet_ihtiyaci ?? {};
-
-            const kutuphane =
-                aday.en_yakin_kutuphane ?? {};
-
-            const arazi =
-                aday.arazi_ortusu ?? {};
-
-            const yer =
-                aday.yer_inceleme ?? {};
-
-            const merkez =
-                aday.merkez ?? {};
-
-            const hucreId =
-                htmlGuvenli(aday.hucre_id);
-
-            return `
-                <article class="candidate-card">
-
-                    <div class="card-header">
-                        <div>
-                            <span class="rank-badge">
-                                Hizmet ihtiyacı sırası:
-                                ${htmlGuvenli(
-                                    hizmet.sira
-                                )}
-                            </span>
-
-                            <h2>
-                                ${hucreId}
-                            </h2>
-                        </div>
-
-                        <div class="score-box">
-                            ${sayiGoster(
-                                hizmet.puan
-                            )}
-                        </div>
-                    </div>
-
-                    <div class="axis-grid">
-
-                        <section class="axis-panel">
-                            <div class="axis-label">
-                                1. Hizmet ihtiyacı
-                            </div>
-
-                            <div class="axis-title">
-                                ${htmlGuvenli(
-                                    hizmet.seviye
-                                )}
-                            </div>
-
-                            <p>
-                                En yakın kütüphane:
-                                <strong>
-                                    ${htmlGuvenli(
-                                        kutuphane.ad
-                                        ?? "-"
-                                    )}
-                                </strong>
-                            </p>
-
-                            <p>
-                                Kütüphaneye uzaklık:
-                                <strong>
-                                    ${sayiGoster(
-                                        kutuphane.uzaklik_km
-                                    )} km
-                                </strong>
-                            </p>
-                        </section>
-
-                        <section class="axis-panel site">
-                            <div class="axis-label">
-                                2. Yer inceleme durumu
-                            </div>
-
-                            <div class="axis-title">
-                                ${htmlGuvenli(
-                                    yer.durum
-                                )}
-                            </div>
-
-                            <p>
-                                ${htmlGuvenli(
-                                    yer.aciklama
-                                )}
-                            </p>
-                        </section>
-
-                    </div>
-
-                    <div class="metrics">
-                        <div class="metric">
-                            <span>Yapılaşmış alan</span>
-
-                            <strong>
-                                ${yuzdeGoster(
-                                    arazi
-                                    .yapilasmis_alan_yuzde
-                                )}
-                            </strong>
-                        </div>
-
-                        <div class="metric">
-                            <span>Bitkisel / yeşil alan</span>
-
-                            <strong>
-                                ${yuzdeGoster(
-                                    arazi
-                                    .bitkisel_yesil_alan_yuzde
-                                )}
-                            </strong>
-                        </div>
-
-                        <div class="metric">
-                            <span>Açık / çıplak alan</span>
-
-                            <strong>
-                                ${yuzdeGoster(
-                                    arazi
-                                    .acik_ciplak_alan_yuzde
-                                )}
-                            </strong>
-                        </div>
-
-                        <div class="metric">
-                            <span>Su / sulak alan</span>
-
-                            <strong>
-                                ${yuzdeGoster(
-                                    arazi
-                                    .su_sulak_alan_yuzde
-                                )}
-                            </strong>
-                        </div>
-
-                        <div class="metric">
-                            <span>WorldCover kapsamı</span>
-
-                            <strong>
-                                ${yuzdeGoster(
-                                    arazi
-                                    .worldcover_kapsama_yuzde
-                                )}
-                            </strong>
-                        </div>
-
-                        <div class="metric">
-                            <span>WorldCover yılı</span>
-
-                            <strong>
-                                ${htmlGuvenli(
-                                    aday.worldcover_yili
-                                )}
-                            </strong>
-                        </div>
-                    </div>
-
-                    <div class="evaluation">
-                        ${htmlGuvenli(
-                            aday.genel_degerlendirme
-                        )}
-                    </div>
-
-                    <div class="coordinates">
-                        Merkez koordinatı:
-                        ${sayiGoster(
-                            merkez.enlem,
-                            6
-                        )},
-                        ${sayiGoster(
-                            merkez.boylam,
-                            6
-                        )}
-                    </div>
-
-                    <a
-                        class="detail-link"
-                        href="${API_TEMEL_ADRESI}/${encodeURIComponent(
-                            aday.hucre_id
-                        )}?ilce=${encodeURIComponent(
-                            aday.ilce
-                        )}"
-                        target="_blank"
-                    >
-                        API ayrıntısını aç
-                    </a>
-
-                </article>
-            `;
-        }
-
-
-        async function apiVerisiGetir(
-            adres
-        ) {
-            const cevap = await fetch(
-                adres
-            );
-
-            if (!cevap.ok) {
-                throw new Error(
-                    `API hatası: ${cevap.status}`
-                );
-            }
-
-            return cevap.json();
-        }
-
-
-        async function analizEdilenIlceleriYukle() {
-            durumGuncelle(
-                "Analiz edilmiş ilçeler yükleniyor..."
-            );
-
-            const tumVeri =
-                await apiVerisiGetir(
-                    `${API_TEMEL_ADRESI}?limit=500`
-                );
-
-            const ilceler = [
-                ...new Set(
-                    (tumVeri.aday_bolgeler ?? [])
-                    .map(
-                        aday => aday.ilce
-                    )
-                    .filter(Boolean)
-                )
-            ].sort(
-                (birinci, ikinci) =>
-                    birinci.localeCompare(
-                        ikinci,
-                        "tr"
-                    )
-            );
-
-            if (ilceler.length === 0) {
-                throw new Error(
-                    "Veritabanında analiz edilmiş ilçe bulunamadı."
-                );
-            }
-
-            ilceSecimi.innerHTML = "";
-
-            for (const ilce of ilceler) {
-                const secenek =
-                    document.createElement(
-                        "option"
-                    );
-
-                secenek.value = ilce;
-                secenek.textContent = ilce;
-
-                ilceSecimi.appendChild(
-                    secenek
-                );
-            }
-
-            ilceSecimi.disabled = false;
-
-            const adresParametreleri =
-                new URLSearchParams(
-                    window.location.search
-                );
-
-            const adresIlcesi =
-                adresParametreleri.get(
-                    "ilce"
-                );
-
-            if (
-                adresIlcesi &&
-                ilceler.includes(adresIlcesi)
-            ) {
-                ilceSecimi.value =
-                    adresIlcesi;
-            } else {
-                ilceSecimi.value =
-                    ilceler[0];
-            }
-
-            await seciliIlceyiYukle();
-        }
-
-
-        async function seciliIlceyiYukle() {
-            const seciliIlce =
-                ilceSecimi.value;
-
-            if (!seciliIlce) {
-                return;
-            }
-
-            durumGuncelle(
-                `${seciliIlce} verileri yükleniyor...`
-            );
-
-            adaylarBolumu.innerHTML = "";
-
-            ozetBolumu.hidden = true;
-            aksiyonlarBolumu.hidden = true;
-            ilceBasligi.hidden = true;
-
-            const adres =
-                `${API_TEMEL_ADRESI}` +
-                `?ilce=${encodeURIComponent(
-                    seciliIlce
-                )}` +
-                "&limit=500";
-
-            const veri =
-                await apiVerisiGetir(
-                    adres
-                );
-
-            const adaylar =
-                veri.aday_bolgeler ?? [];
-
-            if (adaylar.length === 0) {
-                durumGuncelle(
-                    `${seciliIlce} için aday bölge bulunamadı.`,
-                    "error"
-                );
-
-                return;
-            }
-
-            const yeniAdres =
-                new URL(
-                    window.location.href
-                );
-
-            yeniAdres.searchParams.set(
-                "ilce",
-                seciliIlce
-            );
-
-            window.history.replaceState(
-                {},
-                "",
-                yeniAdres
-            );
-
-            ilceBasligi.textContent =
-                `${seciliIlce} Aday Bölge Değerlendirmesi`;
-
-            ilceBasligi.hidden = false;
-
-            document.getElementById(
-                "analiz-ilcesi"
-            ).textContent =
-                seciliIlce;
-
-            document.getElementById(
-                "toplam-aday"
-            ).textContent =
-                adaylar.length;
-
-            document.getElementById(
-                "en-yuksek-puan"
-            ).textContent =
-                sayiGoster(
-                    adaylar[0]
-                    .hizmet_ihtiyaci
-                    .puan
-                );
-
-            document.getElementById(
-                "analiz-yili"
-            ).textContent =
-                adaylar[0]
-                .analiz_yili
-                ?? "-";
-
-            const ilceSlug =
-                slugOlustur(
-                    seciliIlce
-                );
-
-            haritaBaglantisi.href =
-                `${ilceSlug}_` +
-                "aday_bolge_degerlendirme_haritasi.html";
-
-            adaylarBolumu.innerHTML =
-                adaylar
-                .map(adayKartiOlustur)
-                .join("");
-
-            ozetBolumu.hidden = false;
-            aksiyonlarBolumu.hidden = false;
-
-            durumGuncelle(
-                `${seciliIlce} için ` +
-                `${adaylar.length} aday bölge ` +
-                "veritabanından yüklendi.",
-                "success"
-            );
-        }
-
-
-        ilceSecimi.addEventListener(
-            "change",
-            async () => {
-                try {
-                    await seciliIlceyiYukle();
-                } catch (hata) {
-                    console.error(hata);
-
-                    durumGuncelle(
-                        `Veriler yüklenemedi: ${hata.message}`,
-                        "error"
-                    );
-                }
-            }
-        );
-
-
-        analizEdilenIlceleriYukle()
-            .catch(
-                hata => {
-                    console.error(hata);
-
-                    durumGuncelle(
-                        `API bağlantısı kurulamadı: ${hata.message}`,
-                        "error"
-                    );
-                }
-            );
-    </script>
 </body>
 </html>

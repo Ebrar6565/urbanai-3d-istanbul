@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uydu Görüntüleri | UrbanAI 3D İstanbul</title>
+  <meta name="description" content="UrbanAI 3D İstanbul — Sentinel-2 RGB Uydu Görüntüleri ve Yama Analiz Ekranı">
+
+  <!-- Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+
+  <!-- Shared CSS -->
+  <link rel="stylesheet" href="./assets/css/main.css?v=6">
+
+  <style>
+    .pixel-preserved {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    .grid-bg {
+      background-image: radial-gradient(circle, #75777e 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.08;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" aria-label="Ana navigasyon">
+    <div class="sidebar-brand">
+      <span class="sidebar-brand-name">UrbanAI 3D</span>
+      <span class="sidebar-brand-sub">Kentsel Karar Destek Platformu</span>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Sayfa navigasyonu">
+      <a href="./index.html" class="nav-item" id="nav-genel">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="nav-label">Genel Bakış</span>
+      </a>
+      <a href="./ilce_analizi.html" class="nav-item" id="nav-ilce">
+        <span class="material-symbols-outlined">location_city</span>
+        <span class="nav-label">İlçe Analizi</span>
+      </a>
+      <a href="./kutuphaneler.html" class="nav-item" id="nav-kutuphane">
+        <span class="material-symbols-outlined">menu_book</span>
+        <span class="nav-label">Kütüphaneler</span>
+      </a>
+      <a href="./aday_bolgeler.html" class="nav-item" id="nav-aday">
+        <span class="material-symbols-outlined">location_on</span>
+        <span class="nav-label">Aday Bölgeler</span>
+      </a>
+      <a href="./uydu_goruntuleri.html" class="nav-item active" id="nav-uydu" aria-current="page">
+        <span class="material-symbols-outlined">satellite_alt</span>
+        <span class="nav-label">Uydu Görüntüleri</span>
+      </a>
+      <a href="./metodoloji.html" class="nav-item" id="nav-metod">
+        <span class="material-symbols-outlined">science</span>
+        <span class="nav-label">Metodoloji</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span class="material-symbols-outlined" style="font-size:14px;">explore</span>
+      <span>41.0082° N, 28.9784° E</span>
+    </div>
+  </aside>
+
+  <!-- RIGHT SIDE -->
+  <div id="right-side">
+
+    <!-- TOP BAR -->
+    <header id="topbar" role="banner">
+      <div class="topbar-left">
+        <h1 class="topbar-title">UrbanAI 3D İstanbul</h1>
+        <div class="topbar-meta">
+          <span id="topbar-analiz-yili" class="topbar-badge">Analiz Yılı: 2025</span>
+          <span id="topbar-son-guncelleme">Veriler Yükleniyor…</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-icon-btn" title="Ayarlar"><span class="material-symbols-outlined">settings</span></button>
+        <button class="topbar-icon-btn" title="Yardım"><span class="material-symbols-outlined">help</span></button>
+      </div>
+    </header>
+
+    <!-- WORKSPACE CANVAS -->
+    <div id="workspace">
+
+      <!-- Satellite Main Viewer (Fluid Left) -->
+      <section style="flex: 1; display: flex; flex-direction: column; background: var(--surface-container-low); position: relative; overflow: hidden;">
+        <div class="grid-bg" style="position: absolute; inset: 0; pointer-events: none;"></div>
+
+        <!-- Satellite Patch Toolbar -->
+        <div style="height: 48px; background: #ffffff; border-bottom: 1px solid var(--border-gray); padding: 0 20px; display: flex; align-items: center; justify-content: space-between; z-index: 10;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="display: flex; align-items: center; background: var(--surface-container-low); border: 1px solid var(--border-gray); padding: 4px 10px; border-radius: 6px;">
+              <span style="font-size: 10px; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; margin-right: 8px;">İlçe</span>
+              <select id="sat-district-select" style="background: transparent; border: none; font-size: 13px; font-weight: 700; color: var(--primary); outline: none; cursor: pointer;">
+                <option value="">İlçe Yükleniyor…</option>
+              </select>
+            </div>
+
+            <div style="display: flex; align-items: center; background: var(--surface-container-low); border: 1px solid var(--border-gray); padding: 4px 10px; border-radius: 6px;">
+              <span style="font-size: 10px; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; margin-right: 8px;">Yama</span>
+              <select id="sat-patch-select" style="background: transparent; border: none; font-size: 13px; font-weight: 700; color: var(--primary); outline: none; cursor: pointer;">
+                <option value="">Yama Yükleniyor…</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span id="sat-band-badge" class="badge badge-high" style="font-family: var(--font-mono);">Sentinel-2 RGB (4-3-2)</span>
+          </div>
+        </div>
+
+        <!-- Central Viewport Display -->
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 32px; position: relative;">
+          <div style="position: relative;" id="sat-display-container">
+
+            <div style="position: absolute; top: -26px; left: 0; right: 0; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: var(--on-surface-variant);">
+              <span id="sat-frame-label">Sentinel-2 / L2A_RGB</span>
+              <span id="sat-gsd-label">GSD: 10m</span>
+            </div>
+
+            <!-- Satellite Image Box -->
+            <div style="width: 320px; height: 320px; background: #000000; border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.15); overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;" id="sat-img-box">
+              <img id="sat-img-preview" src="" alt="Sentinel-2 RGB Önizleme" class="pixel-preserved" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+              <div id="sat-img-loading" class="state-msg" style="color: #ffffff;">Görüntü yükleniyor…</div>
+
+              <!-- Crosshair Overlay -->
+              <div style="position: absolute; inset: 0; pointer-events: none; opacity: 0.25;">
+                <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: #ffffff;"></div>
+                <div style="position: absolute; top: 0; left: 50%; height: 100%; width: 1px; background: #ffffff;"></div>
+              </div>
+            </div>
+
+            <!-- Scale Bar -->
+            <div style="position: absolute; bottom: -24px; left: 0; right: 0; display: flex; justify-content: center;">
+              <div style="display: flex; height: 6px; width: 160px; border: 1px solid var(--border-gray); border-radius: 3px; overflow: hidden;">
+                <div style="flex: 1; background: #1a1a1a;"></div>
+                <div style="flex: 1; background: #4d4d4d;"></div>
+                <div style="flex: 1; background: #808080;"></div>
+                <div style="flex: 1; background: #b3b3b3;"></div>
+                <div style="flex: 1; background: #ffffff;"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Metadata Panel (320px) -->
+      <aside style="width: 320px; flex-shrink: 0; background: #ffffff; border-left: 1px solid var(--border-gray); display: flex; flex-direction: column; overflow-y: auto;" id="sat-metadata-panel">
+        <div class="state-msg">Yama detaylarını görüntülemek için bir yama seçin.</div>
+      </aside>
+
+    </div><!-- /workspace -->
+
+  </div><!-- /right-side -->
+
+</div><!-- /app-shell -->
+
+<!-- Application Scripts -->
+<script src="./assets/js/config.js?v=6"></script>
+<script src="./assets/js/api.js?v=6"></script>
+<script src="./assets/js/common.js?v=6"></script>
+<script src="./assets/js/uydu-goruntuleri.js?v=6"></script>
+
+</body>
+</html>
